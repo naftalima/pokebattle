@@ -50,6 +50,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+POKE_API_URL = "https://pokeapi.co/api/v2/pokemon/"
+
 ROOT_URLCONF = "pokebattle.urls"
 
 TEMPLATES = [
