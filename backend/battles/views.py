@@ -89,3 +89,42 @@ def opponent_pokemons(request):
         form = OpponentRoundForm()
     return render(request, 'battles/round_new2.html', {'formRound2': form})
 
+def round (player1_pokemon, player2_pokemon):
+    # PKN1 vs PKN2
+    # A1 vs D2
+    # A2 vs D1
+    # HP1 vs HP2 <- settles in case of draw
+
+    round_score = {'player_1': 0, 'player_2': 0}
+
+    if player1_pokemon['attack'] > player2_pokemon['defense']: round_score['player_1'] +=1
+    else: round_score['player_2'] +=1
+    if player1_pokemon['defense'] > player2_pokemon['attack']: round_score['player_1'] +=1
+    else: round_score['player_2'] +=1
+
+    if round_score['player_1'] == round_score['player_2'] and player1_pokemon['hp'] != player2_pokemon['hp']:
+        if  player1_pokemon['hp'] > player2_pokemon['hp']: round_score['player_1'] +=1
+        else: round_score['player_2'] +=1
+    else:
+        if round_score['player_1'] > round_score['player_2']: return {'player_1': 1, 'player_2': 0}
+        else: return {'player_1': 0, 'player_2': 1}
+
+def battle(battle_info, score):
+    for i in range(1,4):
+        curr_pkm_c = 'creator_pokemon_' + str(i)
+        curr_pkm_o = 'opponent_pokemon_' + str(i)
+        creator_pokemon = get_pokemon(battle_info[curr_pkm_c])
+        opponent_pokemon = get_pokemon(battle_info[curr_pkm_o])
+
+        roud_score = round(creator_pokemon, opponent_pokemon)
+        score['player_1'] += roud_score['player_1']
+        score['player_2'] += roud_score['player_2']
+    return score
+
+def battles(request):
+    battle_info = Battle.objects.filter(id=32).values()[0]
+    score = {'player_1': 0, 'player_2': 0}
+
+    score = battle(battle_info,score )
+
+    return render(request, 'battles/battle.html', {'score':score} )
