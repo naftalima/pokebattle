@@ -15,6 +15,7 @@ def get_pokemon(poke_name):
         "defense": data["stats"][3]["base_stat"],
         "attack": data["stats"][4]["base_stat"],
         "hp": data["stats"][5]["base_stat"],
+        "name": data["name"]
     }
     return info
 
@@ -123,8 +124,12 @@ def battle(battle_info, score):
 
 def battles(request):
     battle_info = Battle.objects.filter(id=32).values()[0]
-    score = {'player_1': 0, 'player_2': 0}
+    creator_pokemons = [get_pokemon(battle_info['creator_pokemon_'+ str(i)]) for i in range(1,4) ]
+    opponent_pokemons = [get_pokemon(battle_info['opponent_pokemon_'+ str(i)]) for i in range(1,4) ]
 
+    score = {'player_1': 0, 'player_2': 0}
     score = battle(battle_info,score )
 
-    return render(request, 'battles/battle.html', {'score':score} )
+    winner = 'Player1' if score['player_1'] > score['player_2'] else 'Player2'
+
+    return render(request, 'battles/battle.html', {'winner':winner,'creator_pokemons':creator_pokemons,'score':score,'opponent_pokemons':opponent_pokemons} )

@@ -7,13 +7,53 @@
   <title>Battle</title>
 </head>
 <body>
-  <h1>
-    <!-- <p>player 1</p>
-    {{creator_pokemon}}
-    <p>player 2</p>
-    {{opponent_pokemon}} -->
-    <p>Resultado</p>
-    {{score}}
-  </h1>
+  <h1>Resultado</h1>
+  {{winner}} won! 🎉🎉
+
+  <h2>Score</h2>
+  {{score}}
+
+  <h2>Log</h2>
+
+  <h3>Player 1</h3>
+  <table>
+    <tr>
+      <th>name</th>
+      <th>attack</th>
+      <th>defense</th>
+      <th>hp</th>
+    </tr>
+
+      {% for player1_pkm in creator_pokemons %}
+      <tr>
+        <th> {{player1_pkm.name}}</th>
+        <th> {{player1_pkm.attack}}</th>
+        <th> {{player1_pkm.defense}}</th>
+        <th> {{player1_pkm.hp}}</th>
+      </tr>
+      {% endfor %}
+
+  </table>
+
+  <h3>Player 2</h3>
+  <table>
+    <tr>
+      <th>name</th>
+      <th>attack</th>
+      <th>defense</th>
+      <th>hp</th>
+    </tr>
+
+      {% for player2_pkm in opponent_pokemons %}
+      <tr>
+        <th> {{player2_pkm.name}}</th>
+        <th> {{player2_pkm.attack}}</th>
+        <th> {{player2_pkm.defense}}</th>
+        <th> {{player2_pkm.hp}}</th>
+      </tr>
+      {% endfor %}
+
+  </table>
+
 </body>
 </html>
