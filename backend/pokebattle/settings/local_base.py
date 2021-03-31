@@ -11,6 +11,10 @@ DATABASES = {
     "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": base_dir_join("db.sqlite3"),}
 }
 
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
+
 STATIC_ROOT = base_dir_join("staticfiles")
 STATIC_URL = "/static/"
 
