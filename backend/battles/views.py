@@ -7,8 +7,6 @@ from urllib.parse import urljoin
 from django.conf import settings
 import requests
 
-battle_id= 34
-
 def get_pokemon(poke_name):
     url = urljoin(settings.POKE_API_URL, poke_name)
     response = requests.get(url)
@@ -76,7 +74,7 @@ def creator_pokemons(request):
     return render(request, 'battles/create_battle.html', {'form': form})
 
 def opponent_pokemons(request):
-    battle_info = Battle.objects.get(id=battle_id)
+    battle_info = Battle.objects.latest('id')
     if request.method == "POST":
         form = OpponentRoundForm(request.POST, instance=battle_info)
         if form.is_valid():
@@ -92,45 +90,44 @@ def opponent_pokemons(request):
         form = OpponentRoundForm()
     return render(request, 'battles/opponent_pokemons.html', {'formRound2': form})
 
-def round (player1_pokemon, player2_pokemon):
-    # PKN1 vs PKN2
-    # A1 vs D2
-    # A2 vs D1
-    # HP1 vs HP2 <- settles in case of draw
-
+def round (p1_pkm, p2_pkm):
     round_score = {'player_1': 0, 'player_2': 0}
 
-    if player1_pokemon['attack'] > player2_pokemon['defense']: round_score['player_1'] +=1
-    else: round_score['player_2'] +=1
-    if player1_pokemon['defense'] > player2_pokemon['attack']: round_score['player_1'] +=1
+    if p1_pkm['attack'] > p2_pkm['defense']: round_score['player_1'] +=1
     else: round_score['player_2'] +=1
 
-    if round_score['player_1'] == round_score['player_2'] and player1_pokemon['hp'] != player2_pokemon['hp']:
-        if  player1_pokemon['hp'] > player2_pokemon['hp']: round_score['player_1'] +=1
+    if p1_pkm['defense'] > p2_pkm['attack']: round_score['player_1'] +=1
+    else: round_score['player_2'] +=1
+
+    if round_score['player_1'] == round_score['player_2'] and p1_pkm['hp'] != p2_pkm['hp']:
+        if  p1_pkm['hp'] > p2_pkm['hp']: round_score['player_1'] +=1
         else: round_score['player_2'] +=1
-    else:
-        if round_score['player_1'] > round_score['player_2']: return {'player_1': 1, 'player_2': 0}
-        else: return {'player_1': 0, 'player_2': 1}
 
-def battle(battle_info, score):
-    for i in range(1,4):
-        curr_pkm_c = 'creator_pokemon_' + str(i)
-        curr_pkm_o = 'opponent_pokemon_' + str(i)
-        creator_pokemon = get_pokemon(battle_info[curr_pkm_c])
-        opponent_pokemon = get_pokemon(battle_info[curr_pkm_o])
+    p1_won = {'player_1': 0, 'player_2': 1}
+    p2_won =  {'player_1': 1, 'player_2': 0}
 
-        roud_score = round(creator_pokemon, opponent_pokemon)
-        score['player_1'] += roud_score['player_1']
-        score['player_2'] += roud_score['player_2']
-    return score
+    if round_score['player_1'] > round_score['player_2']: return p2_won
+    else: return p1_won
+
+def battle(creator_pkms,opponent_pkms):
+    battle_score =  {'player_1': 0, 'player_2': 0}
+
+    for c_pkm, o_pkm in zip(creator_pkms,opponent_pkms):
+        score = round(c_pkm,o_pkm)
+
+        battle_score['player_1'] += score['player_1']
+        battle_score['player_2'] += score['player_2']
+
+    return battle_score
 
 def battles(request):
+    battle_id =  Battle.objects.latest('id').id
     battle_info = Battle.objects.filter(id=battle_id).values()[0]
+
     creator_pokemons = [get_pokemon(battle_info['creator_pokemon_'+ str(i)]) for i in range(1,4) ]
     opponent_pokemons = [get_pokemon(battle_info['opponent_pokemon_'+ str(i)]) for i in range(1,4) ]
 
-    score = {'player_1': 0, 'player_2': 0}
-    score = battle(battle_info,score )
+    score = battle(creator_pokemons,opponent_pokemons )
 
     winner = 'Player1' if score['player_1'] > score['player_2'] else 'Player2'
 
