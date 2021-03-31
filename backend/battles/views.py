@@ -7,6 +7,8 @@ from urllib.parse import urljoin
 from django.conf import settings
 import requests
 
+battle_id= 34
+
 def get_pokemon(poke_name):
     url = urljoin(settings.POKE_API_URL, poke_name)
     response = requests.get(url)
@@ -68,13 +70,13 @@ def creator_pokemons(request):
                 return redirect('invite')
             else:
                 message = "ERROR: The PKNs you selected sum more than 600 points, please choose again"
-                return render(request, 'battles/round.html', {'form': form, 'message':message})
+                return render(request, 'battles/create_battle.html', {'form': form, 'message':message})
     else:
         form = CreatorRoundForm()
-    return render(request, 'battles/round.html', {'form': form})
+    return render(request, 'battles/create_battle.html', {'form': form})
 
 def opponent_pokemons(request):
-    battle_info = Battle.objects.get(id=32)
+    battle_info = Battle.objects.get(id=battle_id)
     if request.method == "POST":
         form = OpponentRoundForm(request.POST, instance=battle_info)
         if form.is_valid():
@@ -82,13 +84,13 @@ def opponent_pokemons(request):
             valid_team = check_valid_opponent_team(round_battle)
             if valid_team:
                 form.save()
-                return redirect('home')
+                return redirect('battle')
             else:
                 message = "ERROR: The PKNs you selected sum more than 600 points, please choose again"
-                return render(request, 'battles/round_new2.html', {'formRound2': form, 'battle':battle_info, 'message': message})
+                return render(request, 'battles/opponent_pokemons.html', {'formRound2': form, 'battle':battle_info, 'message': message})
     else:
         form = OpponentRoundForm()
-    return render(request, 'battles/round_new2.html', {'formRound2': form})
+    return render(request, 'battles/opponent_pokemons.html', {'formRound2': form})
 
 def round (player1_pokemon, player2_pokemon):
     # PKN1 vs PKN2
@@ -123,7 +125,7 @@ def battle(battle_info, score):
     return score
 
 def battles(request):
-    battle_info = Battle.objects.filter(id=32).values()[0]
+    battle_info = Battle.objects.filter(id=battle_id).values()[0]
     creator_pokemons = [get_pokemon(battle_info['creator_pokemon_'+ str(i)]) for i in range(1,4) ]
     opponent_pokemons = [get_pokemon(battle_info['opponent_pokemon_'+ str(i)]) for i in range(1,4) ]
 
@@ -132,4 +134,4 @@ def battles(request):
 
     winner = 'Player1' if score['player_1'] > score['player_2'] else 'Player2'
 
-    return render(request, 'battles/battle.html', {'winner':winner,'creator_pokemons':creator_pokemons,'score':score,'opponent_pokemons':opponent_pokemons} )
+    return render(request, 'battles/battle_info.html', {'winner':winner,'creator_pokemons':creator_pokemons,'score':score,'opponent_pokemons':opponent_pokemons} )
