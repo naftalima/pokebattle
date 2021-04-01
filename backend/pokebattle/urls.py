@@ -1,12 +1,8 @@
 from django.conf.urls import include, url  # noqa
 from django.urls import path
 from django.contrib import admin
-from django.shortcuts import redirect
-from django.conf.urls import include
-
 
 import django_js_reverse.views
-
 
 urlpatterns = [
     path("admin/", admin.site.urls, name="admin"),
