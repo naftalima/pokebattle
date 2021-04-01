@@ -1,4 +1,4 @@
-django<3
+django<4 # Fixed django version in order to avoid libs to install v3
 celery[redis]
 django-model-utils
 django-webpack-loader
@@ -14,3 +14,13 @@ whitenoise
 psutil
 ipython
 sentry-sdk
+bandit
+black
+coverage
+django-naomi
+isort
+model-bakery
+pre-commit
+prospector[with-vulture]
+safety
+flake8==3.8.4
