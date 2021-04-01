@@ -90,33 +90,51 @@ def opponent_pokemons(request):
         form = OpponentRoundForm()
     return render(request, 'battles/opponent_pokemons.html', {'formRound2': form})
 
-def round (p1_pkm, p2_pkm):
-    round_score = {'player_1': 0, 'player_2': 0}
+def battle_round(creator_pkn, opponent_pkn):
+    round_score = {'creator': 0, 'opponent': 0}
 
-    if p1_pkm['attack'] > p2_pkm['defense']: round_score['player_1'] +=1
-    else: round_score['player_2'] +=1
+    creator_hit = creator_pkn['attack'] > opponent_pkn['defense']
+    opponent_miss = creator_pkn['defense'] > opponent_pkn['attack']
 
-    if p1_pkm['defense'] > p2_pkm['attack']: round_score['player_1'] +=1
-    else: round_score['player_2'] +=1
+    # First turn: The creator's pokemon attacks
+    if creator_hit:
+        round_score['creator'] +=1
+    else:
+        round_score['opponent'] +=1
 
-    if round_score['player_1'] == round_score['player_2'] and p1_pkm['hp'] != p2_pkm['hp']:
-        if  p1_pkm['hp'] > p2_pkm['hp']: round_score['player_1'] +=1
-        else: round_score['player_2'] +=1
+    # Second turn: The opponents's pokemon attacks
+    if opponent_miss:
+        round_score['creator'] +=1
+    else:
+        round_score['opponent'] +=1
 
-    p1_won = {'player_1': 0, 'player_2': 1}
-    p2_won =  {'player_1': 1, 'player_2': 0}
+    #  In case of draw
+    draw = round_score['creator'] == round_score['opponent']
+    different_pokemon = creator_pkn['name'] != opponent_pkn['name']
+    if draw and different_pokemon:
+        if  creator_pkn['hp'] > opponent_pkn['hp']:
+            round_score['creator'] +=1
+        else:
+            round_score['opponent'] +=1
 
-    if round_score['player_1'] > round_score['player_2']: return p2_won
-    else: return p1_won
+    # Final Round Score
+    creator_won = {'creator': 0, 'opponent': 1}
+    opponent_won =  {'creator': 1, 'opponent': 0}
 
-def battle(creator_pkms,opponent_pkms):
-    battle_score =  {'player_1': 0, 'player_2': 0}
+    creator_scored_more = round_score['creator'] > round_score['opponent']
+    if creator_scored_more:
+        return opponent_won
+    else:
+        return creator_won
 
-    for c_pkm, o_pkm in zip(creator_pkms,opponent_pkms):
-        score = round(c_pkm,o_pkm)
+def battle(creator_pkns,opponent_pkns):
+    battle_score =  {'creator': 0, 'opponent': 0}
 
-        battle_score['player_1'] += score['player_1']
-        battle_score['player_2'] += score['player_2']
+    for creator_pkn, opponent_pkn in zip(creator_pkns, opponent_pkns):
+        score = battle_round(creator_pkn, opponent_pkn)
+
+        battle_score['creator'] += score['creator']
+        battle_score['opponent'] += score['opponent']
 
     return battle_score
 
@@ -129,6 +147,11 @@ def battles(request):
 
     score = battle(creator_pokemons,opponent_pokemons )
 
-    winner = 'Player1' if score['player_1'] > score['player_2'] else 'Player2'
+    winner = 'Player1' if score['creator'] > score['opponent'] else 'Player2'
 
-    return render(request, 'battles/battle_info.html', {'winner':winner,'creator_pokemons':creator_pokemons,'score':score,'opponent_pokemons':opponent_pokemons} )
+    return render(request,
+                  'battles/battle_info.html',
+                  {'winner':winner,
+                   'creator_pokemons':creator_pokemons,
+                   'score':score,
+                   'opponent_pokemons':opponent_pokemons} )
