@@ -34,7 +34,8 @@ def check_valid_creator_team(curr_form):
     pokemon2_points = sum_points(pokemon2)
     pokemon3_points = sum_points(pokemon3)
     sum_pokemons_points = pokemon1_points + pokemon2_points + pokemon3_points
-    if sum_pokemons_points <= 600: return True
+    if sum_pokemons_points <= 600:
+        return True
     return False
 
 
@@ -46,7 +47,8 @@ def check_valid_opponent_team(curr_form):
     pokemon2_points = sum_points(pokemon2)
     pokemon3_points = sum_points(pokemon3)
     sum_pokemons_points = pokemon1_points + pokemon2_points + pokemon3_points
-    if sum_pokemons_points <= 600: return True
+    if sum_pokemons_points <= 600:
+        return True
     return False
 
 
@@ -76,7 +78,7 @@ def select_creator_pokemons(request):
                 return redirect('invite')
             message = "ERROR: you selected sum more than 600 points"
             return render(request, 'battles/create_battle.html', {'form': form,
-                                                                      'message': message})
+                                                                  'message': message})
     else:
         form = CreatorRoundForm()
     return render(request, 'battles/create_battle.html', {'form': form})
@@ -94,8 +96,8 @@ def select_opponent_pokemons(request):
                 return redirect('battle')
             message = "ERROR: you selected sum more than 600 points"
             return render(request, 'battles/opponent_pokemons.html', {'formRound2': form,
-                                                                        'battle': battle_info,
-                                                                        'message': message})
+                                                                      'battle': battle_info,
+                                                                      'message': message})
     else:
         form = OpponentRoundForm()
     return render(request, 'battles/opponent_pokemons.html', {'formRound2': form})
@@ -120,8 +122,8 @@ def battle_round(creator_pkn, opponent_pkn):
         round_score['opponent'] += 1
 
     #  In case of draw
-    draw= round_score['creator'] == round_score['opponent']
-    different_pokemon= creator_pkn['name'] != opponent_pkn['name']
+    draw = round_score['creator'] == round_score['opponent']
+    different_pokemon = creator_pkn['name'] != opponent_pkn['name']
     if draw and different_pokemon:
         if creator_pkn['hp'] > opponent_pkn['hp']:
             round_score['creator'] += 1
@@ -138,7 +140,7 @@ def battle_round(creator_pkn, opponent_pkn):
     return creator_won
 
 
-def battle(creator_pkns,opponent_pkns):
+def battle(creator_pkns, opponent_pkns):
     battle_score = {'creator': 0, 'opponent': 0}
 
     for creator_pkn, opponent_pkn in zip(creator_pkns, opponent_pkns):
@@ -154,14 +156,14 @@ def battles(request):
     battle_id = Battle.objects.latest('id').id
     battle_info = Battle.objects.filter(id=battle_id).values()[0]
 
-    creator_pokemons = [get_pokemon(battle_info['creator_pokemon_' + str(i)]) for i in range(1, 4)]
-    opponent_pokemons = [get_pokemon(battle_info['opponent_pokemon_' + str(i)]) for i in range(1, 4)]
+    creator_pkms = [get_pokemon(battle_info['creator_pokemon_' + str(i)]) for i in range(1, 4)]
+    opponent_pkms = [get_pokemon(battle_info['opponent_pokemon_' + str(i)]) for i in range(1, 4)]
 
-    score = battle(creator_pokemons, opponent_pokemons)
+    score = battle(creator_pkms, opponent_pkms)
 
     winner = 'Player1' if score['creator'] > score['opponent'] else 'Player2'
 
     return render(request, 'battles/battle_info.html', {'winner': winner,
-                                                        'creator_pokemons': creator_pokemons,
+                                                        'creator_pkms': creator_pkms,
                                                         'score': score,
-                                                        'opponent_pokemons': opponent_pokemons})
+                                                        'opponent_pkms': opponent_pkms})

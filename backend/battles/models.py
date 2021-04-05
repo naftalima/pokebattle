@@ -10,8 +10,7 @@ class Battle(models.Model):
     response = requests.get(url)
     data = response.json()
 
-    creator = models.ForeignKey(User, on_delete=models.CASCADE,
-                                      related_name="battles_as_creator")
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="battles_as_creator")
     opponent = models.ForeignKey(User, on_delete=models.CASCADE, related_name="battles_as_opponent")
 
     creator_pokemon_1 = models.CharField(max_length=200,
