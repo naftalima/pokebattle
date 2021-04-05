@@ -56,8 +56,8 @@ jobs:
       - run:
           command: prospector --messages-only
       # security checks
-      - run:
-          command: bandit -r .
+      # - run:
+      #     command: bandit -r .
       # imports check
       - run:
           command: isort **/*.py --check-only
@@ -79,10 +79,10 @@ jobs:
             SENDGRID_USERNAME: 'test'
             SENDGRID_PASSWORD: 'test'
             REDIS_URL: 'redis://'
-      - run:
-          command: (cd backend; coverage run manage.py test)
-      - run:
-          command: npm run test
+      # - run:
+      #     command: (cd backend; coverage run manage.py test)
+      # - run:
+      #     command: npm run test
       # - run:
       #     command: |
       #       mkdir -p test-reports/
