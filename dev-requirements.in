@@ -2,7 +2,7 @@ bandit
 black
 coverage
 django<4 # Fixed django version in order to avoid libs to install v3
-django-naomi
+# django-naomi
 isort
 model-bakery
 pre-commit

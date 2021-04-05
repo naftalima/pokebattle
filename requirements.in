@@ -16,3 +16,4 @@ ipython
 sentry-sdk
 djangorestframework
 requests
+django-templated-email
