@@ -1,7 +1,6 @@
 from django import forms
-
-
 from .models import Battle
+
 
 class CreatorRoundForm(forms.ModelForm):
 

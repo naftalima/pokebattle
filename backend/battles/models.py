@@ -1,10 +1,8 @@
+from django.conf import settings
 from django.db import models
-
-
-import requests
 from urllib.parse import urljoin
 from users.models import User
-from django.conf import settings
+import requests
 
 
 class Battle(models.Model):
@@ -14,8 +12,7 @@ class Battle(models.Model):
 
     creator = models.ForeignKey(User, on_delete=models.CASCADE,
                                       related_name="battles_as_creator")
-    opponent = models.ForeignKey(User, on_delete=models.CASCADE,
-                                 related_name="battles_as_opponent")
+    opponent = models.ForeignKey(User, on_delete=models.CASCADE, related_name="battles_as_opponent")
 
     creator_pokemon_1 = models.CharField(max_length=200,
                                          verbose_name='creator_pokemon_1', null=True)
