@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.db import models
 from urllib.parse import urljoin
-from users.models import User
 import requests
+from users.models import User
 
 
 class Battle(models.Model):
