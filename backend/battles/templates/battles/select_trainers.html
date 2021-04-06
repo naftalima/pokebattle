@@ -2,9 +2,7 @@
 
 {% block content %}
 
-
-  <p class="title_battle">Trainer 1</p>
-  <p class="subtitle_battle">Choose your pokemons!</p>
+  <p class="title_battle">Choose the Trainers!</p>
   <form method="POST">{% csrf_token %}
       {{ form.as_p }}
       <button class="button_battle">Next</button>
@@ -12,7 +10,7 @@
         {% if message %}
           <p class="error">{{message}}</p>
         {% endif %}
-      </div>
+    </div>
 
 {% endblock %}
 

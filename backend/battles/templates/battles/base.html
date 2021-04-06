@@ -11,8 +11,7 @@
             padding: 0px;
             background: #1488CC;  /* fallback for old browsers */
             font-family: Arial, Helvetica, sans-serif;
-
-
+            background-image: url('http://3.bp.blogspot.com/--kenNdb-i1M/ToU04igT7oI/AAAAAAAACyk/YdkLPkFsKRw/s1600/pokemon.png');
         }
         .container1 {
           color: white;
@@ -31,12 +30,14 @@
         }
 
         .container2{
-            height:600px;
+            height:500px;
             background-color: white;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             box-shadow: 1px 7px 20px -6px #18092B;
+            align-items: center;
+            color: black;
 
         }
 
@@ -164,22 +165,17 @@
           color: black;
           margin-top: -20px;
       }
-      .battle-form{
-          display: flex;
-          flex-direction: column;
-          color:#8D36FF;
-      }
-        .invite{
-          color: black;
-          margin: 0 auto;
-          margin-top: 50px;
+      .invite{
+        color: black;
+        margin: 0 auto;
+        margin-top: 50px;
       }
         </style>
 </head>
 <body>
   <div class="container1" id="home">
     <div class="container2">
-      <img class="pokemon_img"  src="http://3.bp.blogspot.com/--kenNdb-i1M/ToU04igT7oI/AAAAAAAACyk/YdkLPkFsKRw/s1600/pokemon.png" alt="pokemon">
+      <img class="pokemon_img"  src="https://team-rocket-blasting-off-again.github.io/pokebattle/assets/pokebattle-title.png" alt="pokemon">
       {% block content %}
 
       {% endblock %}

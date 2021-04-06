@@ -1,17 +1,15 @@
 {% extends 'battles/base.html' %}
 
 {% block content %}
-  <div class="teste">
-    <p class="title_battle">Trainer Opponent</p>
-    <p class="subtitle_battle">Choose your pokemons!</p>
-    <form method="post" class="battle-form">{% csrf_token %}
-        {{ formRound2.as_p }}
-        <input type="submit" value="Next" class="button_next">
-        <div >
-          {% if message %}
-          <p class="error">{{message}}</p>
-          {% endif %}
-        </div>
-    </form>
-  </div>
+  <p class="title_battle">Trainer Opponent</p>
+  <p class="subtitle_battle">Choose your pokemons!</p>
+  <form method="post">{% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Next" class="button_next">
+      <div >
+        {% if message %}
+        <p class="error">{{message}}</p>
+        {% endif %}
+      </div>
+  </form>
 {% endblock %}

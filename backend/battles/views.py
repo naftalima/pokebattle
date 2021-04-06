@@ -7,7 +7,7 @@ import requests
 
 from users.models import User
 
-from .forms import CreatorRoundForm, OpponentRoundForm
+from .forms import CreatorRoundForm, OpponentRoundForm, TrainersRoundForm
 from .models import Battle
 
 
@@ -69,10 +69,23 @@ def opponent(request):
     return render(request, "battles/opponent.html")
 
 
-def select_creator_pokemons(request):
+def select_trainers(request):
     if request.method == "POST":
         print('request.method== "POST"')
-        form = CreatorRoundForm(request.POST)
+        form = TrainersRoundForm(request.POST)
+        if form.is_valid():
+            form.save(commit=False).save()
+            return redirect("creator_pokemons")
+    else:
+        form = TrainersRoundForm()
+    return render(request, "battles/select_trainers.html", {"form": form})
+
+
+def select_creator_pokemons(request):
+    battle_info = Battle.objects.latest("id")
+    print(battle_info)
+    if request.method == "POST":
+        form = CreatorRoundForm(request.POST, instance=battle_info)
         if form.is_valid():
             round_battle = form.save(commit=False)
             valid_team = check_valid_creator_team(round_battle)
@@ -95,16 +108,16 @@ def select_opponent_pokemons(request):
             valid_team = check_valid_opponent_team(round_battle)
             if valid_team:
                 form.save()
-                return redirect("battle")
+                return redirect("battles")
             message = "ERROR: you selected sum more than 600 points"
             return render(
                 request,
                 "battles/opponent_pokemons.html",
-                {"formRound2": form, "battle": battle_info, "message": message},
+                {"form": form, "battle": battle_info, "message": message},
             )
     else:
         form = OpponentRoundForm()
-    return render(request, "battles/opponent_pokemons.html", {"formRound2": form})
+    return render(request, "battles/opponent_pokemons.html", {"form": form})
 
 
 def battle_round(creator_pkn, opponent_pkn):
