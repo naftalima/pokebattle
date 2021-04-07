@@ -33,7 +33,7 @@ npm-debug.log
 *.map
 
 # General
-/pokebattle-venv/
+/backend/pokebattle-venv/
 /venv/
 /env/
 /output/
