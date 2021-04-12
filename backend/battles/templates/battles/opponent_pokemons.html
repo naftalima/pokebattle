@@ -5,7 +5,7 @@
   <p class="subtitle_battle">Choose your pokemons!</p>
   <form method="post">{% csrf_token %}
       {{ form.as_p }}
-      <input type="submit" value="Next" class="button_next">
+      <button class="button_battle">Next</button>
       <div >
         {% if message %}
         <p class="error">{{message}}</p>
