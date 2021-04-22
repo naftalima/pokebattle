@@ -6,6 +6,7 @@ from django.views.generic import CreateView, ListView, TemplateView
 from .forms import CreatorRoundForm, OpponentRoundForm, TrainersRoundForm
 from .models import Battle
 from .utils.battle import battle
+from .utils.email import email_test
 from .utils.pokemon import check_valid_team, get_pokemon
 
 
@@ -72,7 +73,7 @@ class SelectOpponentPokemonsView(View):
             valid_team = check_valid_team(round_battle, "opponent")
             if valid_team:
                 form.save()
-                return redirect("battles")
+                return redirect("battle_result")
             message = "ERROR: you selected sum more than 600 points"
             return render(
                 request, self.template_name, {"form": self.form_class, "message": message}
@@ -85,7 +86,8 @@ class BattleInfoView(View):
     template_name = "battles/battle_info.html"
 
     def get(self, request):
-        battle_id = self.model.objects.latest("id").id
+        battle_field = self.model.objects.latest("id")
+        battle_id = battle_field.id
         battle_info = self.model.objects.filter(id=battle_id).values()[0]
 
         creator_pkms = [get_pokemon(battle_info["creator_pokemon_" + str(i)]) for i in range(1, 4)]
@@ -95,7 +97,11 @@ class BattleInfoView(View):
 
         score = battle(creator_pkms, opponent_pkms)
 
-        winner = "Creator" if score["creator"] > score["opponent"] else "Opponent"
+        creator = battle_field.creator
+        opponent = battle_field.opponent
+        winner = creator if score["creator"] > score["opponent"] else opponent
+
+        email_test(winner, creator, creator_pkms, opponent, opponent_pkms)
 
         return render(
             request,
