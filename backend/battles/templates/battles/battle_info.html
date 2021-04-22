@@ -20,10 +20,10 @@
 
     {% for creator_pkm in creator_pkms %}
     <tr>
-      <th> {{creator_pkm.name}}</th>
-      <th> {{creator_pkm.attack}}</th>
-      <th> {{creator_pkm.defense}}</th>
-      <th> {{creator_pkm.hp}}</th>
+      <td> {{creator_pkm.name}}</td>
+      <td> {{creator_pkm.attack}}</td>
+      <td> {{creator_pkm.defense}}</td>
+      <td> {{creator_pkm.hp}}</td>
     </tr>
     {% endfor %}
 
@@ -40,11 +40,12 @@
 
     {% for opponent_pkm in opponent_pkms %}
     <tr>
-      <th> {{opponent_pkm.name}}</th>
-      <th> {{opponent_pkm.attack}}</th>
-      <th> {{opponent_pkm.defense}}</th>
-      <th> {{opponent_pkm.hp}}</th>
+      <td> {{opponent_pkm.name}}</td>
+      <td> {{opponent_pkm.attack}}</td>
+      <td> {{opponent_pkm.defense}}</td>
+      <td> {{opponent_pkm.hp}}</td>
     </tr>
     {% endfor %}
+</table>
 
 {% endblock %}
