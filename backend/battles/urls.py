@@ -13,7 +13,7 @@ from .views import (
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
-    path("battle/", BattleInfoView.as_view(), name="battles"),
+    path("battle/", BattleInfoView.as_view(), name="battle_result"),
     path("creator/pokemons", SelectCreatorPokemonsView.as_view(), name="creator_pokemons"),
     path("invite/", InviteView.as_view(), name="invite"),
     path("opponent/", Opponent.as_view(), name="opponent"),
