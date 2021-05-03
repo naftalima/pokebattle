@@ -1,9 +1,8 @@
 from django.contrib import admin
 
-from .models import Battle, Battles, BattleTeam, TeamPokemon
+from .models import Battle, Team, TeamPokemon
 
 
 admin.site.register(Battle)
-admin.site.register(Battles)
-admin.site.register(BattleTeam)
+admin.site.register(Team)
 admin.site.register(TeamPokemon)
