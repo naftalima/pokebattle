@@ -1,0 +1,15 @@
+{% extends 'battles/base.html' %}
+
+{% block content %}
+
+  <h1>The Battle</h1>
+  <p>- Pokemons from Trainer1 will battle against Pokemons from Trainer2</p>
+  <p>- A battle is a comparison 1 x 1 of the Pokemons in the order defined by the trainers</p>
+  <p>- It is a 'best of three' where the attack (A1) of PKN1 is compared to the defense (D2) of PKN2, then A2 vs. D1.</p>
+  <p>  In case of draw the PKN with the highest HP wins.</p>
+
+  <a href="{% url 'home' %}">
+    <button class="button" style="margin-top: 400px;">Login</button>
+  </a>
+
+{% endblock %}
