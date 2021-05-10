@@ -1,0 +1,14 @@
+{% extends 'battles/base.html' %}
+
+{% block content %}
+
+  <p class="title_battle">Choose the Trainers!</p>
+  <form method="POST">{% csrf_token %}
+      {{ form.as_p }}
+  </form>
+
+
+  <button class="button"  style="margin-top: 350px;">Next</button>
+
+{% endblock %}
+
