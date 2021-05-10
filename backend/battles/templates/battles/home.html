@@ -1,11 +1,20 @@
 {% extends 'battles/base.html' %}
 
 {% block content %}
+  <div class="row">
+    <div class="column">
+      <button class="button">Settle Battles</button>
+    </div>
 
-  <a href="{% url 'select_trainers' %}">
-    <button class="button_battle"  >
-      <p class="text_button">Create new battle</p>
-    </button>
-  </a>
+    <div class="column">
+      <button class="button">On going Battles</button>
+    </div>
+  </div>
 
+  <div class="row">
+    <a href="{% url 'select_opponent' %}">
+      <button class="button" style="margin-top: 500px;">New Battle</button>
+    </a>
+
+  </div>
 {% endblock %}
