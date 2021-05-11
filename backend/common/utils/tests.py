@@ -15,7 +15,7 @@ class TestCaseUtils(TestCase):
         self.auth_client.login(email=self.user.email, password=self._user_password)
 
     def reverse(self, name, *args, **kwargs):
-        """Reverse a url, convenience to avoid having to import reverse in tests """
+        """Reverse a url, convenience to avoid having to import reverse in tests"""
         return reverse(name, args=args, kwargs=kwargs)
 
     def assertResponse200(self, response):
