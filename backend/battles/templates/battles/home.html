@@ -2,19 +2,25 @@
 
 {% block content %}
   <div class="row">
-    <div class="column">
-      <button class="button">Settle Battles</button>
-    </div>
 
     <div class="column">
-      <button class="button">On going Battles</button>
+      <a href="{% url 'settled_battles' %}">
+        <button class="button">Settled Battles</button>
+      </a>
     </div>
+
+
+    <div class="column">
+      <a href="{% url 'on_going_battles' %}"></a>
+        <button class="button">On going Battles</button>
+      </a>
+    </div>
+
   </div>
 
   <div class="row">
     <a href="{% url 'select_opponent' %}">
       <button class="button" style="margin-top: 500px;">New Battle</button>
     </a>
-
   </div>
 {% endblock %}

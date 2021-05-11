@@ -2,14 +2,14 @@
 
 {% block content %}
 
-  <p class="title_battle">Choose the Trainers!</p>
-  <form method="POST">{% csrf_token %}
-      {{ form.as_p }}
-  </form>
+  <h1 class="title">Choose the Trainers!</h1>
 
-  <a href="{% url 'select_pokemons' %}">
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- will render them wrapped in <p> tags -->
+
     <button class="button"  style="margin-top: 350px;">Next</button>
-  </a>
 
+  </form>
 {% endblock %}
 
