@@ -1,188 +1,80 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Poke Battle</title>
     <style>
-        body{
-            padding: 0px;
-            background: #1488CC;  /* fallback for old browsers */
-            font-family: Arial, Helvetica, sans-serif;
-            background-image: url('http://3.bp.blogspot.com/--kenNdb-i1M/ToU04igT7oI/AAAAAAAACyk/YdkLPkFsKRw/s1600/pokemon.png');
-        }
-        .container1 {
-          color: white;
-          margin: 20px;
-          padding: 20px;
-          justify-content: center;
-          align-items: center;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .pokemon_img{
-            height:150px;
-            margin: 0px auto;
-
-        }
-
-        .container2{
-            height:850px;
-            background-color: white;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 1px 7px 20px -6px #18092B;
-            align-items: center;
-            color: black;
-
-        }
-
-        .button_battle{
-            width: 300px;
-            height: 70px;
-            font-size: 30px;
-            margin: 60px auto;
-            background-color: #fb8603;
-            border: 4px solid  #fb8603;
-            border-radius: 10px;
-            color: rgba(255, 255, 255, 0.925);
-            font-weight: bolder;
-            box-shadow: 1px 1px 14px 0px #1a659e;
-            transition: 0.2s;
-            text-decoration:none;
-            text-align: center;
-
-        }
-        .button_battle:hover{
-            width:330px;
-            height: 80px;
-            background-color: white;
-            color: #fb8603;
-            transition: 0.2s;
-            font-size: 32px;
-
-        }
-        .text_button{
-            margin: 20px auto;
-        }
-        h2{
-            margin-top: -10px;
-            margin-bottom: 50px;
-            font-weight: lighter;
-        }
-        .container3{
-            margin-top: 100px;
-            height: 80vh;
-
-        }
-        .form{
-            height:400px;
-            width:400px;
-            background-color: white;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 1px 7px 20px -6px #18092B;
-
-        }
-        .select{
-            color: #fb8603;
-            font-size: 24px;
-            font-weight: bolder;
-            text-align: center;
-            padding: 10px;
-
-
-        }
-        .users{
-            color: black;
-            text-align: center;
-            padding: 10px;
-        }
-        .container_select{
-            display: flex;
-            flex-direction: column;
-            /*border: 2px solid black;*/
-            justify-content: center;
-            align-items: center;
-            background-color: white;
-            padding-bottom: 20px;
-            border-radius: 10px;
-
-        }
-        .gamer{
-            width: 150px;
-            height: 40px;
-            border: none;
-            background-color: rgba(137, 43, 226, 0.877);
-            border-radius: 5px;
-            margin: 2px;
-            color: white;
-            text-transform: uppercase;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-            text-decoration:none;
-
-        }
-        .gamer:hover{
-            background-color: rgba(137, 43, 226, 0.726);
-            transition: 0.2s;
-        }
-        .name_gamer{
-            margin-top: 12px;
-        }
-        .container4{
-            margin-top: 1000px;
-            background-color: white;
-        }
-        .top-menu{
-            background-color: white;
-            height:20px;
-            border: 2px solid black;
-            width:200px;
-            color: black;
-        }
-        .test{
-          width:400px;
-          color: black;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
+      body{
+        padding: 0px;
+        background: #3B4CCA;  /* fallback for old browsers */
+        background-repeat: no-repeat;
+        font-family: Arial, Helvetica, sans-serif;
+        background-image: url('https://i.pinimg.com/originals/df/4e/8b/df4e8ba28f912bf9cdf9fa0dfc196411.png');
       }
-      .title_battle{
-          color: #004e89;
-          font-size: 25px;
-          padding: 0%;
-          font-weight: bold;
-      }
-      .subtitle_battle{
-          color: black;
-          margin-top: -20px;
-      }
-      .invite{
-        color: black;
-        margin: 0 auto;
-        margin-top: 50px;
-      }
-      .error{
-        background-color: #dd1c1a;
-      }
-        </style>
-</head>
-<body>
-  <div class="container1" id="home">
-    <div class="container2">
-      <img class="pokemon_img"  src="https://team-rocket-blasting-off-again.github.io/pokebattle/assets/pokebattle-title.png" alt="pokemon">
-      {% block content %}
+      /* Create two equal columns that floats next to each other */
+      .column {
+        float: left;
+        margin: 15px;
 
-      {% endblock %}
+      }
+
+      /* Clear floats after the columns */
+      .row:after {
+        content: "";
+        margin: 15px;
+      }
+      .center{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+      }
+      .container{
+        height:700px;
+        width: 70%;
+        background-color:rgba(82,78,77,0.65);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: auto;
+      }
+
+      .button{
+        display: inline-block;
+        padding: 10px 15px;
+        font-size: 24px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+        background-color: #E86E7F;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 9px #EAC787;
+        opacity: 1;
+      }
+      .button:hover {background-color: #EAC787}
+
+      .button:active {
+        background-color: #3e8e41;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+      }
+    </style>
+  </head>
+  <body>
+    <img class="center" src="https://team-rocket-blasting-off-again.github.io/pokebattle/assets/pokebattle-title.png" alt="pokemon">
+    <div class="container">
+      <div class="ontop">
+        {% block content %}
+        {% endblock %}
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
