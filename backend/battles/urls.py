@@ -1,22 +1,11 @@
 from django.urls import path
 
-from .views import (
-    BattleInfoView,
-    HomeView,
-    InviteView,
-    Opponent,
-    SelectCreatorPokemonsView,
-    SelectOpponentPokemonsView,
-    SelectTrainersView,
-)
+from .views import HomeView, InviteView, Opponent, SelectTrainersView
 
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
-    path("battle/", BattleInfoView.as_view(), name="battles"),
-    path("creator/pokemons", SelectCreatorPokemonsView.as_view(), name="creator_pokemons"),
     path("invite/", InviteView.as_view(), name="invite"),
     path("opponent/", Opponent.as_view(), name="opponent"),
-    path("opponent/pokemons", SelectOpponentPokemonsView.as_view(), name="opponent_pokemons"),
     path("trainers", SelectTrainersView.as_view(), name="select_trainers"),
 ]
