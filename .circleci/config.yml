@@ -41,17 +41,17 @@ jobs:
             - v1-npm-cache-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
             - v1-npm-cache-{{ .Branch }}-
             - v1-npm-cache-
-      # - run:
-          # command: npm install
-      # - save_cache:
-          # key: npm-cache-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
-          # paths:
-            # - node_modules
-#
-      # - run:
-          # command: npm run build
-      # - run:
-          # command: npm run lint
+      - run:
+          command: npm install
+      - save_cache:
+          key: npm-cache-{{ .Branch }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - node_modules
+
+      - run:
+          command: npm run build
+      - run:
+          command: npm run lint
       # style check
       - run:
           command: prospector --messages-only
@@ -61,10 +61,6 @@ jobs:
       # imports check
       - run:
           command: isort **/*.py --check-only
-      - run:
-          command: black --version
-      - run:
-          command: black .
       - run:
           command: pre-commit run --all-files
           environment:

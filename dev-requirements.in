@@ -1,5 +1,5 @@
 bandit
-black
+black==21.5b1
 coverage
 django<4 # Fixed django version in order to avoid libs to install v3
 django-naomi
