@@ -13,12 +13,12 @@ class InviteView(TemplateView):
     template_name = "battles/invite.html"
 
 
-class Opponent(TemplateView):
-    template_name = "battles/opponent.html"
-
-
 class SelectTrainersView(CreateView):
     model = Battle
     template_name = "battles/select_trainers.html"
     form_class = TrainersRoundForm
     success_url = reverse_lazy("invite")
+
+
+class Opponent(TemplateView):
+    template_name = "battles/opponent.html"
