@@ -1,26 +1,14 @@
 {% extends 'battles/base.html' %}
 
 {% block content %}
-  <div class="row">
 
-    <div class="column">
-      <a href="{% url 'settled_battles' %}">
-        <button class="button">Settled Battles</button>
-      </a>
-    </div>
+  <a href="{% url 'battles' %}">
+    <button class="button"  style="margin-top: 100px;">Battles</button>
+  </a>
 
+  <br>
 
-    <div class="column">
-      <a href="{% url 'on_going_battles' %}"></a>
-        <button class="button">On going Battles</button>
-      </a>
-    </div>
-
-  </div>
-
-  <div class="row">
-    <a href="{% url 'select_opponent' %}">
-      <button class="button" style="margin-top: 500px;">New Battle</button>
-    </a>
-  </div>
+  <a href="{% url 'select_opponent' %}">
+    <button class="button" style="margin-top: 400px;">New Battle</button>
+  </a>
 {% endblock %}
