@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Battle
+from .models import Battle  # , Team
 
 
 class TrainersRoundForm(forms.ModelForm):
@@ -10,6 +10,6 @@ class TrainersRoundForm(forms.ModelForm):
 
 
 # class TeamRoundForm(forms.ModelForm):
-# class Meta:
-# model = Team???
-# field = ???
+#     class Meta:
+#         model = Team
+#         field = ("pokemons")
