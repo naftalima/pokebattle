@@ -1,8 +1,8 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, TemplateView
 
-from .forms import TrainersRoundForm  # , TeamRoundForm
-from .models import Battle  # , Team
+from .forms import TrainersRoundForm
+from .models import Battle
 
 
 class LoginView(TemplateView):
@@ -11,8 +11,6 @@ class LoginView(TemplateView):
 
 class HomeView(TemplateView):
     template_name = "battles/home.html"
-
-    # def get_context_data(self, **kwargs):
 
 
 class CreateBattleView(CreateView):
@@ -25,6 +23,7 @@ class CreateBattleView(CreateView):
         form.instance.creator = self.request.user
         return super(CreateBattleView, self).form_valid(form)
 
+    # IDEA I tried this, but I had to modify the field to not null and created migrations
     # def get_initial(self):
     #     initial  = super(CreateBattleView, self).get_initial()
     #     initial['creator'] = self.request.user.pk
@@ -32,23 +31,12 @@ class CreateBattleView(CreateView):
     #     return initial
 
 
-# TODO
-# class SelectTeamView(CreateView):
+# HACK : should be a CreateView
 class SelectTeamView(TemplateView):
-    # model = Team
     template_name = "battles/select_pokemons.html"
-    # form_class = TeamRoundForm
-    # success_url = reverse_lazy("home")
 
-    # TODO: validation in the form
-    # def form_valid(self, request):
-    # form = self.form_class(request.POST)
-    # round_battle = form.save(commit=False)
-    # valid_team = check_valid_creator_team(round_battle)
-    # if valid_team:
-    # return super().form_valid(form)
-    # message = "ERROR: you selected sum more than 600 points"
-    # return render(request, self.template_name, {"form": self.form_class, "message": message})
+    # TODO : do the validation on the form
+    # TODO : pass error message in context
 
 
 class BattlesView(ListView):  # pylint: disable=too-many-ancestors
@@ -69,10 +57,12 @@ class BattlesView(ListView):  # pylint: disable=too-many-ancestors
         return queryset
 
 
+# BUG: Crashes if run battle 1
 class BattleDetailView(DetailView):
     model = Battle
     template_name = "battles/battle_detail.html"
     context_object_name = "Battle"
 
+    # FIXME I can't get just the id in the url
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
