@@ -3,10 +3,10 @@ from django.urls import path
 from .views import (
     BattleDetailView,
     BattlesView,
+    CreateBattleView,
     HomeView,
     LoginView,
     SelectTeamView,
-    SelectTrainersView,
 )
 
 
@@ -18,7 +18,7 @@ urlpatterns = [
     path("battle/", BattlesView.as_view(), name="battles"),
     # TODO href listview to detailview
     path("battle/<int:pk>", BattleDetailView.as_view(), name="battle-detail"),
-    path("battle/new/", SelectTrainersView.as_view(), name="select_opponent"),
+    path("battle/new/", CreateBattleView.as_view(), name="select_opponent"),
     path("battle/team/new", SelectTeamView.as_view(), name="select_pokemons")
     # TODO create team
     # path(r'battle/<int:pk>/team/new', SelectTeamView.as_view(), name='select_pokemons'),

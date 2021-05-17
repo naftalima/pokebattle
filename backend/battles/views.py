@@ -15,11 +15,21 @@ class HomeView(TemplateView):
     # def get_context_data(self, **kwargs):
 
 
-class SelectTrainersView(CreateView):
+class CreateBattleView(CreateView):
     model = Battle
     template_name = "battles/select_trainers.html"
     form_class = TrainersRoundForm
     success_url = reverse_lazy("select_pokemons")
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super(CreateBattleView, self).form_valid(form)
+
+    # def get_initial(self):
+    #     initial  = super(CreateBattleView, self).get_initial()
+    #     initial['creator'] = self.request.user.pk
+    #     print(initial)
+    #     return initial
 
 
 # TODO

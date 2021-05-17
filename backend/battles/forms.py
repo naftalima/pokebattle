@@ -6,7 +6,7 @@ from .models import Battle  # , Team
 class TrainersRoundForm(forms.ModelForm):
     class Meta:
         model = Battle
-        fields = ("creator", "opponent")
+        fields = ("opponent",)
 
 
 # class TeamRoundForm(forms.ModelForm):
