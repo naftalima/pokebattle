@@ -1,11 +1,8 @@
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, DetailView, ListView, TemplateView
 
 from .forms import TrainersRoundForm  # , TeamRoundForm
 from .models import Battle  # , Team
-
-
-# from django.views.generic.detail import DetailView
 
 
 class LoginView(TemplateView):
@@ -25,6 +22,7 @@ class SelectTrainersView(CreateView):
     success_url = reverse_lazy("select_pokemons")
 
 
+# TODO
 # class SelectTeamView(CreateView):
 class SelectTeamView(TemplateView):
     # model = Team
@@ -43,11 +41,28 @@ class SelectTeamView(TemplateView):
     # return render(request, self.template_name, {"form": self.form_class, "message": message})
 
 
-# class SettledBattlesView(ListView):
-class BattlesView(TemplateView):
+class BattlesView(ListView):  # pylint: disable=too-many-ancestors
+    model = Battle
     template_name = "battles/battles.html"
+    context_object_name = "battles"
+    # TODO paginate_by = 10
+
+    def get_queryset(self):
+        queryset_filtered = Battle.objects.filter(
+            creator__exact=self.request.user
+        ) | Battle.objects.filter(opponent__exact=self.request.user)
+
+        queryset = {
+            "on_going": queryset_filtered.filter(winner__isnull=True),
+            "settled": queryset_filtered.filter(winner__isnull=False),
+        }
+        return queryset
 
 
-# TODO: battle information page
-# class BattleView(DetailView):
-# template_name = "battles/battle.html"
+class BattleDetailView(DetailView):
+    model = Battle
+    template_name = "battles/battle_detail.html"
+    context_object_name = "Battle"
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
