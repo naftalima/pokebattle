@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, TemplateView
 
 from .forms import TrainersRoundForm
-from .models import Battle
+from .models import Battle, Team
 
 
 class LoginView(TemplateView):
@@ -22,9 +22,13 @@ class CreateBattleView(CreateView):
     # TODO init no form.py
     def form_valid(self, form):
         form.instance.creator = self.request.user
-        return super(CreateBattleView, self).form_valid(form)
+        battle = form.save()
 
-    # TODO create team to oppnent and creator
+        Team.objects.create(battle=battle, trainer=form.instance.creator)
+        Team.objects.create(battle=battle, trainer=form.instance.opponent)
+
+        response = super(CreateBattleView, self).form_valid(form)
+        return response
 
 
 # HACK : should be a UpdateView
