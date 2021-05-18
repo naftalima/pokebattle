@@ -13,7 +13,7 @@
     {% for battle in battles.on_going %}
       <tr>
         <td class="button">
-        <a href="{% url 'select_pokemons' %}">
+        <a href="{% url 'select_pokemons' battle.id %}">
           {{battle.id}}
         </a>
         </td>
