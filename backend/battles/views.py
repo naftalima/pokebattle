@@ -19,19 +19,15 @@ class CreateBattleView(CreateView):
     form_class = TrainersRoundForm
     success_url = reverse_lazy("select_pokemons")
 
+    # TODO init no form.py
     def form_valid(self, form):
         form.instance.creator = self.request.user
         return super(CreateBattleView, self).form_valid(form)
 
-    # IDEA I tried this, but I had to modify the field to not null and created migrations
-    # def get_initial(self):
-    #     initial  = super(CreateBattleView, self).get_initial()
-    #     initial['creator'] = self.request.user.pk
-    #     print(initial)
-    #     return initial
+    # TODO create team to oppnent and creator
 
 
-# HACK : should be a CreateView
+# HACK : should be a UpdateView
 class SelectTeamView(TemplateView):
     template_name = "battles/select_pokemons.html"
 
@@ -62,7 +58,3 @@ class BattleDetailView(DetailView):
     model = Battle
     template_name = "battles/battle_detail.html"
     context_object_name = "Battle"
-
-    # FIXME I can't get just the id in the url
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
