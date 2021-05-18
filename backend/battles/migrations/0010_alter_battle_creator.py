@@ -19,12 +19,3 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='battles_as_creator', to='users.user'),
         ),
     ]
-
-
-# You are trying to change the nullable field 'creator' on battle to non-nullable without a default; we can't do that (the database needs something to populate existing rows).
-# Please select a fix:
-#  1) Provide a one-off default now (will be set on all existing rows with a null value for this column)
-#  2) Ignore for now, and let me handle existing rows with NULL myself (e.g. because you added a RunPython or RunSQL operation to handle NULL values in a previous data migration)
-#  3) Quit, and let me add a default in models.py
-# Select an option: 2
-#
