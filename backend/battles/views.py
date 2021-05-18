@@ -19,8 +19,8 @@ class CreateBattleView(CreateView):
     form_class = TrainersRoundForm
     success_url = reverse_lazy("select_pokemons")
 
-    # TODO init no form.py
     def form_valid(self, form):
+        # TODO init in form
         form.instance.creator = self.request.user
         battle = form.save()
 
