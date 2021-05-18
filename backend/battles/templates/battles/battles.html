@@ -13,7 +13,7 @@
     {% for battle in battles.on_going %}
       <tr>
         <td class="button">
-        <a href="">
+        <a href="{% url 'select_pokemons' %}">
           {{battle.id}}
         </a>
         </td>
@@ -30,10 +30,7 @@
     {% for battle in battles.settled %}
       <tr>
         <td class="button">
-          <!-- <a href="{% url 'battles:battle-detail' battle.pk %"> -->
-          <!-- <a href="{{ battle.id.get_absolute_url }}"></a> -->
-          <!-- <a href="{% battle.get_absolute_url %"> -->
-          <a href="{% url 'battle-detail' battle.id.pk %">
+          <a href="{% url 'battle-detail' battle.id %}">
             {{battle.id}}
           </a>
         </td>
