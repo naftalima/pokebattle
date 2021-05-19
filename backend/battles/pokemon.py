@@ -48,8 +48,8 @@ def sum_points(pokemons):
     return points
 
 
-def check_valid_team(round_battle, trainer):
-    pokemons_id = [getattr(round_battle, trainer + "_pokemon_" + str(i)) for i in range(1, 4)]
+def check_valid_team(round_battle):
+    pokemons_id = [getattr(round_battle, "pokemon_" + str(i)) for i in range(1, 4)]
     pokemons = [get_pokemon(pokemon) for pokemon in pokemons_id]
     is_valid = sum_points(pokemons) <= 600
     return is_valid
