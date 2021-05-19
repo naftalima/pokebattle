@@ -7,7 +7,7 @@ import requests
 from pokemons.models import Pokemon
 
 
-def fetch_pokemon(poke_id):
+def get_pokemon_api(poke_id):
     url = urljoin(settings.POKE_API_URL, poke_id)
     response = requests.get(url)
     data = response.json()
@@ -36,7 +36,7 @@ def save_pokemon(pokemon):
 def get_pokemon(poke_id):
     pokemon = Pokemon.objects.get(poke_id=poke_id)
     if not pokemon:
-        fetch_pokemon(poke_id)
+        get_pokemon_api(poke_id)
         return Pokemon.objects.get(poke_id=poke_id)
     return pokemon
 
