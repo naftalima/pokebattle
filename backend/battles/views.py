@@ -15,9 +15,9 @@ class HomeView(TemplateView):
 
 class CreateBattleView(CreateView):
     model = Battle
-    template_name = "battles/select_trainers.html"
+    template_name = "battles/battle-opponent.html"
     form_class = BattleForm
-    success_url = reverse_lazy("select_pokemons")
+    success_url = reverse_lazy("battle-team-pokemons")
 
     def form_valid(self, form):
         # TODO init in form
@@ -33,7 +33,7 @@ class CreateBattleView(CreateView):
 
 # HACK : should be a UpdateView
 class SelectTeamView(TemplateView):
-    template_name = "battles/select_pokemons.html"
+    template_name = "battles/battle-team-pokemons.html"
 
     # TODO : do the validation on the form
     # TODO : pass error message in context

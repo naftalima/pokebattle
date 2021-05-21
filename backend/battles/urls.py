@@ -15,6 +15,6 @@ urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("battle/", BattlesView.as_view(), name="battles"),
     path("battle/<int:pk>", BattleDetailView.as_view(), name="battle-detail"),
-    path("battle/new/", CreateBattleView.as_view(), name="select_opponent"),
-    path("battle/<int:pk>/team/new", SelectTeamView.as_view(), name="select_pokemons"),
+    path("battle/new/", CreateBattleView.as_view(), name="battle-opponent"),
+    path("battle/<int:pk>/team/new", SelectTeamView.as_view(), name="battle-team-pokemons"),
 ]
