@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, TemplateView
 
@@ -47,8 +48,8 @@ class BattlesView(ListView):  # pylint: disable=too-many-ancestors
 
     def get_queryset(self):
         queryset_filtered = Battle.objects.filter(
-            creator__exact=self.request.user
-        ) | Battle.objects.filter(opponent__exact=self.request.user)
+            Q(creator__exact=self.request.user) | Q(opponent__exact=self.request.user)
+        )
 
         queryset = {
             "on_going": queryset_filtered.filter(winner__isnull=True),
