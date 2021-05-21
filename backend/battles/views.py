@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, TemplateView
 
-from .forms import TrainersRoundForm
+from .forms import BattleForm
 from .models import Battle, Team
 
 
@@ -16,7 +16,7 @@ class HomeView(TemplateView):
 class CreateBattleView(CreateView):
     model = Battle
     template_name = "battles/select_trainers.html"
-    form_class = TrainersRoundForm
+    form_class = BattleForm
     success_url = reverse_lazy("select_pokemons")
 
     def form_valid(self, form):

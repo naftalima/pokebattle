@@ -3,7 +3,7 @@ from django import forms
 from .models import Battle
 
 
-class TrainersRoundForm(forms.ModelForm):
+class BattleForm(forms.ModelForm):
     class Meta:
         model = Battle
         fields = ("opponent",)
