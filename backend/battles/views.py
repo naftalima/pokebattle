@@ -61,4 +61,4 @@ class BattlesView(ListView):  # pylint: disable=too-many-ancestors
 class BattleDetailView(DetailView):
     model = Battle
     template_name = "battles/battle_detail.html"
-    context_object_name = "Battle"
+    context_object_name = "battle"
