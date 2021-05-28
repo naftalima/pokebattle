@@ -22,7 +22,7 @@ class Team(models.Model):
 class TeamPokemon(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     pokemon = models.ForeignKey(Pokemon, on_delete=models.CASCADE, related_name="pokemons")
-    order = models.PositiveIntegerField()
+    order = models.PositiveIntegerField(null=True)
 
     class Meta:
         ordering = ["order"]
