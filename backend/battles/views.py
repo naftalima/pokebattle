@@ -40,7 +40,7 @@ class SelectTeamView(TemplateView):
     # TODO : pass error message in context
 
 
-class BattlesView(ListView):  # pylint: disable=too-many-ancestors
+class BattleListView(ListView):  # pylint: disable=too-many-ancestors
     model = Battle
     template_name = "battles/battles.html"
     context_object_name = "battles"
