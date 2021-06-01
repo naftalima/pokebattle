@@ -1,0 +1,45 @@
+{% extends 'battles/base.html' %}
+
+{% block content %}
+
+{% comment %}
+  TODO
+{% endcomment %}
+
+  <h1 class="title">Battles</h1>
+
+  <h2 class="title">On going Battles</h2>
+  <table>
+    {% for battle in battles.on_going %}
+      <tr>
+        <td class="button">
+        <a href="{% url 'battle-team-pokemons' battle.id %}">
+          {{battle.id}}
+        </a>
+        </td>
+        <td>{{battle.creator}}</td>
+        <td>{{battle.opponent}}</td>
+      </tr>
+    {% empty %}
+        <li>Sorry, no battles in this list.</li>
+    {% endfor %}
+  </table>
+
+  <h2 class="title">Settled Battles</h2>
+  <table>
+    {% for battle in battles.settled %}
+      <tr>
+        <td class="button">
+          <a href="{% url 'battle-detail' battle.id %}">
+            {{battle.id}}
+          </a>
+        </td>
+        <td>{{battle.creator}}</td>
+        <td>{{battle.opponent}}</td>
+      </tr>
+    {% empty %}
+        <li>Sorry, no battles in this list.</li>
+    {% endfor %}
+  </table>
+
+{% endblock %}

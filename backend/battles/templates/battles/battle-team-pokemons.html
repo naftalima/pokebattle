@@ -1,0 +1,16 @@
+{% extends 'battles/base.html' %}
+
+{% block content %}
+
+  <h1 class="title">Choose your Team!</h1>
+
+  <form method="POST" class="battle-form">{% csrf_token %}
+    {{ form.as_p }}
+    <button class="button">Save</button>
+  </form>
+
+  <a href="{% url 'home' %}">
+    <button class="button"  style="margin-top: 350px;">Next</button>
+  </a>
+{% endblock %}
+
