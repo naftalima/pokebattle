@@ -40,20 +40,14 @@ class TeamForm(forms.ModelForm):
         cleaned_data = super().clean()
         return cleaned_data
 
-    def save(self, commit=True):
-        data = self.clean()
-
+    def save(self):  # pylint: disable=arguments-differ
+        data = self.cleaned_data
         team = self.instance
 
-        team.pokemons.add(data["pokemon_1"])
-        TeamPokemon.objects.filter(team=team, pokemon=data["pokemon_1"]).update(order=1)
+        team.pokemons.clear()
 
-        team.pokemons.add(data["pokemon_2"])
-        TeamPokemon.objects.filter(team=team, pokemon=data["pokemon_2"]).update(order=2)
+        TeamPokemon.objects.create(team=team, pokemon=data["pokemon_1"], order=1)
+        TeamPokemon.objects.create(team=team, pokemon=data["pokemon_2"], order=2)
+        TeamPokemon.objects.create(team=team, pokemon=data["pokemon_3"], order=3)
 
-        team.pokemons.add(data["pokemon_3"])
-        TeamPokemon.objects.filter(team=team, pokemon=data["pokemon_3"]).update(order=3)
-
-        instance = super().save(commit=False)
-        instance.some_flag = True
-        return instance
+        return team
