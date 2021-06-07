@@ -55,11 +55,16 @@ class BattlesView(ListView):  # pylint: disable=too-many-ancestors
             Q(creator__exact=self.request.user) | Q(opponent__exact=self.request.user)
         )
 
-        queryset = {
-            "on_going": queryset_filtered.filter(winner__isnull=True),
-            "settled": queryset_filtered.filter(winner__isnull=False),
-        }
-        return queryset
+        return queryset_filtered
+
+    def get_context_data(self):  # pylint: disable=arguments-differ
+        context = super().get_context_data()
+        queryset_filtered = self.get_queryset()
+
+        context["on_going"] = queryset_filtered.filter(winner__isnull=True)
+        context["settled"] = queryset_filtered.filter(winner__isnull=False)
+
+        return context
 
 
 # BUG: Crashes if run battle 1
