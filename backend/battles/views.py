@@ -21,12 +21,14 @@ class CreateBattleView(CreateView):
     form_class = BattleForm
     # success_url = reverse_lazy("battle-team-pokemons")
 
+    def get_initial(self):
+        return {"user_id": self.request.user.id}
+
     def form_valid(self, form):
         # TODO init in form
         form.instance.creator = self.request.user
         battle = form.save()
 
-        # BUG can't challenged yourself
         team_creator = Team.objects.create(battle=battle, trainer=form.instance.creator)
         Team.objects.create(battle=battle, trainer=form.instance.opponent)
 
