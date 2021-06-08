@@ -19,29 +19,23 @@ class CreateBattleView(CreateView):
     model = Battle
     template_name = "battles/battle-opponent.html"
     form_class = BattleForm
-    # success_url = reverse_lazy("battle-team-pokemons")
 
     def form_valid(self, form):
         # TODO init in form
         form.instance.creator = self.request.user
         battle = form.save()
 
-        # BUG can't challenged yourself
         team_creator = Team.objects.create(battle=battle, trainer=form.instance.creator)
         Team.objects.create(battle=battle, trainer=form.instance.opponent)
 
         return HttpResponseRedirect(reverse_lazy("battle-team-pokemons", args=(team_creator.id,)))
 
 
-# HACK : should be a UpdateView
 class SelectTeamView(UpdateView):
     model = Team
     template_name = "battles/battle-team-pokemons.html"
     form_class = TeamForm
     success_url = reverse_lazy("battles")
-
-    # TODO : do the validation on the form
-    # TODO : pass error message in context
 
 
 class BattlesView(ListView):  # pylint: disable=too-many-ancestors
