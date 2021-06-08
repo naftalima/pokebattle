@@ -1,17 +1,18 @@
-from django import forms
+from django.forms import ModelChoiceField, ModelForm, ValidationError
 
 from pokemons.models import Pokemon
 
 from .models import Battle, Team, TeamPokemon
+from .pokemon import check_valid_team
 
 
-class BattleForm(forms.ModelForm):
+class BattleForm(ModelForm):
     class Meta:
         model = Battle
         fields = ("opponent",)
 
 
-class TeamForm(forms.ModelForm):
+class TeamForm(ModelForm):
     class Meta:
         model = Team
         fields = [
@@ -20,17 +21,17 @@ class TeamForm(forms.ModelForm):
             "pokemon_3",
         ]
 
-    pokemon_1 = forms.ModelChoiceField(
+    pokemon_1 = ModelChoiceField(
         label="Pokemon 1",
         queryset=Pokemon.objects.all(),
         required=True,
     )
-    pokemon_2 = forms.ModelChoiceField(
+    pokemon_2 = ModelChoiceField(
         label="Pokemon 2",
         queryset=Pokemon.objects.all(),
         required=True,
     )
-    pokemon_3 = forms.ModelChoiceField(
+    pokemon_3 = ModelChoiceField(
         label="Pokemon 3",
         queryset=Pokemon.objects.all(),
         required=True,
@@ -38,6 +39,16 @@ class TeamForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+
+        pokemons = [self.cleaned_data["pokemon_" + str(i)] for i in range(1, 4)]
+
+        is_team_valid = check_valid_team(pokemons)
+
+        if not is_team_valid:
+            raise ValidationError(
+                "ERROR: Your pokemons sum more than 600 points." "Please select other pokemons"
+            )
+
         return cleaned_data
 
     def save(self):  # pylint: disable=arguments-differ
