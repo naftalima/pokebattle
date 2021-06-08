@@ -3,8 +3,8 @@ from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, TemplateView, UpdateView
 
-from .forms import BattleForm, TeamForm
-from .models import Battle, Team
+from battles.forms import BattleForm, TeamForm
+from battles.models import Battle, Team
 
 
 class LoginView(TemplateView):
@@ -19,7 +19,6 @@ class CreateBattleView(CreateView):
     model = Battle
     template_name = "battles/battle-opponent.html"
     form_class = BattleForm
-    # success_url = reverse_lazy("battle-team-pokemons")
 
     def get_initial(self):
         return {"user_id": self.request.user.id}
@@ -35,15 +34,11 @@ class CreateBattleView(CreateView):
         return HttpResponseRedirect(reverse_lazy("battle-team-pokemons", args=(team_creator.id,)))
 
 
-# HACK : should be a UpdateView
 class SelectTeamView(UpdateView):
     model = Team
     template_name = "battles/battle-team-pokemons.html"
     form_class = TeamForm
     success_url = reverse_lazy("battles")
-
-    # TODO : do the validation on the form
-    # TODO : pass error message in context
 
 
 class BattlesView(ListView):  # pylint: disable=too-many-ancestors
