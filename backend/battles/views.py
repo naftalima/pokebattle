@@ -20,6 +20,9 @@ class CreateBattleView(CreateView):
     template_name = "battles/battle-opponent.html"
     form_class = BattleForm
 
+    def get_initial(self):
+        return {"user_id": self.request.user.id}
+
     def form_valid(self, form):
         # TODO init in form
         form.instance.creator = self.request.user
