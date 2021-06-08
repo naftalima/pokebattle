@@ -51,7 +51,7 @@ class BattlesView(ListView):  # pylint: disable=too-many-ancestors
 
         return queryset_filtered
 
-    def get_context_data(self):  # pylint: disable=arguments-differ
+    def get_context_data(self, *args, **kwargs):
         context = super().get_context_data()
         queryset_filtered = self.get_queryset()
 
