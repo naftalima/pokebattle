@@ -38,7 +38,7 @@ class SelectTeamView(UpdateView):
     success_url = reverse_lazy("battles")
 
 
-class BattlesView(ListView):  # pylint: disable=too-many-ancestors
+class BattlesView(ListView):
     model = Battle
     template_name = "battles/battles.html"
     context_object_name = "battles"
@@ -51,7 +51,7 @@ class BattlesView(ListView):  # pylint: disable=too-many-ancestors
 
         return queryset_filtered
 
-    def get_context_data(self):  # pylint: disable=arguments-differ
+    def get_context_data(self, *args, **kwargs):
         context = super().get_context_data()
         queryset_filtered = self.get_queryset()
 

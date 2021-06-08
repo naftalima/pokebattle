@@ -50,7 +50,7 @@ class TeamForm(ModelForm):
 
         return cleaned_data
 
-    def save(self):  # pylint: disable=arguments-differ
+    def save(self, commit=True):
         data = self.cleaned_data
         team = self.instance
 

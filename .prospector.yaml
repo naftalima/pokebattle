@@ -33,8 +33,10 @@ pylint:
     - invalid-name
     - no-self-use
     - no-member
+    - too-many-ancestors
   options:
     max-line-length: 100
+    ignored-argument-names: arg|args|kwargs
 
 dodgy:
   run: true
