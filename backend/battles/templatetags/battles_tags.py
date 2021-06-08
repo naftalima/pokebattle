@@ -1,4 +1,3 @@
-# custom_tags.py
 from django import template
 
 from battles.models import Battle, Team
