@@ -1,9 +1,8 @@
 from django.forms import ModelChoiceField, ModelForm, ValidationError
 
+from battles.models import Battle, Team, TeamPokemon
+from battles.services.logic_team_pokemon import check_valid_team
 from pokemons.models import Pokemon
-
-from .models import Battle, Team, TeamPokemon
-from .services.logic_team_pokemon import check_valid_team
 
 
 class BattleForm(ModelForm):

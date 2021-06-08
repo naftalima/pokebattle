@@ -3,8 +3,8 @@ from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, TemplateView, UpdateView
 
-from .forms import BattleForm, TeamForm
-from .models import Battle, Team
+from battles.forms import BattleForm, TeamForm
+from battles.models import Battle, Team
 
 
 class LoginView(TemplateView):

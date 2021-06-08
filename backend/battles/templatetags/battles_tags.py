@@ -1,7 +1,7 @@
 # custom_tags.py
 from django import template
 
-from ..models import Battle, Team
+from battles.models import Battle, Team
 
 
 register = template.Library()
