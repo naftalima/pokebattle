@@ -5,6 +5,7 @@ from django.views.generic import CreateView, DetailView, ListView, TemplateView,
 
 from battles.forms import BattleForm, TeamForm
 from battles.models import Battle, Team
+from battles.services.logic_battle import set_winner
 
 
 class LoginView(TemplateView):
@@ -38,7 +39,17 @@ class SelectTeamView(UpdateView):
     model = Team
     template_name = "battles/battle-team-pokemons.html"
     form_class = TeamForm
-    success_url = reverse_lazy("battles")
+
+    def form_valid(self, form):
+        battle = self.get_object().battle
+        user = self.request.user
+
+        form.save()
+
+        if user != battle.creator:
+            set_winner(battle)
+            return HttpResponseRedirect(reverse_lazy("battle-detail", args=(battle.id,)))
+        return HttpResponseRedirect(reverse_lazy("battles"))
 
 
 class BattleListView(ListView):
