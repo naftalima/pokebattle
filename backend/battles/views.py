@@ -41,7 +41,7 @@ class SelectTeamView(UpdateView):
     success_url = reverse_lazy("battles")
 
 
-class BattlesView(ListView):
+class BattleListView(ListView):
     model = Battle
     template_name = "battles/battles.html"
     context_object_name = "battles"
