@@ -1,8 +1,6 @@
-def run_battle(creator_pkn, opponent_pkn):
-    round_score = {"creator": 0, "opponent": 0}
-
+def run_turns(round_score, creator_pkn, opponent_pkn):
     creator_hit = creator_pkn.attack > opponent_pkn.defense
-    opponent_miss = creator_pkn.defense > opponent_pkn.attack
+    opponent_hit = opponent_pkn.attack > creator_pkn.defense
 
     # First turn: The creator's pokemon attacks
     if creator_hit:
@@ -11,19 +9,32 @@ def run_battle(creator_pkn, opponent_pkn):
         round_score["opponent"] += 1
 
     # Second turn: The opponents's pokemon attacks
-    if opponent_miss:
-        round_score["creator"] += 1
-    else:
+    if opponent_hit:
         round_score["opponent"] += 1
+    else:
+        round_score["creator"] += 1
 
-    #  In case of draw
-    draw = round_score["creator"] == round_score["opponent"]
+    return round_score
+
+
+def break_a_tie(round_score, creator_pkn, opponent_pkn):
     different_pokemon = creator_pkn.name != opponent_pkn.name
-    if draw and different_pokemon:
+    if different_pokemon:
         if creator_pkn.hp > opponent_pkn.hp:
             round_score["creator"] += 1
         else:
             round_score["opponent"] += 1
+    return round_score
+
+
+def run_battle(creator_pkn, opponent_pkn):
+    round_score = {"creator": 0, "opponent": 0}
+
+    round_score = run_turns(round_score, creator_pkn, opponent_pkn)
+
+    draw = round_score["creator"] == round_score["opponent"]
+    if draw:
+        round_score = break_a_tie(round_score, creator_pkn, opponent_pkn)
 
     creator_scored_more = round_score["creator"] > round_score["opponent"]
 
@@ -48,20 +59,23 @@ def get_score(pokemons):
     return battle_score
 
 
-def get_teams(battle):
+def get_team_pokemons(battle):
     teams = battle.teams.all()
 
     creator_team = teams.get(trainer=battle.creator)
     opponent_team = teams.get(trainer=battle.opponent)
 
-    teams = {"creator": creator_team.pokemons.all(), "opponent": opponent_team.pokemons.all()}
-    return teams
+    team_pokemons = {
+        "creator": creator_team.pokemons.all(),
+        "opponent": opponent_team.pokemons.all(),
+    }
+    return team_pokemons
 
 
 def get_pokemons(battle):
-    teams = get_teams(battle)
+    pokemon_team = get_team_pokemons(battle)
 
-    pokemons = {"creator": teams["creator"], "opponent": teams["opponent"]}
+    pokemons = {"creator": pokemon_team["creator"], "opponent": pokemon_team["opponent"]}
 
     return pokemons
 
