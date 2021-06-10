@@ -59,24 +59,16 @@ def get_score(pokemons):
     return battle_score
 
 
-def get_team_pokemons(battle):
+def get_pokemons(battle):
     teams = battle.teams.all()
 
     creator_team = teams.get(trainer=battle.creator)
     opponent_team = teams.get(trainer=battle.opponent)
 
-    team_pokemons = {
+    pokemons = {
         "creator": creator_team.pokemons.all(),
         "opponent": opponent_team.pokemons.all(),
     }
-    return team_pokemons
-
-
-def get_pokemons(battle):
-    pokemon_team = get_team_pokemons(battle)
-
-    pokemons = {"creator": pokemon_team["creator"], "opponent": pokemon_team["opponent"]}
-
     return pokemons
 
 
