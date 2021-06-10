@@ -80,9 +80,3 @@ def get_winner(battle):
     if creator_won:
         return battle.creator
     return battle.opponent
-
-
-def set_winner(battle):
-    winner = get_winner(battle)
-    battle.winner = winner
-    battle.save()

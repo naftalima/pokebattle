@@ -12,6 +12,10 @@ class Battle(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
+    def set_winner(self, winner):
+        self.winner = winner
+        self.save()
+
 
 class Team(models.Model):
     trainer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="teams")
