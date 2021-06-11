@@ -1,3 +1,6 @@
+from battles.models import TeamPokemon  # pylint: disable=import-error
+
+
 def run_turns(round_score, creator_pkn, opponent_pkn):
     creator_hit = creator_pkn.attack > opponent_pkn.defense
     opponent_hit = opponent_pkn.attack > creator_pkn.defense
@@ -65,9 +68,12 @@ def get_pokemons(battle):
     creator_team = teams.get(trainer=battle.creator)
     opponent_team = teams.get(trainer=battle.opponent)
 
+    creator_team_pokemon = TeamPokemon.objects.filter(team=creator_team)
+    opponent_team_pokemon = TeamPokemon.objects.filter(team=opponent_team)
+
     pokemons = {
-        "creator": creator_team.pokemons.all(),
-        "opponent": opponent_team.pokemons.all(),
+        "creator": [pokemon.pokemon for pokemon in creator_team_pokemon],
+        "opponent": [pokemon.pokemon for pokemon in opponent_team_pokemon],
     }
     return pokemons
 
