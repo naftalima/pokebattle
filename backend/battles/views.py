@@ -5,6 +5,7 @@ from django.views.generic import CreateView, DetailView, ListView, TemplateView,
 
 from battles.forms import BattleForm, TeamForm
 from battles.models import Battle, Team
+from battles.services.email import email_battle_result
 from battles.services.logic_battle import get_winner
 
 
@@ -52,6 +53,7 @@ class SelectTeamView(UpdateView):
         if creator_team_has_pokemons and opponent_team_has_pokemons:
             winner = get_winner(battle)
             battle.set_winner(winner)
+            email_battle_result(battle)
             return HttpResponseRedirect(reverse_lazy("battle-detail", args=(battle.id,)))
         return HttpResponseRedirect(reverse_lazy("battles"))
 
