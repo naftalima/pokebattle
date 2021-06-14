@@ -30,9 +30,9 @@ CELERY_TASK_ALWAYS_EAGER = True
 CELERY_TASK_EAGER_PROPAGATES = True
 
 # Email
-INSTALLED_APPS += ("naomi",)
-EMAIL_BACKEND = "naomi.mail.backends.naomi.NaomiBackend"
-EMAIL_FILE_PATH = base_dir_join("tmp_email")
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "127.0.0.1"
+EMAIL_PORT = 1025
 
 # Logging
 LOGGING = {
