@@ -42,11 +42,14 @@ class SelectTeamView(UpdateView):
 
     def form_valid(self, form):
         battle = self.get_object().battle
-        user = self.request.user
 
         form.save()
 
-        if user != battle.creator:
+        creator_team_has_pokemons = battle.teams.all().get(trainer=battle.creator).pokemons.exists()
+        opponent_team_has_pokemons = (
+            battle.teams.all().get(trainer=battle.opponent).pokemons.exists()
+        )
+        if creator_team_has_pokemons and opponent_team_has_pokemons:
             winner = get_winner(battle)
             battle.set_winner(winner)
             return HttpResponseRedirect(reverse_lazy("battle-detail", args=(battle.id,)))
