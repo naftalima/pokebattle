@@ -1,11 +1,52 @@
 {% extends 'battles/base.html' %}
+{% load battles_tags %}
 
 {% block content %}
 
   <h1 class="title">Battle #{{battle.id}}</h1>
   <p>Created at {{battle.created_at}}</p>
 
-  <p>Creator: {{battle.creator}} </p>
-  <p>Opponent: {{battle.opponent}} </p>
+  <p>{{battle.creator}} challenged {{battle.opponent}} </p>
+
+
+  <h3 class="title">{{battle.creator}}'s team was:</h3>
+  <table>
+    <tr>
+      {% for pokemon in creator_pokemons %}
+      <td style="padding: 0 6px; width: fit-content;">
+        <div style="display: block;">
+          <div style="display: flex; justify-content: center;">
+            <img src="{{pokemon.img_url}}" height="90px">
+          </div>
+          <div style="text-align: center;">
+            {{pokemon.name}}
+          </div>
+        </div>
+      </td>
+      {% endfor %}
+    </tr>
+  </table>
+
+
+  <h3 class="title">{{battle.opponent}}'s team was:</h3>
+  <table>
+    <tr>
+      {% for pokemon in opponent_pokemons %}
+      <td style="padding: 0 6px; width: fit-content;">
+        <div style="display: block;">
+          <div style="display: flex; justify-content: center;">
+            <img src="{{pokemon.img_url}}" height="90px">
+          </div>
+          <div style="text-align: center;">
+            {{pokemon.name}}
+          </div>
+        </div>
+      </td>
+      {% endfor %}
+    </tr>
+  </table>
+
+  <h1 class="title">And the winner is <b>{{battle.winner}}</b>!!!</h1>
+
 
 {% endblock %}

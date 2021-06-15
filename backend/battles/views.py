@@ -6,7 +6,7 @@ from django.views.generic import CreateView, DetailView, ListView, TemplateView,
 from battles.forms import BattleForm, TeamForm
 from battles.models import Battle, Team
 from battles.services.email import email_battle_result
-from battles.services.logic_battle import get_winner
+from battles.services.logic_battle import get_pokemons, get_winner
 
 
 class LoginView(TemplateView):
@@ -86,3 +86,12 @@ class BattleDetailView(DetailView):
     model = Battle
     template_name = "battles/battle_detail.html"
     context_object_name = "battle"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data()
+
+        pokemons = get_pokemons(context["battle"])
+        context["creator_pokemons"] = pokemons["creator"]
+        context["opponent_pokemons"] = pokemons["opponent"]
+
+        return context
