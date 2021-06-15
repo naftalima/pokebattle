@@ -3,6 +3,10 @@
 
 {% block content %}
 
+  <a href="{% url 'home' %}">
+    <button class="button" style="margin-top: 25px;">Home</button>
+  </a>
+
   <h1 class="title"> Battles</h1>
   <p> total de {% get_total_battles %}.</p>
 
@@ -39,4 +43,4 @@
         <li>Sorry, no battles in this list.</li>
     {% endfor %}
   </table>
-  {% endblock %}
+{% endblock %}
