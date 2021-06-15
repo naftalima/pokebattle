@@ -13,7 +13,7 @@
             <td style="padding: 0 6px; width: fit-content;">
                 <div style="display: block;">
                 <div style="display: flex; justify-content: center;">
-                    <img src="{{creator_pokemon.img_url}}" height="90px"></img>
+                    <img src="{{creator_pokemon.img_url}}" height="90px">
                 </div>
                 <div style="text-align: center;">{{creator_pokemon.name}}</div>
                 </div>
@@ -24,7 +24,7 @@
         </div>
     </p>
 
-        <p>
+    <p>
         <div>{{opponent}}'s team was:</div>
         <table>
         <tr>
@@ -32,7 +32,7 @@
             <td style="padding: 0 6px; width: fit-content;">
                 <div style="display: block;">
                 <div style="display: flex; justify-content: center;">
-                    <img src="{{opponent_pokemon.img_url}}" height="90px"></img>
+                    <img src="{{opponent_pokemon.img_url}}" height="90px">
                 </div>
                 <div style="text-align: center;">{{opponent_pokemon.name}}</div>
                 </div>
