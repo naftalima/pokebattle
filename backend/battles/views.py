@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, TemplateView, UpdateView
 
 from battles.forms import BattleForm, TeamForm
-from battles.models import Battle, Team
+from battles.models import Battle, Team, TeamPokemon
 from battles.services.logic_battle import get_winner
 
 
@@ -45,11 +45,14 @@ class SelectTeamView(UpdateView):
 
         form.save()
 
-        creator_team_has_pokemons = battle.teams.all().get(trainer=battle.creator).pokemons.exists()
-        opponent_team_has_pokemons = (
-            battle.teams.all().get(trainer=battle.opponent).pokemons.exists()
-        )
-        if creator_team_has_pokemons and opponent_team_has_pokemons:
+        creator_team_has_pokemons = TeamPokemon.objects.filter(
+            team__trainer=battle.creator, team__battle=battle
+        ).exists()
+        opponent_team_has_pokemons = TeamPokemon.objects.filter(
+            team__trainer=battle.opponent, team__battle=battle
+        ).exists()
+        all_teams_has_pokemons = creator_team_has_pokemons and opponent_team_has_pokemons
+        if all_teams_has_pokemons:
             winner = get_winner(battle)
             battle.set_winner(winner)
             return HttpResponseRedirect(reverse_lazy("battle-detail", args=(battle.id,)))
