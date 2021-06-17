@@ -7,8 +7,9 @@ register = template.Library()
 
 
 @register.simple_tag()
-def total_battles():
-    return Battle.objects.count()
+def get_total_battles():
+    total_battles = Battle.objects.count()
+    return total_battles
 
 
 @register.filter()
