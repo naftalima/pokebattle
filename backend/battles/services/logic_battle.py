@@ -65,10 +65,10 @@ def get_score(pokemons):
 def get_pokemons(battle):
     creator_team_pokemon = TeamPokemon.objects.filter(
         team__trainer=battle.creator, team__battle=battle
-    )
+    ).select_related("pokemon")
     opponent_team_pokemon = TeamPokemon.objects.filter(
         team__trainer=battle.opponent, team__battle=battle
-    )
+    ).select_related("pokemon")
 
     pokemons = {
         "creator": [pokemon.pokemon for pokemon in creator_team_pokemon],
