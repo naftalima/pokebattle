@@ -4,7 +4,7 @@
 {% block content %}
 
   <a href="{% url 'home' %}">
-    <button class="button" style="margin-top: 25px;">Home</button>
+    <button class="button">Home</button>
   </a>
 
   <h1 class="title"> Battles</h1>
@@ -14,7 +14,7 @@
   <table>
     {% for battle in on_going.all %}
       <tr>
-        <td class="button">
+        <td class="battle-id-btn">
         <a href="{% url 'battle-team-pokemons' battle|get_team:user %}">
           {{battle.id}}
         </a>
@@ -31,7 +31,7 @@
   <table>
     {% for battle in settled.all %}
       <tr>
-        <td class="button">
+        <td class="battle-id-btn">
           <a href="{% url 'battle-detail' battle.id %}">
             {{battle.id}}
           </a>

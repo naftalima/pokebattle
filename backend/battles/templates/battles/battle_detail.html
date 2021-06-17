@@ -13,12 +13,12 @@
   <table>
     <tr>
       {% for pokemon in creator_pokemons %}
-      <td style="padding: 0 6px; width: fit-content;">
-        <div style="display: block;">
-          <div style="display: flex; justify-content: center;">
+      <td class="battle-detail-td">
+        <div class="battle-detail-block">
+          <div class="battle-datail-display">
             <img src="{{pokemon.img_url}}" height="90px">
           </div>
-          <div style="text-align: center;">
+          <div class="battle-detail-pokemon-name">
             {{pokemon.name}}
           </div>
         </div>
@@ -32,12 +32,12 @@
   <table>
     <tr>
       {% for pokemon in opponent_pokemons %}
-      <td style="padding: 0 6px; width: fit-content;">
-        <div style="display: block;">
-          <div style="display: flex; justify-content: center;">
+      <td class="battle-detail-td">
+        <div class="battle-detail-block">
+          <div class="battle-datail-display">
             <img src="{{pokemon.img_url}}" height="90px">
           </div>
-          <div style="text-align: center;">
+          <div class="battle-detail-pokemon-name">
             {{pokemon.name}}
           </div>
         </div>
