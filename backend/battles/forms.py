@@ -1,8 +1,8 @@
-from django.forms import ModelChoiceField, ModelForm, ValidationError
+from django.forms import IntegerField, ModelForm, ValidationError
 
 from battles.models import Battle, Team, TeamPokemon
+from battles.services.api_integration import get_or_create_pokemon
 from battles.services.logic_team_pokemon import check_valid_team
-from pokemons.models import Pokemon
 from users.models import User
 
 
@@ -25,24 +25,25 @@ class TeamForm(ModelForm):
             "pokemon_3",
         ]
 
-    pokemon_1 = ModelChoiceField(
+    pokemon_1 = IntegerField(
         label="Pokemon 1",
-        queryset=Pokemon.objects.all(),
         required=True,
     )
-    pokemon_2 = ModelChoiceField(
+    pokemon_2 = IntegerField(
         label="Pokemon 2",
-        queryset=Pokemon.objects.all(),
         required=True,
     )
-    pokemon_3 = ModelChoiceField(
+    pokemon_3 = IntegerField(
         label="Pokemon 3",
-        queryset=Pokemon.objects.all(),
         required=True,
     )
 
     def clean(self):
         cleaned_data = super().clean()
+
+        cleaned_data["pokemon_1"] = get_or_create_pokemon(str(cleaned_data["pokemon_1"]))
+        cleaned_data["pokemon_2"] = get_or_create_pokemon(str(cleaned_data["pokemon_2"]))
+        cleaned_data["pokemon_3"] = get_or_create_pokemon(str(cleaned_data["pokemon_3"]))
 
         pokemons = [self.cleaned_data["pokemon_" + str(i)] for i in range(1, 4)]
 

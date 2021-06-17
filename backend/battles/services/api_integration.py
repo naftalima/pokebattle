@@ -19,23 +19,23 @@ def get_pokemon_api(poke_id):
         "attack": data["stats"][4]["base_stat"],
         "hp": data["stats"][5]["base_stat"],
     }
-    save_pokemon(pokemon)
+    return pokemon
 
 
-def save_pokemon(pokemon):
-    Pokemon.objects.create(
-        poke_id=pokemon.poke_id,
-        name=pokemon.name,
-        img_url=pokemon.img_url,
-        defense=pokemon.defense,
-        attack=pokemon.attack,
-        hp=pokemon.hp,
+def save_pokemon(pokemon_response):
+    return Pokemon.objects.create(
+        poke_id=pokemon_response["poke_id"],
+        name=pokemon_response["name"],
+        img_url=pokemon_response["img_url"],
+        defense=pokemon_response["defense"],
+        attack=pokemon_response["attack"],
+        hp=pokemon_response["hp"],
     )
 
 
-def get_pokemon(poke_id):
-    pokemon = Pokemon.objects.get(poke_id=poke_id)
+def get_or_create_pokemon(poke_id):
+    pokemon = Pokemon.objects.filter(poke_id=poke_id).first()
     if not pokemon:
-        get_pokemon_api(poke_id)
-        return Pokemon.objects.get(poke_id=poke_id)
+        pokemon_response = get_pokemon_api(poke_id)
+        return save_pokemon(pokemon_response)
     return pokemon
