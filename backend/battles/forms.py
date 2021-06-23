@@ -1,7 +1,7 @@
 from django.forms import IntegerField, ModelForm, ValidationError
 
 from battles.models import Battle, Team, TeamPokemon
-from battles.services.api_integration import get_or_create_pokemon
+from battles.services.api_integration import get_or_create_pokemon, get_pokemon_info
 from battles.services.logic_team_pokemon import check_valid_team
 from users.models import User
 
@@ -41,18 +41,22 @@ class TeamForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        cleaned_data["pokemon_1"] = get_or_create_pokemon(str(cleaned_data["pokemon_1"]))
-        cleaned_data["pokemon_2"] = get_or_create_pokemon(str(cleaned_data["pokemon_2"]))
-        cleaned_data["pokemon_3"] = get_or_create_pokemon(str(cleaned_data["pokemon_3"]))
+        pokemon_1 = get_pokemon_info(str(cleaned_data["pokemon_1"]))
+        pokemon_2 = get_pokemon_info(str(cleaned_data["pokemon_2"]))
+        pokemon_3 = get_pokemon_info(str(cleaned_data["pokemon_3"]))
 
-        pokemons = [self.cleaned_data["pokemon_" + str(i)] for i in range(1, 4)]
+        pokemons_data = [pokemon_1, pokemon_2, pokemon_3]
 
-        is_team_valid = check_valid_team(pokemons)
+        is_team_valid = check_valid_team(pokemons_data)
 
         if not is_team_valid:
             raise ValidationError(
                 "ERROR: Your pokemons sum more than 600 points." "Please select other pokemons"
             )
+
+        cleaned_data["pokemon_1"] = get_or_create_pokemon(pokemons_data[0])
+        cleaned_data["pokemon_2"] = get_or_create_pokemon(pokemons_data[1])
+        cleaned_data["pokemon_3"] = get_or_create_pokemon(pokemons_data[2])
 
         return cleaned_data
 
