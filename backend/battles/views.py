@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -17,10 +18,11 @@ class HomeView(TemplateView):
     template_name = "battles/home.html"
 
 
-class CreateBattleView(CreateView):
+class CreateBattleView(LoginRequiredMixin, CreateView):
     model = Battle
     template_name = "battles/battle-opponent.html"
     form_class = BattleForm
+    login_url = "/admin/"
 
     def get_initial(self):
         return {"user_id": self.request.user.id}
@@ -61,10 +63,11 @@ class SelectTeamView(UpdateView):
         return HttpResponseRedirect(reverse_lazy("battles"))
 
 
-class BattleListView(ListView):
+class BattleListView(LoginRequiredMixin, ListView):
     model = Battle
     template_name = "battles/battles.html"
     context_object_name = "battles"
+    login_url = "/admin/"
     # TODO paginate_by = 10
 
     def get_queryset(self):
