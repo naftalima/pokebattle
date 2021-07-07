@@ -1,9 +1,16 @@
+from django.contrib.auth.forms import UserCreationForm
 from django.forms import IntegerField, ModelForm, ValidationError
 
 from battles.models import Battle, Team, TeamPokemon
 from battles.services.api_integration import get_or_create_pokemon, get_pokemon_info
 from battles.services.logic_team_pokemon import check_valid_team
 from users.models import User
+
+
+class UserRegisterForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ["email"]
 
 
 class BattleForm(ModelForm):

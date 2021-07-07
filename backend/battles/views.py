@@ -1,19 +1,29 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, TemplateView, UpdateView
 
-from battles.forms import BattleForm, TeamForm
+from battles.forms import BattleForm, TeamForm, UserRegisterForm
 from battles.models import Battle, Team, TeamPokemon
 from battles.services.email import email_battle_result
 from battles.services.logic_battle import get_pokemons, get_winner
+from users.models import User
 
 
 class UserLoginView(LoginView):
     redirect_field_name = "home"
     redirect_authenticated_user = True
+
+
+class SignUpView(SuccessMessageMixin, CreateView):
+    model = User
+    form_class = UserRegisterForm
+    template_name = "registration/signup.html"
+    success_message = "Your profile was created successfully"
+    success_url = reverse_lazy("home")
 
 
 class HomeView(TemplateView):
