@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.db.models import Q
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -10,8 +11,9 @@ from battles.services.email import email_battle_result
 from battles.services.logic_battle import get_pokemons, get_winner
 
 
-class LoginView(TemplateView):
-    template_name = "battles/login.html"
+class UserLoginView(LoginView):
+    redirect_field_name = "home"
+    redirect_authenticated_user = True
 
 
 class HomeView(TemplateView):
@@ -22,7 +24,6 @@ class CreateBattleView(LoginRequiredMixin, CreateView):
     model = Battle
     template_name = "battles/battle-opponent.html"
     form_class = BattleForm
-    login_url = "/admin/"
 
     def get_initial(self):
         return {"user_id": self.request.user.id}
@@ -67,7 +68,6 @@ class BattleListView(LoginRequiredMixin, ListView):
     model = Battle
     template_name = "battles/battles.html"
     context_object_name = "battles"
-    login_url = "/admin/"
     # TODO paginate_by = 10
 
     def get_queryset(self):

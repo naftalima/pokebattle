@@ -5,13 +5,13 @@ from .views import (
     BattleListView,
     CreateBattleView,
     HomeView,
-    LoginView,
     SelectTeamView,
+    UserLoginView,
 )
 
 
 urlpatterns = [
-    path("login/", LoginView.as_view(), name="login"),
+    path("login/", UserLoginView.as_view(), name="login"),
     path("", HomeView.as_view(), name="home"),
     path("battle/", BattleListView.as_view(), name="battles"),
     path("battle/<int:pk>/", BattleDetailView.as_view(), name="battle-detail"),
