@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.forms import ModelForm
 
 from battles.models import Battle, Team, TeamPokemon
 from battles.services.api_integration import get_or_create_pokemon, get_pokemon_info
@@ -13,7 +14,7 @@ class UserRegisterForm(UserCreationForm):
         fields = ["email"]
 
 
-class BattleForm(forms.ModelForm):
+class BattleForm(ModelForm):
     class Meta:
         model = Battle
         fields = ("opponent",)
@@ -23,7 +24,7 @@ class BattleForm(forms.ModelForm):
         self.fields["opponent"].queryset = User.objects.exclude(id=self.initial["user_id"])
 
 
-class TeamForm(forms.ModelForm):
+class TeamForm(ModelForm):
     class Meta:
         model = Team
         fields = [
