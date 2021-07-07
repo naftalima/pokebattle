@@ -14,6 +14,7 @@ from battles.services.logic_battle import get_pokemons, get_winner
 class UserLoginView(LoginView):
     redirect_field_name = "home"
     redirect_authenticated_user = True
+    template_name = "backend/templates/registration/login.html"
 
 
 class HomeView(TemplateView):
