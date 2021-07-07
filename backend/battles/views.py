@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
 from django.db.models import Q
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -9,12 +8,6 @@ from battles.forms import BattleForm, TeamForm
 from battles.models import Battle, Team, TeamPokemon
 from battles.services.email import email_battle_result
 from battles.services.logic_battle import get_pokemons, get_winner
-
-
-class UserLoginView(LoginView):
-    redirect_field_name = "home"
-    redirect_authenticated_user = True
-    template_name = "backend/templates/registration/login.html"
 
 
 class HomeView(TemplateView):

@@ -1,17 +1,9 @@
 from django.urls import path
 
-from .views import (
-    BattleDetailView,
-    BattleListView,
-    CreateBattleView,
-    HomeView,
-    SelectTeamView,
-    UserLoginView,
-)
+from .views import BattleDetailView, BattleListView, CreateBattleView, HomeView, SelectTeamView
 
 
 urlpatterns = [
-    path("login/", UserLoginView.as_view(), name="login"),
     path("", HomeView.as_view(), name="home"),
     path("battle/", BattleListView.as_view(), name="battles"),
     path("battle/<int:pk>/", BattleDetailView.as_view(), name="battle-detail"),
