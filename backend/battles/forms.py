@@ -1,4 +1,5 @@
-from django.forms import IntegerField, ModelForm, ValidationError
+from django import forms
+from django.forms import ModelForm
 
 from battles.models import Battle, Team, TeamPokemon
 from battles.services.api_integration import get_or_create_pokemon, get_pokemon_info
@@ -25,19 +26,19 @@ class TeamForm(ModelForm):
             "pokemon_3",
         ]
 
-    pokemon_1 = IntegerField(
+    pokemon_1 = forms.IntegerField(
         label="Pokemon 1",
         required=True,
         min_value=1,
         max_value=898,
     )
-    pokemon_2 = IntegerField(
+    pokemon_2 = forms.IntegerField(
         label="Pokemon 2",
         required=True,
         min_value=1,
         max_value=898,
     )
-    pokemon_3 = IntegerField(
+    pokemon_3 = forms.IntegerField(
         label="Pokemon 3",
         required=True,
         min_value=1,
@@ -56,7 +57,7 @@ class TeamForm(ModelForm):
         is_team_valid = check_valid_team(pokemons_data)
 
         if not is_team_valid:
-            raise ValidationError(
+            raise forms.ValidationError(
                 "ERROR: Your pokemons sum more than 600 points." "Please select other pokemons"
             )
 
