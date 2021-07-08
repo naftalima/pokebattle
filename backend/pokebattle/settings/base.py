@@ -3,6 +3,7 @@
 import os
 
 from decouple import config  # noqa
+from django.urls import reverse_lazy
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -23,6 +24,9 @@ ADMINS = (("Nathalia", "nathalia.lima@vinta.com.br"),)
 AUTH_USER_MODEL = "users.User"
 
 ALLOWED_HOSTS = []
+
+LOGIN_REDIRECT_URL = reverse_lazy("home")
+LOGIN_URL = reverse_lazy("login")
 
 INSTALLED_APPS = [
     "django.contrib.admin",

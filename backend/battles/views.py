@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http.response import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -9,15 +10,11 @@ from battles.services.email import email_battle_result
 from battles.services.logic_battle import get_pokemons, get_winner
 
 
-class LoginView(TemplateView):
-    template_name = "battles/login.html"
-
-
 class HomeView(TemplateView):
     template_name = "battles/home.html"
 
 
-class CreateBattleView(CreateView):
+class CreateBattleView(LoginRequiredMixin, CreateView):
     model = Battle
     template_name = "battles/battle-opponent.html"
     form_class = BattleForm
@@ -61,11 +58,10 @@ class SelectTeamView(UpdateView):
         return HttpResponseRedirect(reverse_lazy("battles"))
 
 
-class BattleListView(ListView):
+class BattleListView(LoginRequiredMixin, ListView):
     model = Battle
     template_name = "battles/battles.html"
     context_object_name = "battles"
-    # TODO paginate_by = 10
 
     def get_queryset(self):
         queryset_filtered = Battle.objects.filter(
