@@ -80,11 +80,8 @@ class TeamForm(ModelForm):
 
         matrix_position_pokemon = sorted(matrix_position_pokemon, key=(lambda x: x[0]))
 
-        pokemons_data = []
-        for row in matrix_position_pokemon:
-            pokemon_id = str(row[1])
-            pokemon = get_pokemon_info(pokemon_id)
-            pokemons_data.append(pokemon)
+        pokemons_id = [str(x[1]) for x in matrix_position_pokemon]
+        pokemons_data = [get_pokemon_info(pokemon_id) for pokemon_id in pokemons_id]
 
         is_team_valid = check_valid_team(pokemons_data)
 
