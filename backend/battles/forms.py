@@ -22,8 +22,11 @@ class TeamForm(ModelForm):
         model = Team
         fields = [
             "pokemon_1",
+            "position_1",
             "pokemon_2",
+            "position_2",
             "pokemon_3",
+            "position_3",
         ]
 
     pokemon_1 = forms.IntegerField(
@@ -45,12 +48,46 @@ class TeamForm(ModelForm):
         max_value=898,
     )
 
+    position_1 = forms.IntegerField(
+        label="Position 1",
+        required=True,
+        min_value=1,
+        max_value=3,
+    )
+
+    position_2 = forms.IntegerField(
+        label="Position 2",
+        required=True,
+        min_value=1,
+        max_value=3,
+    )
+
+    position_3 = forms.IntegerField(
+        label="Position 3",
+        required=True,
+        min_value=1,
+        max_value=3,
+    )
+
     def clean(self):
         cleaned_data = super().clean()
 
         pokemon_1 = get_pokemon_info(str(cleaned_data["pokemon_1"]))
         pokemon_2 = get_pokemon_info(str(cleaned_data["pokemon_2"]))
         pokemon_3 = get_pokemon_info(str(cleaned_data["pokemon_3"]))
+
+        matrix_pokemon_positions = []
+        matrix_pokemon_positions.append([cleaned_data["position_1"], pokemon_1])
+        matrix_pokemon_positions.append([cleaned_data["position_2"], pokemon_2])
+        matrix_pokemon_positions.append([cleaned_data["position_3"], pokemon_3])
+
+        print("not sorted:", matrix_pokemon_positions)
+
+        sorted_matrix = sorted(matrix_pokemon_positions, key=(lambda x: x[0]))
+
+        print("sorted:", sorted_matrix)
+
+        pokemons_data = []
 
         pokemons_data = [pokemon_1, pokemon_2, pokemon_3]
 
