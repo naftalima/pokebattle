@@ -72,24 +72,19 @@ class TeamForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        pokemon_1 = get_pokemon_info(str(cleaned_data["pokemon_1"]))
-        pokemon_2 = get_pokemon_info(str(cleaned_data["pokemon_2"]))
-        pokemon_3 = get_pokemon_info(str(cleaned_data["pokemon_3"]))
+        matrix_position_pokemon = [
+            [cleaned_data["position_1"], cleaned_data["pokemon_1"]],
+            [cleaned_data["position_2"], cleaned_data["pokemon_2"]],
+            [cleaned_data["position_3"], cleaned_data["pokemon_3"]],
+        ]
 
-        matrix_pokemon_positions = []
-        matrix_pokemon_positions.append([cleaned_data["position_1"], pokemon_1])
-        matrix_pokemon_positions.append([cleaned_data["position_2"], pokemon_2])
-        matrix_pokemon_positions.append([cleaned_data["position_3"], pokemon_3])
-
-        print("not sorted:", matrix_pokemon_positions)
-
-        sorted_matrix = sorted(matrix_pokemon_positions, key=(lambda x: x[0]))
-
-        print("sorted:", sorted_matrix)
+        matrix_position_pokemon = sorted(matrix_position_pokemon, key=(lambda x: x[0]))
 
         pokemons_data = []
-
-        pokemons_data = [pokemon_1, pokemon_2, pokemon_3]
+        for row in matrix_position_pokemon:
+            pokemon_id = str(row[1])
+            pokemon = get_pokemon_info(pokemon_id)
+            pokemons_data.append(pokemon)
 
         is_team_valid = check_valid_team(pokemons_data)
 
