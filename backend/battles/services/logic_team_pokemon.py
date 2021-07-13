@@ -14,4 +14,4 @@ def is_unique(positions):
     for position in positions:
         if positions.count(position) > 1:
             return False
-        return True
+    return True
