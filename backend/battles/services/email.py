@@ -17,3 +17,15 @@ def email_battle_result(battle):
             "opponent_pokemon_team": get_pokemons(battle)["opponent"],
         },
     )
+
+
+def email_invite(battle):
+    send_templated_mail(
+        template_name="invite",
+        from_email="nathalia.lima@vinta.com.br",
+        recipient_list=[battle.opponent.email],
+        context={
+            "creator": get_username(battle.creator.email),
+            "opponent": get_username(battle.opponent.email),
+        },
+    )
