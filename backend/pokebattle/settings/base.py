@@ -23,6 +23,11 @@ ADMINS = (("Nathalia", "nathalia.lima@vinta.com.br"),)
 
 AUTH_USER_MODEL = "users.User"
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.google.GoogleOAuth2',
+)
+
 ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = reverse_lazy("home")
@@ -38,6 +43,7 @@ INSTALLED_APPS = [
     "django_js_reverse",
     "webpack_loader",
     "import_export",
+    "social_django",
     "common",
     "users",
     "battles",
@@ -70,6 +76,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # 'social_django.context_processors.backends',
+                # 'social_django.context_processors.login_redirect',
                 "common.context_processors.sentry_dsn",
                 "common.context_processors.commit_sha",
             ],
@@ -129,3 +137,6 @@ COMMIT_SHA = config("HEROKU_SLUG_COMMIT", default="")
 
 # Django Templated E-mail
 TEMPLATED_EMAIL_BACKEND = "templated_email.backends.vanilla_django.TemplateBackend"
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", default="")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", default="")
