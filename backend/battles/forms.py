@@ -3,7 +3,7 @@ from django.forms import ModelForm
 
 from battles.models import Battle, Team, TeamPokemon
 from battles.services.api_integration import get_or_create_pokemon, get_pokemon_info
-from battles.services.logic_team_pokemon import check_valid_team
+from battles.services.logic_team_pokemon import check_valid_team, is_unique
 from users.models import User
 
 
@@ -54,14 +54,12 @@ class TeamForm(ModelForm):
         min_value=1,
         max_value=3,
     )
-
     position_2 = forms.IntegerField(
         label="Position 2",
         required=True,
         min_value=1,
         max_value=3,
     )
-
     position_3 = forms.IntegerField(
         label="Position 3",
         required=True,
@@ -72,22 +70,33 @@ class TeamForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        matrix_position_pokemon = [
-            [cleaned_data["position_1"], cleaned_data["pokemon_1"]],
-            [cleaned_data["position_2"], cleaned_data["pokemon_2"]],
-            [cleaned_data["position_3"], cleaned_data["pokemon_3"]],
+        positions = [
+            cleaned_data["position_1"],
+            cleaned_data["position_2"],
+            cleaned_data["position_3"],
         ]
 
-        matrix_position_pokemon = sorted(matrix_position_pokemon, key=(lambda x: x[0]))
+        is_positions_valid = is_unique(positions)
 
-        pokemons_id = [str(x[1]) for x in matrix_position_pokemon]
+        if not is_positions_valid:
+            raise forms.ValidationError(
+                "ERROR: Has repeated positions." " Please select unique positions."
+            )
+
+        pokemons_id = [
+            cleaned_data["pokemon_1"],
+            cleaned_data["pokemon_2"],
+            cleaned_data["pokemon_3"],
+        ]
+
+        pokemons_id = [str(x[1]) for x in pokemons_id]
         pokemons_data = [get_pokemon_info(pokemon_id) for pokemon_id in pokemons_id]
 
         is_team_valid = check_valid_team(pokemons_data)
 
         if not is_team_valid:
             raise forms.ValidationError(
-                "ERROR: Your pokemons sum more than 600 points." "Please select other pokemons"
+                "ERROR: Your pokemons sum more than 600 points." " Please select other pokemons."
             )
 
         cleaned_data["pokemon_1"] = get_or_create_pokemon(pokemons_data[0])
@@ -102,8 +111,8 @@ class TeamForm(ModelForm):
 
         team.pokemons.clear()
 
-        TeamPokemon.objects.create(team=team, pokemon=data["pokemon_1"], order=1)
-        TeamPokemon.objects.create(team=team, pokemon=data["pokemon_2"], order=2)
-        TeamPokemon.objects.create(team=team, pokemon=data["pokemon_3"], order=3)
+        TeamPokemon.objects.create(team=team, pokemon=data["pokemon_1"], order=data["position_1"])
+        TeamPokemon.objects.create(team=team, pokemon=data["pokemon_2"], order=data["position_2"])
+        TeamPokemon.objects.create(team=team, pokemon=data["pokemon_3"], order=data["position_3"])
 
         return team
