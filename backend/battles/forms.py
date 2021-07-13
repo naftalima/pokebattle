@@ -88,7 +88,7 @@ class TeamForm(ModelForm):
             cleaned_data["pokemon_2"],
             cleaned_data["pokemon_3"],
         ]
-        pokemons_id = [str(x[1]) for x in pokemons_id]
+        pokemons_id = [str(x) for x in pokemons_id]
 
         pokemons_data = [get_pokemon_info(pokemon_id) for pokemon_id in pokemons_id]
 
