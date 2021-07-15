@@ -12,9 +12,9 @@ def email_battle_result(battle):
         from_email=settings.EMAIL_ADDRESS,
         recipient_list=[battle.creator.email, battle.opponent.email],
         context={
-            "winner": get_username(battle.winner.email),
-            "creator": get_username(battle.creator.email),
-            "opponent": get_username(battle.opponent.email),
+            "winner_username": get_username(battle.winner.email),
+            "creator_username": get_username(battle.creator.email),
+            "opponent_username": get_username(battle.opponent.email),
             "creator_pokemon_team": get_pokemons(battle)["creator"],
             "opponent_pokemon_team": get_pokemons(battle)["opponent"],
         },
@@ -27,7 +27,7 @@ def email_invite(battle):
         from_email=settings.EMAIL_ADDRESS,
         recipient_list=[battle.opponent.email],
         context={
-            "creator": get_username(battle.creator.email),
-            "opponent": get_username(battle.opponent.email),
+            "creator_username": get_username(battle.creator.email),
+            "opponent_username": get_username(battle.opponent.email),
         },
     )

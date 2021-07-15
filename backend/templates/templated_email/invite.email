@@ -1,9 +1,9 @@
 {% block subject %}[PokeBattle] Battle result!{% endblock %}
 
 {% block html %}
-     <h3>Hello <b>{{opponent}}</b>!</h3>
+     <h3>Hello <b>{{opponent_username}}</b>!</h3>
 
-  <p>You have been challenged by <b>{{creator}}</b> to a battle.</p>
+  <p>You have been challenged by <b>{{creator_username}}</b> to a battle.</p>
   <p>Choose your pokemons</p>
 
   <p>Good Luck!</p>
