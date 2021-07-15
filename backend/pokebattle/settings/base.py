@@ -21,6 +21,8 @@ DEBUG = True
 
 ADMINS = (("Nathalia", "nathalia.lima@vinta.com.br"),)
 
+EMAIL_ADDRESS = "nathalia.lima@vinta.com.br"
+
 AUTH_USER_MODEL = "users.User"
 
 ALLOWED_HOSTS = []

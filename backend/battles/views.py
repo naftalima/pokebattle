@@ -6,7 +6,7 @@ from django.views.generic import CreateView, DetailView, ListView, TemplateView,
 
 from battles.forms import BattleForm, TeamForm
 from battles.models import Battle, Team, TeamPokemon
-from battles.services.email import email_battle_result
+from battles.services.email import email_battle_result, email_invite
 from battles.services.logic_battle import get_pokemons, get_winner
 
 
@@ -23,12 +23,13 @@ class CreateBattleView(LoginRequiredMixin, CreateView):
         return {"user_id": self.request.user.id}
 
     def form_valid(self, form):
-        # TODO init in form
         form.instance.creator = self.request.user
         battle = form.save()
 
         team_creator = Team.objects.create(battle=battle, trainer=form.instance.creator)
         Team.objects.create(battle=battle, trainer=form.instance.opponent)
+
+        email_invite(battle)
 
         return HttpResponseRedirect(reverse_lazy("battle-team-pokemons", args=(team_creator.id,)))
 
@@ -80,7 +81,6 @@ class BattleListView(LoginRequiredMixin, ListView):
         return context
 
 
-# BUG: Crashes if run battle 1
 class BattleDetailView(DetailView):
     model = Battle
     template_name = "battles/battle_detail.html"

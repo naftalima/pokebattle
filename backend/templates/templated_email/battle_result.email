@@ -3,10 +3,10 @@
 {% block html %}
      <h3>Hello,</h3>
 
-  <p><b>{{creator}}</b> challenged <b>{{opponent}}</b></p>
+  <p><b>{{creator_username}}</b> challenged <b>{{opponent_username}}</b></p>
 
     <p>
-        <div>{{creator}}'s team was:</div>
+        <div>{{creator_username}}'s team was:</div>
         <table>
         <tr>
             {% for creator_pokemon in creator_pokemon_team %}
@@ -25,7 +25,7 @@
     </p>
 
     <p>
-        <div>{{opponent}}'s team was:</div>
+        <div>{{opponent_username}}'s team was:</div>
         <table>
         <tr>
             {% for opponent_pokemon in opponent_pokemon_team %}
@@ -43,6 +43,6 @@
         </div>
     </p>
 
-  <p style="font-size: 18px;">And the winner is <b>{{winner}}</b>!!!</p>
+  <p style="font-size: 18px;">And the winner is <b>{{winner_username}}</b>!!!</p>
 
 {% endblock %}
