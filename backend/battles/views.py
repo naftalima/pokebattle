@@ -23,7 +23,6 @@ class CreateBattleView(LoginRequiredMixin, CreateView):
         return {"user_id": self.request.user.id}
 
     def form_valid(self, form):
-        # TODO init in form
         form.instance.creator = self.request.user
         battle = form.save()
 
@@ -82,7 +81,6 @@ class BattleListView(LoginRequiredMixin, ListView):
         return context
 
 
-# BUG: Crashes if run battle 1
 class BattleDetailView(DetailView):
     model = Battle
     template_name = "battles/battle_detail.html"
