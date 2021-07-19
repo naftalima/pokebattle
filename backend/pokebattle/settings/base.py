@@ -25,6 +25,11 @@ EMAIL_ADDRESS = "nathalia.lima@vinta.com.br"
 
 AUTH_USER_MODEL = "users.User"
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.google.GoogleOAuth2',
+)
+
 ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = reverse_lazy("home")
@@ -40,6 +45,7 @@ INSTALLED_APPS = [
     "django_js_reverse",
     "webpack_loader",
     "import_export",
+    "social_django",
     "common",
     "users",
     "battles",
@@ -108,6 +114,8 @@ USE_TZ = True
 
 STATICFILES_DIRS = (base_dir_join("../frontend"),)
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # Webpack
 WEBPACK_LOADER = {
     "DEFAULT": {
@@ -131,3 +139,6 @@ COMMIT_SHA = config("HEROKU_SLUG_COMMIT", default="")
 
 # Django Templated E-mail
 TEMPLATED_EMAIL_BACKEND = "templated_email.backends.vanilla_django.TemplateBackend"
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", default="")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", default="")

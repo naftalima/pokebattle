@@ -9,4 +9,18 @@
 
     <input type="submit" name="sumbit">
   </form>
+
+
+  <br>
+
+  <a href="{% url 'social:begin' 'google-oauth2' %}">
+    <div class="login-with-google-btn">
+      Sign in with Google
+    </div>
+  </a>
+
+  <a href="{% url 'signup' %}">
+    <button class="button">Battles</button>
+  </a>
+
 {% endblock %}
