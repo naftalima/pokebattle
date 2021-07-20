@@ -1,5 +1,7 @@
 from django import forms
+from django.contrib.auth.forms import PasswordResetForm
 from django.forms import ModelForm
+from django.utils.crypto import get_random_string
 
 from battles.models import Battle, Team, TeamPokemon
 from battles.services.api_integration import get_or_create_pokemon, get_pokemon_info
@@ -8,13 +10,39 @@ from users.models import User
 
 
 class BattleForm(ModelForm):
+    opponent = forms.EmailField()
+
     class Meta:
         model = Battle
         fields = ("opponent",)
+        # fields = ["creator", "opponent"]
 
     def __init__(self, *args, **kwargs):
         super(BattleForm, self).__init__(*args, **kwargs)
         self.fields["opponent"].queryset = User.objects.exclude(id=self.initial["user_id"])
+        # self.fields["creator"].widget = forms.HiddenInput()
+
+    def clean_opponent(self):
+        opponent_email = self.cleaned_data["opponent"]
+        try:
+            opponent = User.objects.get(email=opponent_email)
+        except User.DoesNotExist:
+            opponent = User.objects.create(email=opponent_email)
+            random_password = get_random_string(length=64)
+            opponent.set_password(random_password)
+            opponent.save()
+        return opponent
+
+    def save(self, commit=True):
+        super().save()
+        opponent = self.cleaned_data["opponent"]
+        invite_form = PasswordResetForm(data={"email": opponent.email})
+        invite_form.is_valid()
+        invite_form.save(
+            from_email="nathalia.lima@vinta.com.br",
+            email_template_name="registration/password_reset_email.html",
+            # subject_template_name="registration/password_reset_subject.txt",
+        )
 
 
 class TeamForm(ModelForm):
