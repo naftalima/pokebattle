@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import PasswordResetForm
 from django.forms import ModelForm
 from django.utils.crypto import get_random_string
@@ -39,9 +40,14 @@ class BattleForm(ModelForm):
         invite_form = PasswordResetForm(data={"email": opponent.email})
         invite_form.is_valid()
         invite_form.save(
-            from_email="nathalia.lima@vinta.com.br",
+            self,
+            subject_template_name="registration/password_reset_subject.txt",
             email_template_name="registration/password_reset_email.html",
-            # subject_template_name="registration/password_reset_subject.txt",
+            # from_email=settings.FROM_EMAIL,
+            from_email="nathalia.lima@vinta.com.br",
+            request=None,
+            html_email_template_name=None,
+            extra_email_context={"HOST": settings.HOST},
         )
 
 
