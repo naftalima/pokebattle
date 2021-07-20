@@ -26,12 +26,13 @@ class CreateBattleView(LoginRequiredMixin, CreateView):
         form.instance.creator = self.request.user
         battle = form.save()
 
-        team_creator = Team.objects.create(battle=battle, trainer=form.instance.creator)
-        Team.objects.create(battle=battle, trainer=form.instance.opponent)
+        creator_team_id = (
+            Team.objects.only("id").get(battle=form.instance, trainer=form.instance.creator).id
+        )
 
         email_invite(battle)
 
-        return HttpResponseRedirect(reverse_lazy("battle-team-pokemons", args=(team_creator.id,)))
+        return HttpResponseRedirect(reverse_lazy("battle-team-pokemons", args=(creator_team_id,)))
 
 
 class SelectTeamView(UpdateView):

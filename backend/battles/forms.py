@@ -36,6 +36,12 @@ class BattleForm(ModelForm):
 
     def save(self, commit=True):
         super().save()
+
+        battle = self.instance
+
+        Team.objects.create(battle=battle, trainer=battle.creator)
+        Team.objects.create(battle=battle, trainer=battle.opponent)
+
         opponent = self.cleaned_data["opponent"]
         invite_form = PasswordResetForm(data={"email": opponent.email})
         invite_form.is_valid()
