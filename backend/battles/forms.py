@@ -6,6 +6,7 @@ from django.utils.crypto import get_random_string
 
 from battles.models import Battle, Team, TeamPokemon
 from battles.services.api_integration import get_or_create_pokemon, get_pokemon_info
+from battles.services.email import email_invite
 from battles.services.logic_team_pokemon import check_valid_team, is_unique
 from users.models import User
 
@@ -42,16 +43,17 @@ class BattleForm(ModelForm):
         Team.objects.create(battle=battle, trainer=battle.creator)
         Team.objects.create(battle=battle, trainer=battle.opponent)
 
+        email_invite(battle)
+
         opponent = self.cleaned_data["opponent"]
         invite_form = PasswordResetForm(data={"email": opponent.email})
         invite_form.is_valid()
         invite_form.save(
             self,
-            subject_template_name="registration/password_reset_subject.txt",
+            subject_template_name="registration/invite_signup_subject.txt",
             email_template_name="registration/password_reset_email.html",
-            # from_email=settings.FROM_EMAIL,
-            from_email="nathalia.lima@vinta.com.br",
-            request=None,
+            from_email=settings.EMAIL_ADDRESS,
+            # from_email="nathalia.lima@vinta.com.br",
             html_email_template_name=None,
             extra_email_context={"HOST": settings.HOST},
         )
