@@ -17,18 +17,18 @@ class BattleForm(ModelForm):
     class Meta:
         model = Battle
         fields = ("opponent",)
-        # fields = ["creator", "opponent"]
 
     def __init__(self, *args, **kwargs):
         super(BattleForm, self).__init__(*args, **kwargs)
         self.fields["opponent"].queryset = User.objects.exclude(id=self.initial["user_id"])
-        # self.fields["creator"].widget = forms.HiddenInput()
+        self.is_guest = False
 
     def clean_opponent(self):
         opponent_email = self.cleaned_data["opponent"]
         try:
             opponent = User.objects.get(email=opponent_email)
         except User.DoesNotExist:
+            self.is_guest = True
             opponent = User.objects.create(email=opponent_email)
             random_password = get_random_string(length=64)
             opponent.set_password(random_password)
@@ -43,20 +43,20 @@ class BattleForm(ModelForm):
         Team.objects.create(battle=battle, trainer=battle.creator)
         Team.objects.create(battle=battle, trainer=battle.opponent)
 
-        email_invite(battle)
-
-        opponent = self.cleaned_data["opponent"]
-        invite_form = PasswordResetForm(data={"email": opponent.email})
-        invite_form.is_valid()
-        invite_form.save(
-            self,
-            subject_template_name="registration/invite_signup_subject.txt",
-            email_template_name="registration/password_reset_email.html",
-            from_email=settings.EMAIL_ADDRESS,
-            # from_email="nathalia.lima@vinta.com.br",
-            html_email_template_name=None,
-            extra_email_context={"HOST": settings.HOST},
-        )
+        if not self.is_guest:
+            email_invite(battle)
+        else:
+            opponent = self.cleaned_data["opponent"]
+            invite_form = PasswordResetForm(data={"email": opponent.email})
+            invite_form.is_valid()
+            invite_form.save(
+                self,
+                subject_template_name="registration/invite_signup_subject.txt",
+                email_template_name="registration/password_reset_email.html",
+                from_email=settings.EMAIL_ADDRESS,
+                html_email_template_name=None,
+                extra_email_context={"HOST": settings.HOST},
+            )
 
 
 class TeamForm(ModelForm):
