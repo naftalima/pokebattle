@@ -51,7 +51,7 @@ class BattleForm(ModelForm):
             invite_form.is_valid()
             invite_form.save(
                 subject_template_name="registration/invite_signup_subject.txt",
-                email_template_name="registration/password_reset_email.html",
+                email_template_name="registration/invite_signup_email.html",
                 from_email=settings.EMAIL_ADDRESS,
                 html_email_template_name=None,
                 domain_override=settings.HOST,
