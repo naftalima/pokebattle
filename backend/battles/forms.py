@@ -29,23 +29,17 @@ class TeamForm(ModelForm):
             "position_3",
         ]
 
-    pokemon_1 = forms.IntegerField(
+    pokemon_1 = forms.CharField(
         label="Pokemon 1",
         required=True,
-        min_value=1,
-        max_value=898,
     )
-    pokemon_2 = forms.IntegerField(
+    pokemon_2 = forms.CharField(
         label="Pokemon 2",
         required=True,
-        min_value=1,
-        max_value=898,
     )
-    pokemon_3 = forms.IntegerField(
+    pokemon_3 = forms.CharField(
         label="Pokemon 3",
         required=True,
-        min_value=1,
-        max_value=898,
     )
 
     position_1 = forms.IntegerField(
@@ -83,14 +77,13 @@ class TeamForm(ModelForm):
                 "ERROR: Has repeated positions." " Please select unique positions."
             )
 
-        pokemons_id = [
+        pokemon_names = [
             cleaned_data["pokemon_1"],
             cleaned_data["pokemon_2"],
             cleaned_data["pokemon_3"],
         ]
-        pokemons_id = [str(x) for x in pokemons_id]
 
-        pokemons_data = [get_pokemon_info(pokemon_id) for pokemon_id in pokemons_id]
+        pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
 
         is_team_valid = check_valid_team(pokemons_data)
 
