@@ -27,7 +27,7 @@ cffi==1.14.6
     # via cryptography
 cfgv==3.3.0
     # via pre-commit
-charset-normalizer==2.0.2
+charset-normalizer==2.0.3
     # via requests
 click==8.0.1
     # via
@@ -109,7 +109,7 @@ packaging==21.0
     # via
     #   dparse
     #   safety
-pathspec==0.8.1
+pathspec==0.9.0
     # via black
 pbr==5.6.0
     # via stevedore

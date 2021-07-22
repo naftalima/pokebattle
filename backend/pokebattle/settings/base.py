@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_js_reverse",
+    "django_celery_beat",
     "webpack_loader",
     "import_export",
     "social_django",
