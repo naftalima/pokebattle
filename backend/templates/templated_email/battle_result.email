@@ -1,0 +1,48 @@
+{% block subject %}[PokeBattle] Battle result!{% endblock %}
+
+{% block html %}
+     <h3>Hello,</h3>
+
+  <p><b>{{creator_username}}</b> challenged <b>{{opponent_username}}</b></p>
+
+    <p>
+        <div>{{creator_username}}'s team was:</div>
+        <table>
+        <tr>
+            {% for creator_pokemon in creator_pokemon_team %}
+            <td style="padding: 0 6px; width: fit-content;">
+                <div style="display: block;">
+                <div style="display: flex; justify-content: center;">
+                    <img src="{{creator_pokemon.img_url}}" height="90px">
+                </div>
+                <div style="text-align: center;">{{creator_pokemon.name}}</div>
+                </div>
+            </td>
+            {% endfor %}
+        </tr>
+        </table>
+        </div>
+    </p>
+
+    <p>
+        <div>{{opponent_username}}'s team was:</div>
+        <table>
+        <tr>
+            {% for opponent_pokemon in opponent_pokemon_team %}
+            <td style="padding: 0 6px; width: fit-content;">
+                <div style="display: block;">
+                <div style="display: flex; justify-content: center;">
+                    <img src="{{opponent_pokemon.img_url}}" height="90px">
+                </div>
+                <div style="text-align: center;">{{opponent_pokemon.name}}</div>
+                </div>
+            </td>
+            {% endfor %}
+        </tr>
+        </table>
+        </div>
+    </p>
+
+  <p style="font-size: 18px;">And the winner is <b>{{winner_username}}</b>!!!</p>
+
+{% endblock %}

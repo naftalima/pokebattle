@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h1 class="title">Choose your Team!</h1>
+
+  <form method="POST" class="battle-form">{% csrf_token %}
+    {{ form.as_p }}
+    <button class="button">Save</button>
+  </form>
+
+{% endblock %}
+

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load battles_tags %}
+
+{% block content %}
+
+  <a href="{% url 'home' %}">
+    <button class="button">Home</button>
+  </a>
+
+  <h1 class="title"> Battles</h1>
+  <p> total de {% get_total_battles %}.</p>
+
+  <h2 class="title">On going Battles</h2>
+  <table>
+    {% for battle in on_going.all %}
+      <tr>
+        <td class="battle-id-btn">
+        <a href="{% url 'battle-team-pokemons' battle|get_team:user %}">
+          {{battle.id}}
+        </a>
+        </td>
+        <td>{{battle.creator}}</td>
+        <td>{{battle.opponent}}</td>
+      </tr>
+    {% empty %}
+        <li>Sorry, no battles in this list.</li>
+    {% endfor %}
+  </table>
+
+  <h2 class="title">Settled Battles</h2>
+  <table>
+    {% for battle in settled.all %}
+      <tr>
+        <td class="battle-id-btn">
+          <a href="{% url 'battle-detail' battle.id %}">
+            {{battle.id}}
+          </a>
+        </td>
+        <td>{{battle.creator}}</td>
+        <td>{{battle.opponent}}</td>
+      </tr>
+    {% empty %}
+        <li>Sorry, no battles in this list.</li>
+    {% endfor %}
+  </table>
+{% endblock %}

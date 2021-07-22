@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h1 class="title">Choose the Trainers!</h1>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- will render them wrapped in <p> tags -->
+
+    <button class="button">Next</button>
+
+  </form>
+{% endblock %}
+
