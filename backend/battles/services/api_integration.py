@@ -54,3 +54,18 @@ def get_or_create_pokemon(pokemon_data):
         pokemon = save_pokemon(pokemon_data)
         return pokemon
     return pokemon
+
+
+def get_all_pokemons_api():
+    response = requests.get(settings.POKE_API_URL)
+    data = response.json().get("results")
+    for item in data:
+        pokemon = {
+            "poke_id": item["id"],
+            "name": item["name"],
+            "img_url": item["sprites"]["front_default"],
+            "defense": item["stats"][3]["base_stat"],
+            "attack": item["stats"][4]["base_stat"],
+            "hp": item["stats"][5]["base_stat"],
+        }
+        get_or_create_pokemon(pokemon)
