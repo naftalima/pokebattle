@@ -6,8 +6,8 @@ from django.views.generic import CreateView, DetailView, ListView, TemplateView,
 
 from battles.forms import BattleForm, TeamForm
 from battles.models import Battle, Team, TeamPokemon
-from battles.services.email import email_battle_result
-from battles.services.logic_battle import get_pokemons, get_winner
+from battles.services.logic_battle import get_pokemons
+from battles.tasks import run_battle_and_send_result
 
 
 class HomeView(TemplateView):
@@ -51,9 +51,7 @@ class SelectTeamView(UpdateView):
         ).exists()
         all_teams_has_pokemons = creator_team_has_pokemons and opponent_team_has_pokemons
         if all_teams_has_pokemons:
-            winner = get_winner(battle)
-            battle.set_winner(winner)
-            email_battle_result(battle)
+            run_battle_and_send_result.delay(battle.id)
             return HttpResponseRedirect(reverse_lazy("battle-detail", args=(battle.id,)))
         return HttpResponseRedirect(reverse_lazy("battles"))
 
