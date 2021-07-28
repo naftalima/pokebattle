@@ -7,6 +7,6 @@ from pokebattle.celery import app as celery_app
 logger = get_task_logger(__name__)
 
 
-@celery_app.task(bind=True)
+@celery_app.task
 def get_pokemons_from_api_and_save():
     get_all_pokemons_api()
