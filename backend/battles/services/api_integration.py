@@ -4,7 +4,7 @@ from django.conf import settings
 
 import requests
 
-from pokemons.models import Pokemon
+from pokemons.models import Pokemon  # pylint: disable=import-error
 
 
 def get_pokemon_api(pokemon_name):
@@ -58,14 +58,8 @@ def get_or_create_pokemon(pokemon_data):
 
 def get_all_pokemons_api():
     response = requests.get(settings.POKE_API_URL)
-    data = response.json().get("results")
-    for item in data:
-        pokemon = {
-            "poke_id": item["id"],
-            "name": item["name"],
-            "img_url": item["sprites"]["front_default"],
-            "defense": item["stats"][3]["base_stat"],
-            "attack": item["stats"][4]["base_stat"],
-            "hp": item["stats"][5]["base_stat"],
-        }
+    pokeapi_named = response.json().get("results")
+    for pokemon_result in pokeapi_named:
+        pokemon_name = pokemon_result["name"]
+        pokemon = get_pokemon_api(pokemon_name)
         get_or_create_pokemon(pokemon)
