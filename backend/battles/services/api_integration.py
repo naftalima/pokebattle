@@ -54,3 +54,14 @@ def get_or_create_pokemon(pokemon_data):
         pokemon = save_pokemon(pokemon_data)
         return pokemon
     return pokemon
+
+
+def get_all_pokemons_api():
+    limit = "?limit=899"
+    url = settings.POKE_API_URL + limit
+    response = requests.get(url)
+    pokeapi_named = response.json().get("results")
+    for pokemon_result in pokeapi_named:
+        pokemon_name = pokemon_result["name"]
+        pokemon = get_pokemon_api(pokemon_name)
+        get_or_create_pokemon(pokemon)
