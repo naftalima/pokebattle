@@ -2,15 +2,15 @@
 
 {% block content %}
 
-  <h1 >Choose your Team!</h1>
+  <h1 class="title" >Choose your Team!</h1>
   <form method="POST" form">{% csrf_token %}
     <p>
       <label for="pokemon_1">Pokemon 1:</label>
       <input id="pokemon_1" name="pokemon_1" type="text" list="pokemons">
       <datalist id="pokemons" name="pokemon_1">
         {% for pokemon_name in pokemons_name %}
-        <option value="{{pokemon_name}}">
-          {% endfor %}
+          <option value="{{pokemon_name}}"></option>
+        {% endfor %}
       </datalist>
     </p>
     <p>
@@ -23,14 +23,13 @@
       <input id="pokemon_2" name="pokemon_2" type="text" list="pokemons">
       <datalist id="pokemons" name="pokemon_2">
         {% for pokemon_name in pokemons_name %}
-        <option value="{{pokemon_name}}">
-          {% endfor %}
+          <option value="{{pokemon_name}}"></option>
+        {% endfor %}
       </datalist>
     </p>
     <p>
       <label for="position_2">Pokemon position:</label>
       <input id="position_2" type="number" name="position_2" value="{{ position_2 }}">
-
     </p>
 
     <p>
@@ -38,14 +37,16 @@
       <input id="pokemon_3" name="pokemon_3" type="text" list="pokemons">
       <datalist id="pokemons" name="pokemon_3">
         {% for pokemon_name in pokemons_name %}
-        <option value="{{pokemon_name}}">
-          {% endfor %}
+          <option value="{{pokemon_name}}"></option>
+        {% endfor %}
       </datalist>
     </p>
     <p>
       <label for="position_3">Pokemon position:</label>
-      <input id="position_3" type="number" name="position_3" value="{{ position_3 }}">    </p>
-    <input type="submit" value="Next" >
+      <input id="position_3" type="number" name="position_3" value="{{ position_3 }}">
+    </p>
+
+    <button class="button">Finish</button>
   </form>
 
 </div>
