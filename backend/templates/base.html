@@ -122,10 +122,26 @@
         background-position: 12px 11px;
       }
 
+      .welcome {
+        text-align: center;
+        color: #3B4CCA;
+        font-size: 20px;
+        font-weight: 500;
+      }
+
     </style>
   </head>
   <body>
     <img class="center" src="https://team-rocket-blasting-off-again.github.io/pokebattle/assets/pokebattle-title.png" alt="pokemon">
+
+    {% if request.user.is_anonymous %}
+      <a href="{% url 'login' %}">
+      <p class="welcome">Begin Session</p>
+      </a>
+    {% else %}
+      <p class="welcome">Hello, {{request.user}}!</p>
+    {% endif %}
+
     <div class="container">
       <div class="ontop">
         {% block content %}
