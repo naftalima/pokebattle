@@ -8,7 +8,6 @@ from battles.forms import BattleForm, TeamForm
 from battles.models import Battle, Team, TeamPokemon
 from battles.services.logic_battle import get_pokemons
 from battles.tasks import run_battle_and_send_result
-from pokemons.models import Pokemon
 
 
 class HomeView(TemplateView):
@@ -55,12 +54,6 @@ class SelectTeamView(UpdateView):
             run_battle_and_send_result.delay(battle.id)
             return HttpResponseRedirect(reverse_lazy("battle-detail", args=(battle.id,)))
         return HttpResponseRedirect(reverse_lazy("battles"))
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        pokemons_name = list(Pokemon.objects.values_list("name", flat=True))
-        context["pokemons_name"] = pokemons_name
-        return context
 
 
 class BattleListView(LoginRequiredMixin, ListView):
