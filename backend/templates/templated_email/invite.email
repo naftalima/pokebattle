@@ -1,4 +1,4 @@
-{% block subject %}[PokeBattle] Battle result!{% endblock %}
+{% block subject %}[PokeBattle] Battle Invite!{% endblock %}
 
 {% block html %}
      <h3>Hello <b>{{opponent_username}}</b>!</h3>

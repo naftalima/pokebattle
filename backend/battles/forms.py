@@ -1,13 +1,19 @@
 from django import forms
+from django.conf import settings
+from django.contrib.auth.forms import PasswordResetForm
 from django.forms import ModelForm
+from django.utils.crypto import get_random_string
 
 from battles.models import Battle, Team, TeamPokemon
 from battles.services.api_integration import get_or_create_pokemon, get_pokemon_info
+from battles.services.email import email_invite
 from battles.services.logic_team_pokemon import check_valid_team, is_unique
 from users.models import User
 
 
 class BattleForm(ModelForm):
+    opponent = forms.EmailField()
+
     class Meta:
         model = Battle
         fields = ("opponent",)
@@ -15,6 +21,41 @@ class BattleForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(BattleForm, self).__init__(*args, **kwargs)
         self.fields["opponent"].queryset = User.objects.exclude(id=self.initial["user_id"])
+        self.is_guest = False
+
+    def clean_opponent(self):
+        opponent_email = self.cleaned_data["opponent"]
+        try:
+            opponent = User.objects.get(email=opponent_email)
+        except User.DoesNotExist:
+            self.is_guest = True
+            opponent = User.objects.create(email=opponent_email)
+            random_password = get_random_string(length=64)
+            opponent.set_password(random_password)
+            opponent.save()
+        return opponent
+
+    def save(self, commit=True):
+        super().save()
+
+        battle = self.instance
+
+        Team.objects.create(battle=battle, trainer=battle.creator)
+        Team.objects.create(battle=battle, trainer=battle.opponent)
+
+        if not self.is_guest:
+            email_invite(battle)
+        else:
+            opponent = self.cleaned_data["opponent"]
+            invite_form = PasswordResetForm(data={"email": opponent.email})
+            invite_form.is_valid()
+            invite_form.save(
+                subject_template_name="registration/invite_signup_subject.txt",
+                email_template_name="registration/invite_signup_email.html",
+                from_email=settings.EMAIL_ADDRESS,
+                html_email_template_name=None,
+                domain_override=settings.HOST,
+            )
 
 
 class TeamForm(ModelForm):

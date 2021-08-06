@@ -6,8 +6,9 @@ from django.views.generic import CreateView, DetailView, ListView, TemplateView,
 
 from battles.forms import BattleForm, TeamForm
 from battles.models import Battle, Team, TeamPokemon
-from battles.services.email import email_battle_result, email_invite
-from battles.services.logic_battle import get_pokemons, get_winner
+from battles.services.logic_battle import get_pokemons
+from battles.tasks import run_battle_and_send_result
+from pokemons.models import Pokemon
 
 
 class HomeView(TemplateView):
@@ -24,14 +25,13 @@ class CreateBattleView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.creator = self.request.user
-        battle = form.save()
+        form.save()
 
-        team_creator = Team.objects.create(battle=battle, trainer=form.instance.creator)
-        Team.objects.create(battle=battle, trainer=form.instance.opponent)
+        creator_team_id = (
+            Team.objects.only("id").get(battle=form.instance, trainer=form.instance.creator).id
+        )
 
-        email_invite(battle)
-
-        return HttpResponseRedirect(reverse_lazy("battle-team-pokemons", args=(team_creator.id,)))
+        return HttpResponseRedirect(reverse_lazy("battle-team-pokemons", args=(creator_team_id,)))
 
 
 class SelectTeamView(UpdateView):
@@ -52,11 +52,15 @@ class SelectTeamView(UpdateView):
         ).exists()
         all_teams_has_pokemons = creator_team_has_pokemons and opponent_team_has_pokemons
         if all_teams_has_pokemons:
-            winner = get_winner(battle)
-            battle.set_winner(winner)
-            email_battle_result(battle)
+            run_battle_and_send_result.delay(battle.id)
             return HttpResponseRedirect(reverse_lazy("battle-detail", args=(battle.id,)))
         return HttpResponseRedirect(reverse_lazy("battles"))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pokemons_name = list(Pokemon.objects.values_list("name", flat=True))
+        context["pokemons_name"] = pokemons_name
+        return context
 
 
 class BattleListView(LoginRequiredMixin, ListView):
