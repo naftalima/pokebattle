@@ -58,6 +58,7 @@ class SelectTeamView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         pokemons_name = list(Pokemon.objects.values_list("name", flat=True))
         context["pokemons_name"] = pokemons_name
         return context
