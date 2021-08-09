@@ -27,7 +27,7 @@ cffi==1.14.6
     # via cryptography
 cfgv==3.3.0
     # via pre-commit
-charset-normalizer==2.0.3
+charset-normalizer==2.0.4
     # via requests
 click==8.0.1
     # via
@@ -45,7 +45,7 @@ defusedxml==0.7.1
     #   social-auth-core
 distlib==0.3.2
     # via virtualenv
-django==3.2.5
+django==3.2.6
     # via
     #   -r dev-requirements.in
     #   django-naomi
@@ -68,11 +68,11 @@ gitdb==4.0.7
     # via gitpython
 gitpython==3.1.18
     # via bandit
-identify==2.2.11
+identify==2.2.13
     # via pre-commit
 idna==3.2
     # via requests
-importlib-metadata==4.6.1
+importlib-metadata==4.6.3
     # via
     #   backports.entry-points-selectable
     #   click
@@ -80,7 +80,7 @@ importlib-metadata==4.6.1
     #   pre-commit
     #   stevedore
     #   virtualenv
-importlib-resources==5.2.1
+importlib-resources==5.2.2
     # via
     #   pre-commit
     #   virtualenv
@@ -166,7 +166,7 @@ pyyaml==5.4.1
     #   dparse
     #   pre-commit
     #   prospector
-regex==2021.7.6
+regex==2021.8.3
     # via black
 requests==2.26.0
     # via
@@ -185,13 +185,12 @@ six==1.16.0
     # via
     #   astroid
     #   bandit
-    #   social-auth-app-django
     #   virtualenv
 smmap==4.0.0
     # via gitdb
 snowballstemmer==2.1.0
     # via pydocstyle
-social-auth-app-django==4.0.0
+social-auth-app-django==5.0.0
     # via -r dev-requirements.in
 social-auth-core==4.1.0
     # via social-auth-app-django
@@ -217,7 +216,7 @@ typing-extensions==3.10.0.0
     #   importlib-metadata
 urllib3==1.26.6
     # via requests
-virtualenv==20.6.0
+virtualenv==20.7.0
     # via pre-commit
 wrapt==1.12.1
     # via astroid

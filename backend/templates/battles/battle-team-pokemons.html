@@ -4,6 +4,13 @@
 
   <h1 class="title" >Choose your Team!</h1>
   <form method="POST" form">{% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="error">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
     <p>
       <label for="pokemon_1">Pokemon 1:</label>
       <input id="pokemon_1" name="pokemon_1" type="text" list="pokemons">
@@ -47,6 +54,7 @@
     </p>
 
     <button class="button">Finish</button>
+
   </form>
 
 {% endblock %}

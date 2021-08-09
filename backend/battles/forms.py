@@ -5,9 +5,17 @@ from django.forms import ModelForm
 from django.utils.crypto import get_random_string
 
 from battles.models import Battle, Team, TeamPokemon
-from battles.services.api_integration import get_or_create_pokemon, get_pokemon_info
+from battles.services.api_integration import (
+    check_pokemons_exists,
+    get_or_create_pokemon,
+    get_pokemon_info,
+)
 from battles.services.email import email_invite
-from battles.services.logic_team_pokemon import check_valid_team, is_unique
+from battles.services.logic_team_pokemon import (
+    check_pokemons_unique,
+    check_position_unique,
+    check_team_sum_valid,
+)
 from users.models import User
 
 
@@ -105,15 +113,22 @@ class TeamForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
 
+        required_fields = list(self.fields.keys())
+        input_fields = list(cleaned_data.keys())
+        all_fields_filled = required_fields == input_fields
+
+        if not all_fields_filled:
+            raise forms.ValidationError("ERROR: All fields are required.")
+
         positions = [
             cleaned_data["position_1"],
             cleaned_data["position_2"],
             cleaned_data["position_3"],
         ]
 
-        is_positions_valid = is_unique(positions)
+        is_positions_unique = check_position_unique(positions)
 
-        if not is_positions_valid:
+        if not is_positions_unique:
             raise forms.ValidationError(
                 "ERROR: Has repeated positions." " Please select unique positions."
             )
@@ -124,11 +139,25 @@ class TeamForm(ModelForm):
             cleaned_data["pokemon_3"],
         ]
 
+        is_pokemons_unique = check_pokemons_unique(pokemon_names)
+
+        if not is_pokemons_unique:
+            raise forms.ValidationError(
+                "ERROR: Has repeated pokemon." " Please select unique pokemons."
+            )
+
+        is_pokemons_valid = check_pokemons_exists(pokemon_names)
+
+        if not is_pokemons_valid:
+            raise forms.ValidationError(
+                "ERROR: It's not a valid pokemon." " Please select an pokemons."
+            )
+
         pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
 
-        is_team_valid = check_valid_team(pokemons_data)
+        is_team_sum_valid = check_team_sum_valid(pokemons_data)
 
-        if not is_team_valid:
+        if not is_team_sum_valid:
             raise forms.ValidationError(
                 "ERROR: Your pokemons sum more than 600 points." " Please select other pokemons."
             )
