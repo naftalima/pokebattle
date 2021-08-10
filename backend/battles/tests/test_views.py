@@ -1,7 +1,16 @@
+from django.urls import reverse
+
+from model_bakery import baker
+
+from battles.models import Battle
 from common.utils.tests import TestCaseUtils
 
 
 class CreateBattleViewTest(TestCaseUtils):
+    def setUp(self):
+        super().setUp()
+        self.opponent = baker.make("users.User")
+
     def test_logged_in_uses_correct_template(self):
         response = self.auth_client.get("/battle/new/")
 
@@ -18,3 +27,17 @@ class CreateBattleViewTest(TestCaseUtils):
         response = self.auth_client.get("/battle/new/")
         self.assertRedirects(response, "/login/?next=/battle/new/")
         self.assertEqual(response.status_code, 302)
+
+    def test_challenge_yourself(self):
+        battle_data = {
+            "creator": self.user.id,
+            "opponent": self.user.id,
+        }
+
+        self.auth_client.post(reverse("battle-opponent"), battle_data)
+
+        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
+        self.assertFalse(battle)
+
+        self.auth_client.post(reverse("battle-opponent"), battle_data)
+        self.assertRaisesMessage(ValueError, "ERROR: You can't challenge yourself.")
