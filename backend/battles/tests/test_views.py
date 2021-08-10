@@ -14,6 +14,7 @@ class CreateBattleViewTest(TestCaseUtils):
         self.assertTemplateUsed(response, "battles/battle-opponent.html")
 
     def test_redirect_if_not_logged_in(self):
+        self.auth_client.logout()
         response = self.auth_client.get("/battle/new/")
         self.assertRedirects(response, "/login/?next=/battle/new/")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
