@@ -15,7 +15,7 @@
     {% for battle in on_going.all %}
       <tr>
         <td class="battle-id-btn">
-        <a href="{% url 'battle-team-pokemons' battle|get_team:user %}">
+        <a href="{% url 'battle-detail' battle.id %}">
           {{battle.id}}
         </a>
         </td>
