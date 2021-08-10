@@ -39,5 +39,17 @@ class CreateBattleViewTest(TestCaseUtils):
         battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
         self.assertFalse(battle)
 
-        self.auth_client.post(reverse("battle-opponent"), battle_data)
         self.assertRaisesMessage(ValueError, "ERROR: You can't challenge yourself.")
+
+    def test_create_battle_valid_opponent(self):
+        battle_data = {
+            "creator": self.user.id,
+            "opponent": self.opponent.email,
+        }
+
+        response = self.auth_client.post(reverse("battle-opponent"), battle_data)
+
+        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
+        self.assertTrue(battle)
+
+        self.assertEqual(response.status_code, 302)
