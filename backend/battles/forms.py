@@ -35,6 +35,9 @@ class BattleForm(ModelForm):
         opponent_email = self.cleaned_data["opponent"]
         try:
             opponent = User.objects.get(email=opponent_email)
+            challenge_yourself = opponent.id == self.initial["user_id"]
+            if challenge_yourself:
+                raise forms.ValidationError("ERROR: You can't challenge yourself.")
         except User.DoesNotExist:
             self.is_guest = True
             opponent = User.objects.create(email=opponent_email)
