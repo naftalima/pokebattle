@@ -1,13 +1,7 @@
-from model_bakery import baker
-
 from common.utils.tests import TestCaseUtils
 
 
 class CreateBattleViewTest(TestCaseUtils):
-    def setUp(self):
-        self.oppoent1 = baker.make("users.User")
-        self.oppoent2 = baker.make("users.User")
-
     def test_logged_in_uses_correct_template(self):
         self.client.login(email=self.user.email, password=self._user_password)
         response = self.client.get("/battle/new/")
