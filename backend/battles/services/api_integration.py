@@ -65,3 +65,12 @@ def get_all_pokemons_api():
         pokemon_name = pokemon_result["name"]
         pokemon = get_pokemon_api(pokemon_name)
         get_or_create_pokemon(pokemon)
+
+
+def check_pokemons_exists(pokemon_names):
+    for pokemon_name in pokemon_names:
+        url = urljoin(settings.POKE_API_URL, pokemon_name)
+        response = requests.head(url)
+        if not bool(response):
+            return False
+    return True

@@ -18,3 +18,4 @@ djangorestframework
 requests
 django-templated-email
 social-auth-app-django
+model_bakery
