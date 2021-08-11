@@ -53,3 +53,15 @@ class CreateBattleViewTest(TestCaseUtils):
         self.assertTrue(battle)
 
         self.assertEqual(response.status_code, 302)
+
+    def test_challenge_none(self):
+        battle_data = {
+            "creator": self.user.id,
+        }
+
+        self.auth_client.post(reverse("battle-opponent"), battle_data)
+
+        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
+        self.assertFalse(battle)
+
+        self.assertRaisesMessage(ValueError, "ERROR: You can't challenge yourself.")
