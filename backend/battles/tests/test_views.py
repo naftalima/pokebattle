@@ -65,3 +65,51 @@ class CreateBattleViewTest(TestCaseUtils):
         self.assertFalse(battle)
 
         self.assertRaisesMessage(ValueError, "ERROR: You can't challenge yourself.")
+
+
+class SelectTeamViewTest(TestCaseUtils):
+    def setUp(self):
+        super().setUp()
+        self.creator = self.user
+        self.opponent = baker.make("users.User")
+        self.battle = baker.make("battles.Battle", creator=self.creator, opponent=self.opponent)
+        self.team = baker.make("battles.Team", battle=self.battle, trainer=self.creator)
+
+    def test_redirect_if_not_logged_in(self):
+        self.auth_client.logout()
+        response = self.auth_client.get(
+            reverse("battle-team-pokemons", kwargs={"pk": self.team.id})
+        )
+        # self.assertRedirects(response, "/login/?next=/battle/<int:pk>/team/new/")
+        # Can't use assertRedirect, because the redirect URL is unpredictable
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith("/login/"))
+
+    def test_logged_in_uses_correct_template(self):
+        response = self.auth_client.get(
+            reverse("battle-team-pokemons", kwargs={"pk": self.team.id})
+        )
+        self.assertEqual(str(response.context["user"]), self.user.email)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "battles/battle-team-pokemons.html")
+
+    def test_creator_select_valid_team(self):
+        team_pokemon_data = {
+            "pokemon_1": "pikachu",
+            "position_1": 1,
+            "pokemon_2": "eevee",
+            "position_2": 2,
+            "pokemon_3": "nidorina",
+            "position_3": 3,
+        }
+        response = self.auth_client.post(
+            reverse(
+                "battle-team-pokemons",
+                kwargs={
+                    "pk": self.team.id,
+                },
+            ),
+            team_pokemon_data,
+            follow=True,
+        )
+        self.assertRedirects(response, "/battle/")
