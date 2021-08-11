@@ -52,22 +52,26 @@
 
   {% else %}
 
-  <h2>Wait for your opponent to choose their team.</h2>
+    {% if not opponent_pokemons %}
+      <h2>Wait for your opponent to choose their team.</h2>
+    {% endif %}
 
   <h3 class="title">Your team is:</h3>
   <table>
     <tr>
       {% for pokemon in creator_pokemons %}
-      <td class="battle-detail-td">
-        <div class="battle-detail-block">
-          <div class="battle-datail-display">
-            <img src="{{pokemon.img_url}}" height="90px">
+        <td class="battle-detail-td">
+          <div class="battle-detail-block">
+            <div class="battle-datail-display">
+              <img src="{{pokemon.img_url}}" height="90px">
+            </div>
+            <div class="battle-detail-pokemon-name">
+              {{pokemon.name}}
+            </div>
           </div>
-          <div class="battle-detail-pokemon-name">
-            {{pokemon.name}}
-          </div>
-        </div>
-      </td>
+        </td>
+      {% empty %}
+        <p>Your team is empty. Choose Pokemons for your team.</p>
       {% endfor %}
     </tr>
   </table>
