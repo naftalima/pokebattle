@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from model_bakery import baker
 
-from battles.models import Battle
+from battles.models import Battle, TeamPokemon
 from common.utils.tests import TestCaseUtils
 
 
@@ -113,3 +113,27 @@ class SelectTeamViewTest(TestCaseUtils):
             follow=True,
         )
         self.assertRedirects(response, "/battle/")
+
+    def test_creator_select_invalid_pokemon(self):
+        team_pokemon_data = {
+            "pokemon_1": "momo",
+            "position_1": 1,
+            "pokemon_2": "eevee",
+            "position_2": 1,
+            "pokemon_3": "nidorina",
+            "position_3": 1,
+        }
+        self.auth_client.post(
+            reverse(
+                "battle-team-pokemons",
+                kwargs={
+                    "pk": self.team.id,
+                },
+            ),
+            team_pokemon_data,
+            follow=True,
+        )
+
+        team_pokemon = TeamPokemon.objects.filter(team=self.team)
+        self.assertFalse(team_pokemon)
+        self.assertRaisesMessage(ValueError, "ERROR: It's not a valid pokemon.")
