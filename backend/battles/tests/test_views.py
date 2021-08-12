@@ -80,8 +80,6 @@ class SelectTeamViewTest(TestCaseUtils):
         response = self.auth_client.get(
             reverse("battle-team-pokemons", kwargs={"pk": self.team.id})
         )
-        # self.assertRedirects(response, "/login/?next=/battle/<int:pk>/team/new/")
-        # Can't use assertRedirect, because the redirect URL is unpredictable
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.url.startswith("/login/"))
 
