@@ -119,9 +119,9 @@ class SelectTeamViewTest(TestCaseUtils):
             "pokemon_1": "momo",
             "position_1": 1,
             "pokemon_2": "eevee",
-            "position_2": 1,
+            "position_2": 2,
             "pokemon_3": "nidorina",
-            "position_3": 1,
+            "position_3": 3,
         }
         self.auth_client.post(
             reverse(
