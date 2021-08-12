@@ -63,5 +63,3 @@ class CreateBattleViewTest(TestCaseUtils):
 
         battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
         self.assertFalse(battle)
-
-        self.assertRaisesMessage(ValueError, "ERROR: You can't challenge yourself.")
