@@ -32,6 +32,11 @@ class BattleForm(ModelForm):
         self.is_guest = False
 
     def clean_opponent(self):
+
+        opponent_field_filled = self.cleaned_data["opponent"]
+        if not opponent_field_filled:
+            raise forms.ValidationError("ERROR: All fields are required.")
+
         opponent_email = self.cleaned_data["opponent"]
         try:
             opponent = User.objects.get(email=opponent_email)
