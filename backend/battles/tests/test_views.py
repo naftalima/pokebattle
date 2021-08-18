@@ -141,7 +141,6 @@ class SelectTeamViewTest(TestCaseUtils):
 
     def test_missing_pokemon(self):
         team_pokemon_data = {
-            "pokemon_1": "",
             "position_1": 1,
             "pokemon_2": "eevee",
             "position_2": 2,
