@@ -113,6 +113,10 @@ class SelectTeamViewTest(TestCaseUtils):
         team_pokemon = TeamPokemon.objects.filter(team=self.team)
         self.assertTrue(team_pokemon)
 
+        self.assertEqual(team_pokemon_data["pokemon_1"], team_pokemon[0].pokemon.name)
+        self.assertEqual(team_pokemon_data["pokemon_2"], team_pokemon[1].pokemon.name)
+        self.assertEqual(team_pokemon_data["pokemon_3"], team_pokemon[2].pokemon.name)
+
         self.assertRedirects(response, "/battle/")
 
     def test_creator_select_invalid_pokemon(self):
