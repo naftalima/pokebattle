@@ -81,7 +81,7 @@ class SelectTeamViewTest(TestCaseUtils):
             reverse("battle-team-pokemons", kwargs={"pk": self.team.id})
         )
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith("/login/"))
+        self.assertTrue(response.url.startswith(reverse("login")))
 
     def test_logged_in_uses_correct_template(self):
         response = self.auth_client.get(
