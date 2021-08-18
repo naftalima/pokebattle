@@ -138,3 +138,27 @@ class SelectTeamViewTest(TestCaseUtils):
         team_pokemon = TeamPokemon.objects.filter(team=self.team)
         self.assertFalse(team_pokemon)
         self.assertRaisesMessage(ValueError, "ERROR: It's not a valid pokemon.")
+
+    def test_missing_pokemon(self):
+        team_pokemon_data = {
+            "pokemon_1": "",
+            "position_1": 1,
+            "pokemon_2": "eevee",
+            "position_2": 2,
+            "pokemon_3": "nidorina",
+            "position_3": 3,
+        }
+        self.auth_client.post(
+            reverse(
+                "battle-team-pokemons",
+                kwargs={
+                    "pk": self.team.id,
+                },
+            ),
+            team_pokemon_data,
+            follow=True,
+        )
+
+        team_pokemon = TeamPokemon.objects.filter(team=self.team)
+        self.assertFalse(team_pokemon)
+        self.assertRaisesMessage(ValueError, "ERROR: All fields are required.")
