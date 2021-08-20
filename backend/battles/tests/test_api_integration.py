@@ -116,20 +116,17 @@ class SendInviteMailTest(TestCaseUtils):
             "opponent": self.opponent.email,
         }
 
-        response = self.auth_client.post(reverse("battle-opponent"), battle_data)
+        self.auth_client.post(reverse("battle-opponent"), battle_data)
 
-        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
-        self.assertTrue(battle)
-
-        self.assertEqual(response.status_code, 302)
+        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)[0]
 
         email_mock.assert_called_with(
             template_name="invite",
             from_email=settings.EMAIL_ADDRESS,
-            recipient_list=[battle[0].opponent.email],
+            recipient_list=[battle.opponent.email],
             context={
-                "creator_username": get_username(battle[0].creator.email),
-                "opponent_username": get_username(battle[0].opponent.email),
+                "creator_username": get_username(battle.creator.email),
+                "opponent_username": get_username(battle.opponent.email),
             },
         )
 
