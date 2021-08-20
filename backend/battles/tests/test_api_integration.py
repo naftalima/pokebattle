@@ -110,7 +110,7 @@ class SendInviteMailTest(TestCaseUtils):
         self.opponent = baker.make("users.User")
 
     @mock.patch("battles.services.email.send_templated_mail")
-    def test_create_battle_valid_email(self, email_mock):
+    def test_send_email_invite(self, email_mock):
         battle_data = {
             "creator": self.user.id,
             "opponent": self.opponent.email,
@@ -159,7 +159,7 @@ class SendResultMailTest(TestCaseUtils):  # pylint: disable=too-many-instance-at
         )
 
     @mock.patch("battles.services.email.send_templated_mail")
-    def test_create_battle_valid_email(self, email_mock):
+    def test_send_battle_result(self, email_mock):
 
         team_pokemon_data = {
             "pokemon_1": "pikachu",
