@@ -34,7 +34,7 @@ class CreateBattleView(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(reverse_lazy("battle-team-pokemons", args=(creator_team_id,)))
 
 
-class SelectTeamView(UpdateView):
+class SelectTeamView(LoginRequiredMixin, UpdateView):
     model = Team
     template_name = "battles/battle-team-pokemons.html"
     form_class = TeamForm
@@ -85,7 +85,7 @@ class BattleListView(LoginRequiredMixin, ListView):
         return context
 
 
-class BattleDetailView(DetailView):
+class BattleDetailView(LoginRequiredMixin, DetailView):
     model = Battle
     template_name = "battles/battle_detail.html"
     context_object_name = "battle"
