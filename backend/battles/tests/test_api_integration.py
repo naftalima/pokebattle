@@ -94,3 +94,47 @@ class PokeApiTest(TestCaseUtils):
         is_pokemons_valid = check_pokemons_exists(pokemon_names)
 
         self.assertFalse(is_pokemons_valid)
+
+    @mock.patch("battles.services.api_integration.get_response")
+    def test_valid_pokemon_name(self, mock_get_pokemon):
+        def side_effect_func(pokemon_name):
+            fake_json = None
+            if pokemon_name == "mareep":
+                fake_json = {
+                    "defense": 65,
+                    "attack": 45,
+                    "hp": 35,
+                    "name": "mareep",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "pokemon_id": 179,
+                }
+            elif pokemon_name == "cleffa":
+                fake_json = {
+                    "defense": 55,
+                    "attack": 45,
+                    "hp": 15,
+                    "name": "cleffa",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "pokemon_id": 173,
+                }
+            elif pokemon_name == "bulbasaur":
+                fake_json = {
+                    "defense": 30,
+                    "attack": 40,
+                    "hp": 20,
+                    "name": "bulbasaur",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "pokemon_id": 10,
+                }
+            return fake_json
+
+        mock_get_pokemon.side_effect = side_effect_func
+
+        pokemon_names = ["mareep", "cleffa", "bulbasaur"]
+
+        is_pokemons_valid = check_pokemons_exists(pokemon_names)
+
+        self.assertTrue(is_pokemons_valid)
