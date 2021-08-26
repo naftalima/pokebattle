@@ -1,6 +1,6 @@
 from unittest import mock
 
-from battles.services.api_integration import check_pokemons_exists, get_pokemon_info
+from battles.services.api_integration import check_pokemons_exists, get_pokemons_data
 from battles.services.logic_team_pokemon import check_team_sum_valid
 from common.utils.tests import TestCaseUtils
 
@@ -45,7 +45,7 @@ class PokeApiTest(TestCaseUtils):
         mock_get_pokemon.side_effect = side_effect_func
         pokemon_names = ["mareep", "cleffa", "bulbasaur"]
 
-        pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
+        pokemons_data = get_pokemons_data(pokemon_names)
 
         is_team_sum_valid = check_team_sum_valid(pokemons_data)
 

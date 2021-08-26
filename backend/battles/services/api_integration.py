@@ -79,3 +79,8 @@ def check_pokemons_exists(pokemon_names):
         if not bool(response):
             return False
     return True
+
+
+def get_pokemons_data(pokemon_names):
+    pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
+    return pokemons_data
