@@ -21,11 +21,19 @@ class RunAsyncBattleTest(TestCaseUtils):
         self.team_opponent = baker.make("battles.Team", battle=self.battle, trainer=self.opponent)
         self.pokemons = [baker.make("pokemons.Pokemon") for i in range(1, 4)]
 
+    def add_pokemons_to_team(self, pokemons, positions, team):
+        for pokemon, position in zip(pokemons, positions):
+            TeamPokemon.objects.create(team=team, pokemon=pokemon, order=position)
+
     @mock.patch("battles.services.email.send_templated_mail")
     def test_run_battle_and_send_result(self, email_mock):
 
-        add_pokemons_to_team(pokemons=self.pokemons, positions=[1, 2, 3], team=self.team_creator)
-        add_pokemons_to_team(pokemons=self.pokemons, positions=[3, 2, 1], team=self.team_opponent)
+        self.add_pokemons_to_team(
+            pokemons=self.pokemons, positions=[1, 2, 3], team=self.team_creator
+        )
+        self.add_pokemons_to_team(
+            pokemons=self.pokemons, positions=[3, 2, 1], team=self.team_opponent
+        )
 
         run_battle_and_send_result(self.battle.id)
 
@@ -45,8 +53,3 @@ class RunAsyncBattleTest(TestCaseUtils):
                 "opponent_pokemon_team": get_pokemons(battle)["opponent"],
             },
         )
-
-
-def add_pokemons_to_team(pokemons, positions, team):
-    for pokemon, position in zip(pokemons, positions):
-        TeamPokemon.objects.create(team=team, pokemon=pokemon, order=position)
