@@ -28,7 +28,6 @@ class BattleForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(BattleForm, self).__init__(*args, **kwargs)
-        self.fields["opponent"].queryset = User.objects.exclude(id=self.initial["user_id"])
         self.is_guest = False
 
     def clean_opponent(self):
