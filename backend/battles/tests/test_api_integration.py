@@ -96,7 +96,7 @@ class PokeApiTest(TestCaseUtils):
         self.assertFalse(is_pokemons_valid)
 
     @mock.patch("battles.services.api_integration.get_response")
-    def test_valid_pokemon_name(self, mock_get_pokemon):
+    def test_valid_pokemons(self, mock_get_pokemon):
         def side_effect_func(pokemon_name):
             fake_json = None
             if pokemon_name == "mareep":
