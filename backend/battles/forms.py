@@ -6,7 +6,7 @@ from django.utils.crypto import get_random_string
 
 from battles.models import Battle, Team, TeamPokemon
 from battles.services.api_integration import (
-    check_pokemons_exists,
+    check_pokemons_exists_in_pokeapi,
     get_or_create_pokemon,
     get_pokemons_data,
 )
@@ -148,7 +148,7 @@ class TeamForm(ModelForm):
                 "ERROR: Has repeated pokemon." " Please select unique pokemons."
             )
 
-        is_pokemons_valid = check_pokemons_exists(pokemon_names)
+        is_pokemons_valid = check_pokemons_exists_in_pokeapi(pokemon_names)
 
         if not is_pokemons_valid:
             raise forms.ValidationError(
