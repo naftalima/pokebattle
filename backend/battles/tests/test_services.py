@@ -1,6 +1,6 @@
 from unittest import mock
 
-from battles.services.api_integration import check_pokemons_exists, get_pokemons_data
+from battles.services.api_integration import check_pokemons_exists_in_pokeapi, get_pokemons_data
 from battles.services.logic_team_pokemon import check_team_sum_valid
 from common.utils.tests import TestCaseUtils
 
@@ -51,7 +51,7 @@ class PokeApiTest(TestCaseUtils):
 
         self.assertTrue(is_team_sum_valid)
 
-    @mock.patch("battles.services.api_integration.get_pokemon_api")
+    @mock.patch("battles.services.api_integration.get_pokemon_from_api")
     def test_invalid_pokemon_name(self, mock_get_pokemon):
         def side_effect_func(pokemon_name):
             fake_json = None
@@ -91,11 +91,11 @@ class PokeApiTest(TestCaseUtils):
 
         pokemon_names = ["pikachuuuur", "cleffa", "bulbasaur"]
 
-        is_pokemons_valid = check_pokemons_exists(pokemon_names)
+        is_pokemons_valid = check_pokemons_exists_in_pokeapi(pokemon_names)
 
         self.assertFalse(is_pokemons_valid)
 
-    @mock.patch("battles.services.api_integration.get_pokemon_api")
+    @mock.patch("battles.services.api_integration.get_pokemon_from_api")
     def test_valid_pokemons(self, mock_get_pokemon):
         def side_effect_func(pokemon_name):
             fake_json = None
@@ -135,6 +135,6 @@ class PokeApiTest(TestCaseUtils):
 
         pokemon_names = ["mareep", "cleffa", "bulbasaur"]
 
-        is_pokemons_valid = check_pokemons_exists(pokemon_names)
+        is_pokemons_valid = check_pokemons_exists_in_pokeapi(pokemon_names)
 
         self.assertTrue(is_pokemons_valid)
