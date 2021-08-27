@@ -51,6 +51,52 @@ class PokeApiTest(TestCaseUtils):
 
         self.assertTrue(is_team_sum_valid)
 
+    @mock.patch("battles.services.api_integration.get_pokemon_info")
+    def test_invalid_pokemon_team(self, mock_get_pokemon):
+        def side_effect_func(pokemon_name):
+            fake_json = 1
+            if pokemon_name == "venusaur":
+                fake_json = {
+                    "defense": 165,
+                    "attack": 145,
+                    "hp": 235,
+                    "name": "venusaur",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "pokemon_id": 179,
+                }
+            elif pokemon_name == "ivysaur":
+                fake_json = {
+                    "defense": 255,
+                    "attack": 145,
+                    "hp": 150,
+                    "name": "ivysaur",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "pokemon_id": 173,
+                }
+            elif pokemon_name == "bulbasaur":
+                fake_json = {
+                    "defense": 120,
+                    "attack": 100,
+                    "hp": 200,
+                    "name": "bulbasaur",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "pokemon_id": 10,
+                }
+            return fake_json
+
+        mock_get_pokemon.side_effect = side_effect_func
+
+        pokemon_names = ["bulbasaur", "ivysaur", "venusaur"]
+
+        pokemons_data = get_pokemons_data(pokemon_names)
+
+        is_team_sum_valid = check_team_sum_valid(pokemons_data)
+
+        self.assertFalse(is_team_sum_valid)
+
     @mock.patch("battles.services.api_integration.get_pokemon_from_api")
     def test_invalid_pokemon_name(self, mock_get_pokemon):
         def side_effect_func(pokemon_name):
