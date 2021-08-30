@@ -418,6 +418,7 @@ class LogicBattleTest(TestCaseUtils):
         )
         winner = get_winner(self.battle)
         self.assertTrue(winner)
+        self.assertEqual(winner, self.opponent)
 
     def test_opponent_wins_in_a_tie(self):
         self.add_pokemons_to_team(
