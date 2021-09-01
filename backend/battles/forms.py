@@ -8,7 +8,7 @@ from battles.models import Battle, Team, TeamPokemon
 from battles.services.api_integration import (
     check_pokemons_exists_in_pokeapi,
     get_or_create_pokemon,
-    get_pokemons_data,
+    get_pokemon_info,
 )
 from battles.services.email import email_invite
 from battles.services.logic_team_pokemon import (
@@ -32,6 +32,11 @@ class BattleForm(ModelForm):
         self.is_guest = False
 
     def clean_opponent(self):
+
+        opponent_field_filled = self.cleaned_data["opponent"]
+        if not opponent_field_filled:
+            raise forms.ValidationError("ERROR: All fields are required.")
+
         opponent_email = self.cleaned_data["opponent"]
         try:
             opponent = User.objects.get(email=opponent_email)
@@ -156,7 +161,7 @@ class TeamForm(ModelForm):
                 "ERROR: It's not a valid pokemon." " Please select an pokemons."
             )
 
-        pokemons_data = get_pokemons_data(pokemon_names)
+        pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
 
         is_team_sum_valid = check_team_sum_valid(pokemons_data)
 

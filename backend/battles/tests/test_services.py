@@ -6,7 +6,7 @@ from django.urls import reverse
 from model_bakery import baker
 
 from battles.models import Battle
-from battles.services.api_integration import check_pokemons_exists_in_pokeapi, get_pokemons_data
+from battles.services.api_integration import check_pokemons_exists_in_pokeapi, get_pokemon_info
 from battles.services.logic_battle import get_pokemons  # pylint: disable=import-error
 from battles.services.logic_team_pokemon import check_team_sum_valid
 from battles.utils.format import get_username  # pylint: disable=import-error
@@ -14,7 +14,7 @@ from common.utils.tests import TestCaseUtils
 
 
 class PokeApiTest(TestCaseUtils):
-    @mock.patch("battles.services.api_integration.get_pokemon_info")
+    @mock.patch("battles.services.api_integration.get_pokemon_from_api")
     def test_valid_pokemon_team(self, mock_get_pokemon):
         def side_effect_func(pokemon_name):
             fake_json = 1
@@ -53,13 +53,13 @@ class PokeApiTest(TestCaseUtils):
         mock_get_pokemon.side_effect = side_effect_func
         pokemon_names = ["mareep", "cleffa", "bulbasaur"]
 
-        pokemons_data = get_pokemons_data(pokemon_names)
+        pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
 
         is_team_sum_valid = check_team_sum_valid(pokemons_data)
 
         self.assertTrue(is_team_sum_valid)
 
-    @mock.patch("battles.services.api_integration.get_pokemon_info")
+    @mock.patch("battles.services.api_integration.get_pokemon_from_api")
     def test_invalid_pokemon_team(self, mock_get_pokemon):
         def side_effect_func(pokemon_name):
             fake_json = 1
@@ -99,7 +99,7 @@ class PokeApiTest(TestCaseUtils):
 
         pokemon_names = ["bulbasaur", "ivysaur", "venusaur"]
 
-        pokemons_data = get_pokemons_data(pokemon_names)
+        pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
 
         is_team_sum_valid = check_team_sum_valid(pokemons_data)
 
