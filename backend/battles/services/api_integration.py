@@ -4,10 +4,10 @@ from django.conf import settings
 
 import requests
 
-from pokemons.models import Pokemon
+from pokemons.models import Pokemon  # pylint:disable=import-error
 
 
-def get_pokemon_api(pokemon_name):
+def get_pokemon_from_api(pokemon_name):
     url = urljoin(settings.POKE_API_URL, pokemon_name)
     response = requests.get(url)
     data = response.json()
@@ -36,7 +36,7 @@ def save_pokemon(pokemon_data):
 def get_pokemon_info(pokemon_name):
     pokemon = Pokemon.objects.filter(name=pokemon_name).first()
     if not pokemon:
-        pokemon_response = get_pokemon_api(pokemon_name)
+        pokemon_response = get_pokemon_from_api(pokemon_name)
         return pokemon_response
     return {
         "poke_id": pokemon.poke_id,
@@ -63,14 +63,13 @@ def get_all_pokemons_api():
     pokeapi_named = response.json().get("results")
     for pokemon_result in pokeapi_named:
         pokemon_name = pokemon_result["name"]
-        pokemon = get_pokemon_api(pokemon_name)
+        pokemon = get_pokemon_from_api(pokemon_name)
         get_or_create_pokemon(pokemon)
 
 
-def check_pokemons_exists(pokemon_names):
+def check_pokemons_exists_in_pokeapi(pokemon_names):
     for pokemon_name in pokemon_names:
-        url = urljoin(settings.POKE_API_URL, pokemon_name)
-        response = requests.head(url)
+        response = get_pokemon_from_api(pokemon_name)
         if not bool(response):
             return False
     return True
