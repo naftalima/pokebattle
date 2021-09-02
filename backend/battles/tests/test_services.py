@@ -6,7 +6,11 @@ from django.urls import reverse
 from model_bakery import baker
 
 from battles.models import Battle, TeamPokemon
-from battles.services.api_integration import check_pokemons_exists_in_pokeapi, get_pokemons_data
+from battles.services.api_integration import (
+    check_pokemons_exists_in_pokeapi,
+    get_or_create_pokemon,
+    get_pokemon_info,
+)
 from battles.services.logic_battle import get_pokemons, get_winner
 from battles.services.logic_team_pokemon import (
     check_pokemons_unique,
@@ -18,7 +22,7 @@ from common.utils.tests import TestCaseUtils
 
 
 class PokeApiTest(TestCaseUtils):
-    @mock.patch("battles.services.api_integration.get_pokemon_info")
+    @mock.patch("battles.services.api_integration.get_pokemon_from_api")
     def test_valid_pokemon_team(self, mock_get_pokemon):
         def side_effect_func(pokemon_name):
             fake_json = 1
@@ -30,7 +34,7 @@ class PokeApiTest(TestCaseUtils):
                     "name": "mareep",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 179,
+                    "poke_id": 179,
                 }
             elif pokemon_name == "cleffa":
                 fake_json = {
@@ -40,7 +44,7 @@ class PokeApiTest(TestCaseUtils):
                     "name": "cleffa",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 173,
+                    "poke_id": 173,
                 }
             elif pokemon_name == "bulbasaur":
                 fake_json = {
@@ -50,20 +54,20 @@ class PokeApiTest(TestCaseUtils):
                     "name": "bulbasaur",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 10,
+                    "poke_id": 10,
                 }
             return fake_json
 
         mock_get_pokemon.side_effect = side_effect_func
         pokemon_names = ["mareep", "cleffa", "bulbasaur"]
 
-        pokemons_data = get_pokemons_data(pokemon_names)
+        pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
 
         is_team_sum_valid = check_team_sum_valid(pokemons_data)
 
         self.assertTrue(is_team_sum_valid)
 
-    @mock.patch("battles.services.api_integration.get_pokemon_info")
+    @mock.patch("battles.services.api_integration.get_pokemon_from_api")
     def test_invalid_pokemon_team(self, mock_get_pokemon):
         def side_effect_func(pokemon_name):
             fake_json = 1
@@ -75,7 +79,7 @@ class PokeApiTest(TestCaseUtils):
                     "name": "venusaur",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 179,
+                    "poke_id": 179,
                 }
             elif pokemon_name == "ivysaur":
                 fake_json = {
@@ -85,7 +89,7 @@ class PokeApiTest(TestCaseUtils):
                     "name": "ivysaur",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 173,
+                    "poke_id": 173,
                 }
             elif pokemon_name == "bulbasaur":
                 fake_json = {
@@ -95,7 +99,7 @@ class PokeApiTest(TestCaseUtils):
                     "name": "bulbasaur",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 10,
+                    "poke_id": 10,
                 }
             return fake_json
 
@@ -103,7 +107,7 @@ class PokeApiTest(TestCaseUtils):
 
         pokemon_names = ["bulbasaur", "ivysaur", "venusaur"]
 
-        pokemons_data = get_pokemons_data(pokemon_names)
+        pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
 
         is_team_sum_valid = check_team_sum_valid(pokemons_data)
 
@@ -121,7 +125,7 @@ class PokeApiTest(TestCaseUtils):
                     "name": "mareep",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 179,
+                    "poke_id": 179,
                 }
             elif pokemon_name == "cleffa":
                 fake_json = {
@@ -131,7 +135,7 @@ class PokeApiTest(TestCaseUtils):
                     "name": "cleffa",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 173,
+                    "poke_id": 173,
                 }
             elif pokemon_name == "bulbasaur":
                 fake_json = {
@@ -141,7 +145,7 @@ class PokeApiTest(TestCaseUtils):
                     "name": "bulbasaur",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 10,
+                    "poke_id": 10,
                 }
             return fake_json
 
@@ -165,7 +169,7 @@ class PokeApiTest(TestCaseUtils):
                     "name": "mareep",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 179,
+                    "poke_id": 179,
                 }
             elif pokemon_name == "cleffa":
                 fake_json = {
@@ -175,7 +179,7 @@ class PokeApiTest(TestCaseUtils):
                     "name": "cleffa",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 173,
+                    "poke_id": 173,
                 }
             elif pokemon_name == "bulbasaur":
                 fake_json = {
@@ -185,7 +189,7 @@ class PokeApiTest(TestCaseUtils):
                     "name": "bulbasaur",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 10,
+                    "poke_id": 10,
                 }
             return fake_json
 
@@ -320,7 +324,7 @@ class LogicTeamPokemonTest(TestCaseUtils):
                     "name": "nidorina",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 179,
+                    "poke_id": 179,
                 }
             elif pokemon_name == "eevee":
                 fake_json = {
@@ -330,7 +334,7 @@ class LogicTeamPokemonTest(TestCaseUtils):
                     "name": "eevee",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 173,
+                    "poke_id": 173,
                 }
             elif pokemon_name == "pikachu":
                 fake_json = {
@@ -340,14 +344,14 @@ class LogicTeamPokemonTest(TestCaseUtils):
                     "name": "pikachu",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 10,
+                    "poke_id": 10,
                 }
             return fake_json
 
         mock_get_pokemon.side_effect = side_effect_func
 
         pokemon_names = ["pikachu", "eevee", "nidorina"]
-        pokemons_data = get_pokemons_data(pokemon_names)
+        pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
         is_team_sum_valid = check_team_sum_valid(pokemons_data)
         self.assertTrue(is_team_sum_valid)
 
@@ -390,7 +394,7 @@ class LogicTeamPokemonTest(TestCaseUtils):
         mock_get_pokemon.side_effect = side_effect_func
 
         pokemon_names = ["bulbasaur", "ivysaur", "venusaur"]
-        pokemons_data = get_pokemons_data(pokemon_names)
+        pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
         is_team_sum_valid = check_team_sum_valid(pokemons_data)
         self.assertFalse(is_team_sum_valid)
 
@@ -409,12 +413,127 @@ class LogicBattleTest(TestCaseUtils):
         for pokemon, position in zip(pokemons, positions):
             TeamPokemon.objects.create(team=team, pokemon=pokemon, order=position)
 
-    def test_get_winner(self):
+    @mock.patch("battles.services.api_integration.get_pokemon_info")
+    def test_get_winner_and_opponent_won(self, mock_get_pokemon):
+        def side_effect_func(pokemon_name):
+            fake_json = 1
+            if pokemon_name == "venusaur":
+                fake_json = {
+                    "defense": 165,
+                    "attack": 145,
+                    "hp": 235,
+                    "name": "venusaur",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 179,
+                }
+            elif pokemon_name == "ivysaur":
+                fake_json = {
+                    "defense": 255,
+                    "attack": 145,
+                    "hp": 150,
+                    "name": "ivysaur",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 173,
+                }
+            elif pokemon_name == "bulbasaur":
+                fake_json = {
+                    "defense": 120,
+                    "attack": 100,
+                    "hp": 200,
+                    "name": "bulbasaur",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 132,
+                }
+            elif pokemon_name == "ditto":
+                fake_json = {
+                    "defense": 48,
+                    "attack": 48,
+                    "hp": 48,
+                    "name": "ditto",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 10,
+                }
+            return fake_json
+
+        mock_get_pokemon.side_effect = side_effect_func
+        pokemon_names = ["bulbasaur", "ivysaur", "venusaur", "ditto"]
+        pokemons = [
+            get_or_create_pokemon(pokemon_data=get_pokemon_info(pokemon_name=pokemon_name))
+            for pokemon_name in pokemon_names
+        ]
+
         self.add_pokemons_to_team(
-            pokemons=self.pokemons, positions=[1, 2, 3], team=self.team_creator
+            pokemons=pokemons[0:2], positions=[1, 2, 3], team=self.team_creator
         )
         self.add_pokemons_to_team(
-            pokemons=self.pokemons, positions=[3, 2, 1], team=self.team_opponent
+            pokemons=pokemons[1:3], positions=[3, 2, 1], team=self.team_opponent
+        )
+        winner = get_winner(self.battle)
+        self.assertTrue(winner)
+        self.assertEqual(winner, self.opponent)
+
+    @mock.patch("battles.services.api_integration.get_pokemon_info")
+    def test_get_winner_and_creator_won(self, mock_get_pokemon):
+        def side_effect_func(pokemon_name):
+            fake_json = 1
+            if pokemon_name == "venusaur":
+                fake_json = {
+                    "defense": 165,
+                    "attack": 145,
+                    "hp": 235,
+                    "name": "venusaur",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 179,
+                }
+            elif pokemon_name == "ivysaur":
+                fake_json = {
+                    "defense": 255,
+                    "attack": 145,
+                    "hp": 150,
+                    "name": "ivysaur",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 173,
+                }
+            elif pokemon_name == "bulbasaur":
+                fake_json = {
+                    "defense": 120,
+                    "attack": 100,
+                    "hp": 200,
+                    "name": "bulbasaur",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 10,
+                }
+            elif pokemon_name == "ditto":
+                fake_json = {
+                    "defense": 48,
+                    "attack": 48,
+                    "hp": 48,
+                    "name": "ditto",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 10,
+                }
+            return fake_json
+
+        mock_get_pokemon.side_effect = side_effect_func
+        pokemon_names = ["bulbasaur", "ivysaur", "venusaur", "ditto"]
+        pokemons = [
+            get_or_create_pokemon(pokemon_data=get_pokemon_info(pokemon_name=pokemon_name))
+            for pokemon_name in pokemon_names
+        ]
+
+        self.add_pokemons_to_team(
+            pokemons=pokemons[0:2], positions=[3, 2, 1], team=self.team_creator
+        )
+        self.add_pokemons_to_team(
+            pokemons=pokemons[1:3], positions=[1, 2, 3], team=self.team_opponent
         )
         winner = get_winner(self.battle)
         self.assertTrue(winner)
