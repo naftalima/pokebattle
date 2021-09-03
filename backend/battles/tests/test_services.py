@@ -466,11 +466,14 @@ class LogicBattleTest(TestCaseUtils):
             for pokemon_name in pokemon_names
         ]
 
+        creator_pkns = pokemons[1:]
+        opponent_pkns = pokemons[0:3]
+
         self.add_pokemons_to_team(
-            pokemons=pokemons[0:2], positions=[1, 2, 3], team=self.team_creator
+            pokemons=creator_pkns, positions=[1, 2, 3], team=self.team_creator
         )
         self.add_pokemons_to_team(
-            pokemons=pokemons[1:3], positions=[3, 2, 1], team=self.team_opponent
+            pokemons=opponent_pkns, positions=[3, 2, 1], team=self.team_opponent
         )
         winner = get_winner(self.battle)
         self.assertTrue(winner)
@@ -528,16 +531,18 @@ class LogicBattleTest(TestCaseUtils):
             get_or_create_pokemon(pokemon_data=get_pokemon_info(pokemon_name=pokemon_name))
             for pokemon_name in pokemon_names
         ]
+        creator_pkns = pokemons[0:3]
+        opponent_pkns = pokemons[1:]
 
         self.add_pokemons_to_team(
-            pokemons=pokemons[0:2], positions=[3, 2, 1], team=self.team_creator
+            pokemons=creator_pkns, positions=[3, 2, 1], team=self.team_creator
         )
         self.add_pokemons_to_team(
-            pokemons=pokemons[1:3], positions=[1, 2, 3], team=self.team_opponent
+            pokemons=opponent_pkns, positions=[1, 2, 3], team=self.team_opponent
         )
         winner = get_winner(self.battle)
         self.assertTrue(winner)
-        self.assertEqual(winner, self.opponent)
+        self.assertEqual(winner, self.creator)
 
     def test_opponent_wins_in_a_tie(self):
         self.add_pokemons_to_team(
