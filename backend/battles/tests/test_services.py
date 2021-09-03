@@ -367,7 +367,7 @@ class LogicTeamPokemonTest(TestCaseUtils):
                     "name": "venusaur",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 179,
+                    "poke_id": 179,
                 }
             elif pokemon_name == "ivysaur":
                 fake_json = {
@@ -377,7 +377,7 @@ class LogicTeamPokemonTest(TestCaseUtils):
                     "name": "ivysaur",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 173,
+                    "poke_id": 173,
                 }
             elif pokemon_name == "bulbasaur":
                 fake_json = {
@@ -387,7 +387,7 @@ class LogicTeamPokemonTest(TestCaseUtils):
                     "name": "bulbasaur",
                     "img_url": "https://raw.githubusercontent.com"
                     "/PokeAPI/sprites/master/sprites/pokemon/25.png",
-                    "pokemon_id": 10,
+                    "poke_id": 10,
                 }
             return fake_json
 
