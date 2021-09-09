@@ -12,10 +12,10 @@ class CreateBattleViewTest(TestCaseUtils):
         self.opponent = baker.make("users.User")
 
     def test_logged_in_uses_correct_template(self):
-        response = self.auth_client.get("/battle/new/")
+        response = self.auth_client.get(reverse("battle-opponent"))
 
         # Check our user is logged in
-        self.assertEqual(str(response.context["user"]), self.user.email)
+        self.assertEqual(response.context["user"].email, self.user.email)
         # Check that we got a response "success"
         self.assertEqual(response.status_code, 200)
 
@@ -24,7 +24,7 @@ class CreateBattleViewTest(TestCaseUtils):
 
     def test_redirect_if_not_logged_in(self):
         self.auth_client.logout()
-        response = self.auth_client.get("/battle/new/")
+        response = self.auth_client.get(reverse("battle-opponent"))
         self.assertRedirects(response, "/login/?next=/battle/new/")
         self.assertEqual(response.status_code, 302)
 
@@ -50,6 +50,9 @@ class CreateBattleViewTest(TestCaseUtils):
         response = self.auth_client.post(reverse("battle-opponent"), battle_data)
 
         battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
+        self.assertEqual(battle[0].creator.email, self.user.email)
+        self.assertEqual(battle[0].opponent.email, self.opponent.email)
+
         self.assertTrue(battle)
 
         self.assertEqual(response.status_code, 302)
@@ -60,6 +63,8 @@ class CreateBattleViewTest(TestCaseUtils):
         }
 
         self.auth_client.post(reverse("battle-opponent"), battle_data)
+
+        self.assertRaisesMessage(ValueError, "ERROR: All fields are required.")
 
         battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
         self.assertFalse(battle)
@@ -81,7 +86,7 @@ class SelectTeamViewTest(TestCaseUtils):
             reverse("battle-team-pokemons", kwargs={"pk": self.team.id})
         )
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.url.startswith("/login/"))
+        self.assertTrue(response.url.startswith(reverse("login")))
 
     def test_logged_in_uses_correct_template(self):
         response = self.auth_client.get(
@@ -113,6 +118,10 @@ class SelectTeamViewTest(TestCaseUtils):
         team_pokemon = TeamPokemon.objects.filter(team=self.team)
         self.assertTrue(team_pokemon)
 
+        self.assertEqual(team_pokemon_data["pokemon_1"], team_pokemon[0].pokemon.name)
+        self.assertEqual(team_pokemon_data["pokemon_2"], team_pokemon[1].pokemon.name)
+        self.assertEqual(team_pokemon_data["pokemon_3"], team_pokemon[2].pokemon.name)
+
         self.assertRedirects(response, "/battle/")
 
     def test_creator_select_invalid_pokemon(self):
@@ -138,3 +147,26 @@ class SelectTeamViewTest(TestCaseUtils):
         team_pokemon = TeamPokemon.objects.filter(team=self.team)
         self.assertFalse(team_pokemon)
         self.assertRaisesMessage(ValueError, "ERROR: It's not a valid pokemon.")
+
+    def test_missing_pokemon(self):
+        team_pokemon_data = {
+            "position_1": 1,
+            "pokemon_2": "eevee",
+            "position_2": 2,
+            "pokemon_3": "nidorina",
+            "position_3": 3,
+        }
+        self.auth_client.post(
+            reverse(
+                "battle-team-pokemons",
+                kwargs={
+                    "pk": self.team.id,
+                },
+            ),
+            team_pokemon_data,
+            follow=True,
+        )
+
+        team_pokemon = TeamPokemon.objects.filter(team=self.team)
+        self.assertFalse(team_pokemon)
+        self.assertRaisesMessage(ValueError, "ERROR: All fields are required.")

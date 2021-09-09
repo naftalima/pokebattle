@@ -4,7 +4,7 @@ from battles.models import Battle, Team, TeamPokemon
 from battles.services.api_integration import (
     check_pokemons_exists_in_pokeapi,
     get_or_create_pokemon,
-    get_pokemons_data,
+    get_pokemon_info,
 )
 from battles.services.logic_team import create_guest_opponent
 from battles.services.logic_team_pokemon import (
@@ -33,11 +33,11 @@ class BattleSerializer(serializers.ModelSerializer):
 
 class CreateBattleSerializer(serializers.ModelSerializer):
     opponent = serializers.CharField(style={"base_template": "textarea.html"})
+    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Battle
-        fields = ("id", "creator", "opponent", "winner")
-        extra_kwargs = {"winner": {"required": False}}
+        fields = ("id", "creator", "opponent")
 
     def validate_opponent(self, attrs):
         opponent_email = attrs
@@ -95,22 +95,22 @@ class SelectTeamSerializer(serializers.ModelSerializer):
         is_positions_unique = check_position_unique(positions)
         if not is_positions_unique:
             raise serializers.ValidationError(
-                "ERROR: Has repeated positions." " Please select unique positions."
+                "ERROR: Has repeated positions. Please select unique positions."
             )
 
         is_pokemons_unique = check_pokemons_unique(pokemon_names)
         if not is_pokemons_unique:
             raise serializers.ValidationError(
-                "ERROR: Has repeated pokemon." " Please select unique pokemons."
+                "ERROR: Has repeated pokemon. Please select unique pokemons."
             )
 
         is_pokemons_valid = check_pokemons_exists_in_pokeapi(pokemon_names)
         if not is_pokemons_valid:
             raise serializers.ValidationError(
-                "ERROR: It's not a valid pokemon." " Please select an pokemons."
+                "ERROR: It's not a valid pokemon. Please select an pokemons."
             )
 
-        pokemons_data = get_pokemons_data(pokemon_names)
+        pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
 
         is_team_sum_valid = check_team_sum_valid(pokemons_data)
         if not is_team_sum_valid:
@@ -125,6 +125,8 @@ class SelectTeamSerializer(serializers.ModelSerializer):
         return attrs
 
     def update(self, instance, validated_data):
+        instance.pokemons.clear()
+
         pokemon_1 = validated_data.pop("pokemon_1")
         pokemon_2 = validated_data.pop("pokemon_2")
         pokemon_3 = validated_data.pop("pokemon_3")
