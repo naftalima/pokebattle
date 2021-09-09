@@ -79,8 +79,8 @@ class BattleListView(LoginRequiredMixin, ListView):
         context = super().get_context_data()
         queryset_filtered = self.get_queryset()
 
-        context["on_going"] = queryset_filtered.filter(winner__isnull=True)
-        context["settled"] = queryset_filtered.filter(winner__isnull=False)
+        context["on_going"] = queryset_filtered.filter(winner__isnull=True).order_by("-id")
+        context["settled"] = queryset_filtered.filter(winner__isnull=False).order_by("-id")
 
         return context
 
