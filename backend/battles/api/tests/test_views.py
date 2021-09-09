@@ -48,10 +48,44 @@ class SelectTeamTests(TestCaseUtils):
         baker.make("pokemons.Pokemon", name="eevee")
         baker.make("pokemons.Pokemon", name="nidorina")
 
-    @mock.patch("battles.services.api_integration.check_pokemons_exists_in_pokeapi")
-    def test_update_team_correct(
-        self, mock_check_pokemons_exists_in_pokeapi
-    ):  # pylint: disable=unused-argument
+    @mock.patch("battles.services.api_integration.get_pokemon_from_api")
+    def test_update_team_correct(self, mock_get_pokemon):
+        def side_effect_func(pokemon_name):
+            fake_json = 1
+            if pokemon_name == "mareep":
+                fake_json = {
+                    "defense": 65,
+                    "attack": 45,
+                    "hp": 35,
+                    "name": "mareep",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 179,
+                }
+            elif pokemon_name == "cleffa":
+                fake_json = {
+                    "defense": 55,
+                    "attack": 45,
+                    "hp": 15,
+                    "name": "cleffa",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 173,
+                }
+            elif pokemon_name == "bulbasaur":
+                fake_json = {
+                    "defense": 30,
+                    "attack": 40,
+                    "hp": 20,
+                    "name": "bulbasaur",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 10,
+                }
+            return fake_json
+
+        mock_get_pokemon.side_effect = side_effect_func
+
         team_pokemon_data = {
             "pokemon_1": "pikachu",
             "position_1": 1,
@@ -60,7 +94,6 @@ class SelectTeamTests(TestCaseUtils):
             "pokemon_3": "nidorina",
             "position_3": 3,
         }
-
         response = self.auth_client.patch(
             self.view_url, json.dumps(team_pokemon_data), content_type="application/json"
         )
