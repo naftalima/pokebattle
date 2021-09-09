@@ -95,19 +95,19 @@ class SelectTeamSerializer(serializers.ModelSerializer):
         is_positions_unique = check_position_unique(positions)
         if not is_positions_unique:
             raise serializers.ValidationError(
-                "ERROR: Has repeated positions." " Please select unique positions."
+                "ERROR: Has repeated positions. Please select unique positions."
             )
 
         is_pokemons_unique = check_pokemons_unique(pokemon_names)
         if not is_pokemons_unique:
             raise serializers.ValidationError(
-                "ERROR: Has repeated pokemon." " Please select unique pokemons."
+                "ERROR: Has repeated pokemon. Please select unique pokemons."
             )
 
         is_pokemons_valid = check_pokemons_exists_in_pokeapi(pokemon_names)
         if not is_pokemons_valid:
             raise serializers.ValidationError(
-                "ERROR: It's not a valid pokemon." " Please select an pokemons."
+                "ERROR: It's not a valid pokemon. Please select an pokemons."
             )
 
         pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
