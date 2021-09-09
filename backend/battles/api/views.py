@@ -2,8 +2,8 @@ from django.db.models import Q
 
 from rest_framework import generics
 
-from battles.api.serializers import BattleSerializer, CreateBattleSerializer
-from battles.models import Battle
+from battles.api.serializers import BattleSerializer, CreateBattleSerializer, SelectTeamSerializer
+from battles.models import Battle, Team
 
 
 class BattleListView(generics.ListAPIView):
@@ -18,3 +18,11 @@ class BattleListView(generics.ListAPIView):
 
 class CreateBattleView(generics.CreateAPIView):
     serializer_class = CreateBattleSerializer
+
+
+class SelectTeamView(generics.UpdateAPIView):
+    serializer_class = SelectTeamSerializer
+
+    def get_queryset(self):
+        queryset = Team.objects.all()
+        return queryset
