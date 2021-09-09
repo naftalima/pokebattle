@@ -25,8 +25,5 @@ class CreateBattleView(generics.CreateAPIView):
 
 class SelectTeamView(generics.UpdateAPIView):
     serializer_class = SelectTeamSerializer
+    queryset = Team.objects.all()
     permission_classes = [IsTheTrainerOfTheTeam]
-
-    def get_queryset(self):
-        queryset = Team.objects.all()
-        return queryset
