@@ -22,13 +22,29 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("id", "email")
 
 
+class PokemonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pokemon
+        fields = ("id", "poke_id", "name", "img_url", "attack", "defense", "hp")
+
+
+class TeamSerializer(serializers.ModelSerializer):
+    trainer = UserSerializer()
+    pokemons = PokemonSerializer(many=True)
+
+    class Meta:
+        model = Team
+        fields = ("id", "battle", "trainer", "pokemons")
+
+
 class BattleSerializer(serializers.ModelSerializer):
     creator = UserSerializer()
     opponent = UserSerializer()
+    teams = TeamSerializer(many=True, read_only=True)
 
     class Meta:
         model = Battle
-        fields = ("id", "creator", "opponent", "winner", "created_at")
+        fields = ("id", "creator", "opponent", "teams", "winner", "created_at")
 
 
 class CreateBattleSerializer(serializers.ModelSerializer):
@@ -60,12 +76,6 @@ class CreateBattleSerializer(serializers.ModelSerializer):
         Team.objects.create(battle=battle, trainer=battle.creator)
         Team.objects.create(battle=battle, trainer=battle.opponent)
         return battle
-
-
-class PokemonSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Pokemon
-        fields = ("id", "poke_id", "name", "img_url", "attack", "defense", "hp")
 
 
 class SelectTeamSerializer(serializers.ModelSerializer):

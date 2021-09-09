@@ -18,6 +18,17 @@ class BattleListView(generics.ListAPIView):
         return queryset
 
 
+class BattleDetailView(generics.RetrieveAPIView):
+    serializer_class = BattleSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Battle.objects.filter(
+            Q(creator=self.request.user) | Q(opponent=self.request.user)
+        ).order_by("-id")
+        return queryset
+
+
 class CreateBattleView(generics.CreateAPIView):
     serializer_class = CreateBattleSerializer
     permission_classes = [permissions.IsAuthenticated]
