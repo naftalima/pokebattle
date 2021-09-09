@@ -22,11 +22,11 @@ class BattleSerializer(serializers.ModelSerializer):
 
 class CreateBattleSerializer(serializers.ModelSerializer):
     opponent = serializers.CharField(style={"base_template": "textarea.html"})
+    creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Battle
-        fields = ("id", "creator", "opponent", "winner")
-        extra_kwargs = {"winner": {"required": False}}
+        fields = ("id", "creator", "opponent")
 
     def validate_opponent(self, attrs):
         opponent_email = attrs
