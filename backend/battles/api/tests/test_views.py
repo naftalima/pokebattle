@@ -159,3 +159,59 @@ class SelectTeamTests(TestCaseUtils):
 
         team_pokemon = TeamPokemon.objects.filter(team=self.team_creator)
         self.assertFalse(team_pokemon)
+
+    @mock.patch("battles.services.api_integration.get_pokemon_from_api")
+    def test_user_is_not_the_team_trainer(self, mock_get_pokemon):
+        view_url = reverse(self.view_name, kwargs={"pk": self.team_opponent.pk})
+
+        def side_effect_func(pokemon_name):
+            fake_json = 1
+            if pokemon_name == "pikachu":
+                fake_json = {
+                    "defense": 65,
+                    "attack": 45,
+                    "hp": 35,
+                    "name": "pikachu",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 179,
+                }
+            elif pokemon_name == "eevee":
+                fake_json = {
+                    "defense": 55,
+                    "attack": 45,
+                    "hp": 15,
+                    "name": "eevee",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 173,
+                }
+            elif pokemon_name == "nidorina":
+                fake_json = {
+                    "defense": 30,
+                    "attack": 40,
+                    "hp": 20,
+                    "name": "nidorina",
+                    "img_url": "https://raw.githubusercontent.com"
+                    "/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                    "poke_id": 10,
+                }
+            return fake_json
+
+        mock_get_pokemon.side_effect = side_effect_func
+
+        team_pokemon_data = {
+            "pokemon_1": "pikachu",
+            "position_1": 1,
+            "pokemon_2": "pikachu",
+            "position_2": 2,
+            "pokemon_3": "pikachu",
+            "position_3": 3,
+        }
+
+        self.auth_client.patch(
+            view_url, json.dumps(team_pokemon_data), content_type="application/json"
+        )
+
+        team_pokemon = TeamPokemon.objects.filter(team=self.team_creator)
+        self.assertFalse(team_pokemon)
