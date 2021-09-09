@@ -22,7 +22,4 @@ class CreateBattleView(generics.CreateAPIView):
 
 class SelectTeamView(generics.UpdateAPIView):
     serializer_class = SelectTeamSerializer
-
-    def get_queryset(self):
-        queryset = Team.objects.all()
-        return queryset
+    queryset = Team.objects.all()
