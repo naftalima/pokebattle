@@ -8,14 +8,14 @@
   </a>
 
   <h1 class="title"> Battles</h1>
-  <p> total de {% get_total_battles %}.</p>
+  <p> total de {% get_total_battles user %}.</p>
 
   <h2 class="title">On going Battles</h2>
   <table>
     {% for battle in on_going.all %}
       <tr>
         <td class="battle-id-btn">
-        <a href="{% url 'battle-team-pokemons' battle|get_team:user %}">
+        <a href="{% url 'battle-detail' battle.id %}">
           {{battle.id}}
         </a>
         </td>
