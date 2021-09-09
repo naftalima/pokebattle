@@ -34,6 +34,28 @@ class BattleListTests(TestCaseUtils):
         self.assertFalse(response.data)
 
 
+class BattleDetailTest(TestCaseUtils):
+    view_name = "api:battle_detail"
+
+    def setUp(self):
+        super().setUp()
+        self.creator = self.user
+        self.opponent = baker.make("users.User")
+        self.battle = baker.make("battles.Battle", creator=self.creator, opponent=self.opponent)
+        self.team_creator = baker.make("battles.Team", battle=self.battle, trainer=self.creator)
+        self.team_opponent = baker.make("battles.Team", battle=self.battle, trainer=self.opponent)
+        self.view_url = reverse(self.view_name, kwargs={"pk": self.battle.pk})
+
+    def test_return_200_when_accessing_endpoint(self):
+        response = self.auth_client.get(self.view_url)
+        self.assertResponse200(response)
+
+    def test_return_forbidden(self):
+        self.auth_client.logout()
+        response = self.auth_client.get(self.view_url)
+        self.assertResponse403(response)
+
+
 class SelectTeamTests(TestCaseUtils):
     view_name = "api:team_edit"
 
