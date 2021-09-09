@@ -125,6 +125,8 @@ class SelectTeamSerializer(serializers.ModelSerializer):
         return attrs
 
     def update(self, instance, validated_data):
+        instance.pokemons.clear()
+
         pokemon_1 = validated_data.pop("pokemon_1")
         pokemon_2 = validated_data.pop("pokemon_2")
         pokemon_3 = validated_data.pop("pokemon_3")
