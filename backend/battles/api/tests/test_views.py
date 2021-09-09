@@ -1,11 +1,14 @@
 import json
 from unittest import mock
 
+from django.conf import settings
 from django.urls import reverse
 
 from model_bakery import baker
 
-from battles.models import TeamPokemon
+from battles.models import Battle, TeamPokemon
+from battles.services.logic_battle import get_pokemons
+from battles.utils.format import get_username  # pylint: disable=import-error
 from common.utils.tests import TestCaseUtils
 
 
@@ -67,6 +70,7 @@ class SelectTeamTests(TestCaseUtils):
         self.team_creator = baker.make("battles.Team", battle=self.battle, trainer=self.creator)
         self.team_opponent = baker.make("battles.Team", battle=self.battle, trainer=self.opponent)
         self.view_url = reverse(self.view_name, kwargs={"pk": self.team_creator.pk})
+        self.team_pokemon = None
         baker.make("pokemons.Pokemon", name="pikachu")
         baker.make("pokemons.Pokemon", name="eevee")
         baker.make("pokemons.Pokemon", name="nidorina")
@@ -237,3 +241,53 @@ class SelectTeamTests(TestCaseUtils):
 
         team_pokemon = TeamPokemon.objects.filter(team=self.team_creator)
         self.assertFalse(team_pokemon)
+
+    @mock.patch("battles.services.email.send_templated_mail")
+    def test_send_battle_result(self, email_mock):
+        pokemon_1 = baker.make("pokemons.Pokemon")
+        pokemon_2 = baker.make("pokemons.Pokemon")
+        pokemon_3 = baker.make("pokemons.Pokemon")
+
+        self.team_pokemon = baker.make(
+            "battles.TeamPokemon", team=self.team_opponent, pokemon=pokemon_1, order=1
+        )
+        self.team_pokemon = baker.make(
+            "battles.TeamPokemon", team=self.team_opponent, pokemon=pokemon_2, order=2
+        )
+        self.team_pokemon = baker.make(
+            "battles.TeamPokemon", team=self.team_opponent, pokemon=pokemon_3, order=3
+        )
+
+        team_pokemon_data = {
+            "pokemon_1": "pikachu",
+            "position_1": 1,
+            "pokemon_2": "eevee",
+            "position_2": 2,
+            "pokemon_3": "nidorina",
+            "position_3": 3,
+        }
+        self.auth_client.post(
+            reverse(
+                "battle-team-pokemons",
+                kwargs={
+                    "pk": self.team_creator.id,
+                },
+            ),
+            team_pokemon_data,
+            follow=True,
+        )
+
+        battle = Battle.objects.filter(creator=self.creator, opponent=self.opponent)[0]
+
+        email_mock.assert_called_with(
+            template_name="battle_result",
+            from_email=settings.EMAIL_ADDRESS,
+            recipient_list=[battle.creator.email, battle.opponent.email],
+            context={
+                "winner_username": get_username(battle.winner.email),
+                "creator_username": get_username(battle.creator.email),
+                "opponent_username": get_username(battle.opponent.email),
+                "creator_pokemon_team": get_pokemons(battle)["creator"],
+                "opponent_pokemon_team": get_pokemons(battle)["opponent"],
+            },
+        )
