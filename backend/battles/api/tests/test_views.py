@@ -67,9 +67,6 @@ class SelectTeamTests(TestCaseUtils):
         self.team_creator = baker.make("battles.Team", battle=self.battle, trainer=self.creator)
         self.team_opponent = baker.make("battles.Team", battle=self.battle, trainer=self.opponent)
         self.view_url = reverse(self.view_name, kwargs={"pk": self.team_creator.pk})
-        baker.make("pokemons.Pokemon", name="pikachu")
-        baker.make("pokemons.Pokemon", name="eevee")
-        baker.make("pokemons.Pokemon", name="nidorina")
 
     @mock.patch("battles.services.api_integration.get_pokemon_from_api")
     def test_update_team_correct(self, mock_get_pokemon):

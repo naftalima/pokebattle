@@ -125,7 +125,7 @@ class SelectTeamSerializer(serializers.ModelSerializer):
         is_team_sum_valid = check_team_sum_valid(pokemons_data)
         if not is_team_sum_valid:
             raise serializers.ValidationError(
-                "ERROR: Your pokemons sum more than 600 points." " Please select other pokemons."
+                "ERROR: Your pokemons sum more than 600 points. Please select other pokemons."
             )
 
         attrs["pokemon_1"] = get_or_create_pokemon(pokemons_data[0])
