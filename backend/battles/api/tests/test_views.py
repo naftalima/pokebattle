@@ -10,9 +10,10 @@ from battles.models import Battle, TeamPokemon
 from battles.services.logic_battle import get_pokemons
 from battles.utils.format import get_username  # pylint: disable=import-error
 from common.utils.tests import TestCaseUtils
+from users.models import User
 
 
-class BattleListTests(TestCaseUtils):
+class BattleListTest(TestCaseUtils):
     view_name = "api:battle_list"
 
     def setUp(self):
@@ -59,7 +60,7 @@ class BattleDetailTest(TestCaseUtils):
         self.assertResponse403(response)
 
 
-class SelectTeamTests(TestCaseUtils):
+class SelectTeamTest(TestCaseUtils):
     view_name = "api:team_edit"
 
     def setUp(self):
@@ -291,3 +292,52 @@ class SelectTeamTests(TestCaseUtils):
                 "opponent_pokemon_team": get_pokemons(battle)["opponent"],
             },
         )
+
+
+class CreateBattleTest(TestCaseUtils):
+    view_name = "api:battle_create"
+
+    def setUp(self):
+        super().setUp()
+        self.view_url = reverse(self.view_name)
+        self.opponent = baker.make("users.User")
+
+    @mock.patch("battles.services.email.send_templated_mail")
+    def test_send_email_invite(self, email_mock):
+        battle_data = {
+            "opponent": self.opponent.email,
+        }
+
+        response = self.auth_client.post(self.view_url, battle_data)
+        self.assertResponse201(response)
+
+        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)[0]
+        self.assertTrue(battle)
+
+        email_mock.assert_called_with(
+            template_name="invite",
+            from_email=settings.EMAIL_ADDRESS,
+            recipient_list=[battle.opponent.email],
+            context={
+                "creator_username": get_username(battle.creator.email),
+                "opponent_username": get_username(battle.opponent.email),
+            },
+        )
+
+    # @mock.patch("battles.services.email.send_templated_mail")
+    def test_opponent_is_not_registered(self):
+        opponent_email = "zuko@fire.com"
+        battle_data = {
+            "opponent": opponent_email,
+        }
+
+        response = self.auth_client.post(self.view_url, battle_data)
+        self.assertResponse201(response)
+
+        opponent = User.objects.filter(email=opponent_email)[0]
+        battle = Battle.objects.filter(creator=self.user, opponent=opponent.id)
+        self.assertTrue(battle)
+
+        # TODO : test if the email was sent
+        # subject_template_name="registration/invite_signup_subject.txt",
+        # email_template_name="registration/invite_signup_email.html",
