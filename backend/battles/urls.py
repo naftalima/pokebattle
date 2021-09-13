@@ -1,6 +1,7 @@
 from django.urls import path
 
 from battles.views import (
+    BaseView,
     BattleDetailView,
     BattleListView,
     CreateBattleView,
@@ -11,6 +12,7 @@ from battles.views import (
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
+    path("base", BaseView.as_view(), name="base_react"),
     path("battle/", BattleListView.as_view(), name="battles"),
     path("battle/<int:pk>/", BattleDetailView.as_view(), name="battle-detail"),
     path("battle/new/", CreateBattleView.as_view(), name="battle-opponent"),
