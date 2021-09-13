@@ -1,4 +1,5 @@
 {% load render_bundle from webpack_loader %}
+{% load static %}
 
 <!DOCTYPE html>
 <html class="no-js" lang="en">
@@ -11,13 +12,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link rel="shortcut icon" href="#" />
-
-  <!-- Webpack rendered CSS -->
-  {% render_bundle 'main' 'css' %}
+  {% render_bundle 'main' 'css' 'DEFAULT' %}
 </head>
 
 <body>
   {% include 'includes/sentry_init.html' %}
+
+  <div id='react-app'></div>
 
   <!-- Body Content -->
   {% block body %}{% endblock %}
@@ -26,7 +27,7 @@
   <script src="{% url 'js_reverse' %}" type="text/javascript"></script>
 
   <!-- Webpack rendered Javascript -->
-  {% render_bundle 'vendors~main' 'js' 'DEFAULT' %} {% render_bundle 'main' 'js' 'DEFAULT' %}
+  {% render_bundle 'main' 'js' 'DEFAULT' %}
   {% block scripts %}{% endblock %}
 </body>
 
