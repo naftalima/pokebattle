@@ -10,7 +10,6 @@ from battles.models import Battle, TeamPokemon
 from battles.services.logic_battle import get_pokemons
 from battles.utils.format import get_username  # pylint: disable=import-error
 from common.utils.tests import TestCaseUtils
-from users.models import User
 
 
 class BattleListTest(TestCaseUtils):
@@ -320,21 +319,3 @@ class CreateBattleTest(TestCaseUtils):
                 "opponent_username": get_username(battle.opponent.email),
             },
         )
-
-    # @mock.patch("battles.services.email.send_templated_mail")
-    def test_opponent_is_not_registered(self):
-        opponent_email = "zuko@fire.com"
-        battle_data = {
-            "opponent": opponent_email,
-        }
-
-        response = self.auth_client.post(self.view_url, battle_data)
-        self.assertResponse201(response)
-
-        opponent = User.objects.filter(email=opponent_email)[0]
-        battle = Battle.objects.filter(creator=self.user, opponent=opponent.id)
-        self.assertTrue(battle)
-
-        # TODO : test if the email was sent
-        # subject_template_name="registration/invite_signup_subject.txt",
-        # email_template_name="registration/invite_signup_email.html",
