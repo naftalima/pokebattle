@@ -10,7 +10,6 @@ from battles.models import Battle, TeamPokemon
 from battles.services.logic_battle import get_pokemons
 from battles.utils.format import get_username  # pylint: disable=import-error
 from common.utils.tests import TestCaseUtils
-from users.models import User
 
 
 class BattleListTest(TestCaseUtils):
@@ -32,7 +31,6 @@ class BattleListTest(TestCaseUtils):
         self.assertEqual(response.data[0].get("id"), battle.id)
 
     def test_return_empty_queryset(self):
-        """ """
         baker.make("battles.Battle")
         response = self.auth_client.get(self.view_url)
         self.assertFalse(response.data)
@@ -321,20 +319,23 @@ class CreateBattleTest(TestCaseUtils):
             },
         )
 
-    # @mock.patch("battles.services.email.send_templated_mail")
-    def test_opponent_is_not_registered(self):
-        opponent_email = "zuko@fire.com"
+    def test_challenge_none(self):
+        battle_data = {}
+
+        self.auth_client.post(reverse("battle-opponent"), battle_data)
+
+        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
+        self.assertFalse(battle)
+
+    def test_challenge_yourself(self):
         battle_data = {
-            "opponent": opponent_email,
+            "creator": self.user.id,
+            "opponent": self.user.id,
         }
 
-        response = self.auth_client.post(self.view_url, battle_data)
-        self.assertResponse201(response)
+        self.auth_client.post(reverse("battle-opponent"), battle_data)
 
-        opponent = User.objects.filter(email=opponent_email)[0]
-        battle = Battle.objects.filter(creator=self.user, opponent=opponent.id)
-        self.assertTrue(battle)
+        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
+        self.assertFalse(battle)
 
-        # TODO : test if the email was sent
-        # subject_template_name="registration/invite_signup_subject.txt",
-        # email_template_name="registration/invite_signup_email.html",
+        self.assertRaisesMessage(ValueError, "ERROR: You can't challenge yourself.")
