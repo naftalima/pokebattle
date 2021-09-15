@@ -31,7 +31,6 @@ class BattleListTest(TestCaseUtils):
         self.assertEqual(response.data[0].get("id"), battle.id)
 
     def test_return_empty_queryset(self):
-        """ """
         baker.make("battles.Battle")
         response = self.auth_client.get(self.view_url)
         self.assertFalse(response.data)
@@ -232,9 +231,11 @@ class SelectTeamTest(TestCaseUtils):
             "position_3": 3,
         }
 
-        self.auth_client.patch(
+        response = self.auth_client.patch(
             view_url, json.dumps(team_pokemon_data), content_type="application/json"
         )
+
+        self.assertResponse403(response)
 
         team_pokemon = TeamPokemon.objects.filter(team=self.team_creator)
         self.assertFalse(team_pokemon)
@@ -319,3 +320,24 @@ class CreateBattleTest(TestCaseUtils):
                 "opponent_username": get_username(battle.opponent.email),
             },
         )
+
+    def test_challenge_none(self):
+        battle_data = {}
+
+        self.auth_client.post(reverse("battle-opponent"), battle_data)
+
+        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
+        self.assertFalse(battle)
+
+    def test_challenge_yourself(self):
+        battle_data = {
+            "creator": self.user.id,
+            "opponent": self.user.id,
+        }
+
+        self.auth_client.post(reverse("battle-opponent"), battle_data)
+
+        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
+        self.assertFalse(battle)
+
+        self.assertRaisesMessage(ValueError, "ERROR: You can't challenge yourself.")

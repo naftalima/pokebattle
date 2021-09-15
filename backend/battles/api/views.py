@@ -2,7 +2,7 @@ from django.db.models import Q
 
 from rest_framework import generics, permissions
 
-from battles.api.permissions import IsTheTrainerOfTheTeam
+from battles.api.permissions import IsTrainerOfTeam
 from battles.api.serializers import BattleSerializer, CreateBattleSerializer, SelectTeamSerializer
 from battles.models import Battle, Team
 from battles.services.logic_team import all_teams_has_pokemons
@@ -39,7 +39,7 @@ class CreateBattleView(generics.CreateAPIView):
 class SelectTeamView(generics.UpdateAPIView):
     serializer_class = SelectTeamSerializer
     queryset = Team.objects.all()
-    permission_classes = [IsTheTrainerOfTheTeam]
+    permission_classes = [IsTrainerOfTeam]
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()

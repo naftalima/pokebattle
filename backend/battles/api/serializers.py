@@ -49,7 +49,7 @@ class BattleSerializer(serializers.ModelSerializer):
 
 
 class CreateBattleSerializer(serializers.ModelSerializer):
-    opponent = serializers.CharField(style={"base_template": "textarea.html"})
+    opponent = serializers.CharField()
     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
