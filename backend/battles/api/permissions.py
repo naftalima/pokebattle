@@ -11,6 +11,6 @@ class IsTrainerOfTeam(permissions.BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
-        if str(obj.trainer) == str(request.user):
+        if str(obj.trainer.email) == str(request.user.email):
             return True
         return False
