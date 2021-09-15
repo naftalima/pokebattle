@@ -5,8 +5,6 @@ from rest_framework import generics, permissions
 from battles.api.permissions import IsTrainerOfTeam
 from battles.api.serializers import BattleSerializer, CreateBattleSerializer, SelectTeamSerializer
 from battles.models import Battle, Team
-from battles.services.logic_team import all_teams_has_pokemons
-from battles.tasks import run_battle_and_send_result
 
 
 class BattleListView(generics.ListAPIView):
@@ -40,12 +38,3 @@ class SelectTeamView(generics.UpdateAPIView):
     serializer_class = SelectTeamSerializer
     queryset = Team.objects.all()
     permission_classes = [IsTrainerOfTeam]
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        battle = instance.battle
-
-        teams_are_complete = all_teams_has_pokemons(battle)
-        if teams_are_complete:
-            run_battle_and_send_result.delay(battle.id)
-        return super().update(request, *args, **kwargs)

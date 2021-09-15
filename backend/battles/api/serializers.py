@@ -7,12 +7,17 @@ from battles.services.api_integration import (
     get_pokemon_info,
 )
 from battles.services.email import email_invite
-from battles.services.logic_team import create_guest_opponent, invite_unregistered_opponent
+from battles.services.logic_team import (
+    all_teams_has_pokemons,
+    create_guest_opponent,
+    invite_unregistered_opponent,
+)
 from battles.services.logic_team_pokemon import (
     check_pokemons_unique,
     check_position_unique,
     check_team_sum_valid,
 )
+from battles.tasks import run_battle_and_send_result
 from pokemons.models import Pokemon
 from users.models import User
 
@@ -160,5 +165,11 @@ class SelectTeamSerializer(serializers.ModelSerializer):
         TeamPokemon.objects.create(team=instance, pokemon=pokemon_1, order=position_1)
         TeamPokemon.objects.create(team=instance, pokemon=pokemon_2, order=position_2)
         TeamPokemon.objects.create(team=instance, pokemon=pokemon_3, order=position_3)
+
+        battle = instance.battle
+
+        teams_are_complete = all_teams_has_pokemons(battle)
+        if teams_are_complete:
+            run_battle_and_send_result.delay(battle.id)
 
         return instance
