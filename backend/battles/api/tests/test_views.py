@@ -1,15 +1,18 @@
 import json
 from unittest import mock
 
+from django.conf import settings
 from django.urls import reverse
 
 from model_bakery import baker
 
-from battles.models import TeamPokemon
+from battles.models import Battle, TeamPokemon
+from battles.services.logic_battle import get_pokemons
+from battles.utils.format import get_username  # pylint: disable=import-error
 from common.utils.tests import TestCaseUtils
 
 
-class BattleListTests(TestCaseUtils):
+class BattleListTest(TestCaseUtils):
     view_name = "api:battle_list"
 
     def setUp(self):
@@ -28,13 +31,34 @@ class BattleListTests(TestCaseUtils):
         self.assertEqual(response.data[0].get("id"), battle.id)
 
     def test_return_empty_queryset(self):
-        """ """
         baker.make("battles.Battle")
         response = self.auth_client.get(self.view_url)
         self.assertFalse(response.data)
 
 
-class SelectTeamTests(TestCaseUtils):
+class BattleDetailTest(TestCaseUtils):
+    view_name = "api:battle_detail"
+
+    def setUp(self):
+        super().setUp()
+        self.creator = self.user
+        self.opponent = baker.make("users.User")
+        self.battle = baker.make("battles.Battle", creator=self.creator, opponent=self.opponent)
+        self.team_creator = baker.make("battles.Team", battle=self.battle, trainer=self.creator)
+        self.team_opponent = baker.make("battles.Team", battle=self.battle, trainer=self.opponent)
+        self.view_url = reverse(self.view_name, kwargs={"pk": self.battle.pk})
+
+    def test_return_200_when_accessing_endpoint(self):
+        response = self.auth_client.get(self.view_url)
+        self.assertResponse200(response)
+
+    def test_return_forbidden(self):
+        self.auth_client.logout()
+        response = self.auth_client.get(self.view_url)
+        self.assertResponse403(response)
+
+
+class SelectTeamTest(TestCaseUtils):
     view_name = "api:team_edit"
 
     def setUp(self):
@@ -45,6 +69,7 @@ class SelectTeamTests(TestCaseUtils):
         self.team_creator = baker.make("battles.Team", battle=self.battle, trainer=self.creator)
         self.team_opponent = baker.make("battles.Team", battle=self.battle, trainer=self.opponent)
         self.view_url = reverse(self.view_name, kwargs={"pk": self.team_creator.pk})
+        self.team_pokemon = None
 
     @mock.patch("battles.services.api_integration.get_pokemon_from_api")
     def test_update_team_correct(self, mock_get_pokemon):
@@ -214,3 +239,105 @@ class SelectTeamTests(TestCaseUtils):
 
         team_pokemon = TeamPokemon.objects.filter(team=self.team_creator)
         self.assertFalse(team_pokemon)
+
+    @mock.patch("battles.services.email.send_templated_mail")
+    def test_send_battle_result(self, email_mock):
+        pokemon_1 = baker.make("pokemons.Pokemon")
+        pokemon_2 = baker.make("pokemons.Pokemon")
+        pokemon_3 = baker.make("pokemons.Pokemon")
+
+        self.team_pokemon = baker.make(
+            "battles.TeamPokemon", team=self.team_opponent, pokemon=pokemon_1, order=1
+        )
+        self.team_pokemon = baker.make(
+            "battles.TeamPokemon", team=self.team_opponent, pokemon=pokemon_2, order=2
+        )
+        self.team_pokemon = baker.make(
+            "battles.TeamPokemon", team=self.team_opponent, pokemon=pokemon_3, order=3
+        )
+
+        team_pokemon_data = {
+            "pokemon_1": "pikachu",
+            "position_1": 1,
+            "pokemon_2": "eevee",
+            "position_2": 2,
+            "pokemon_3": "nidorina",
+            "position_3": 3,
+        }
+        self.auth_client.post(
+            reverse(
+                "battle-team-pokemons",
+                kwargs={
+                    "pk": self.team_creator.id,
+                },
+            ),
+            team_pokemon_data,
+            follow=True,
+        )
+
+        battle = Battle.objects.filter(creator=self.creator, opponent=self.opponent)[0]
+
+        email_mock.assert_called_with(
+            template_name="battle_result",
+            from_email=settings.EMAIL_ADDRESS,
+            recipient_list=[battle.creator.email, battle.opponent.email],
+            context={
+                "winner_username": get_username(battle.winner.email),
+                "creator_username": get_username(battle.creator.email),
+                "opponent_username": get_username(battle.opponent.email),
+                "creator_pokemon_team": get_pokemons(battle)["creator"],
+                "opponent_pokemon_team": get_pokemons(battle)["opponent"],
+            },
+        )
+
+
+class CreateBattleTest(TestCaseUtils):
+    view_name = "api:battle_create"
+
+    def setUp(self):
+        super().setUp()
+        self.view_url = reverse(self.view_name)
+        self.opponent = baker.make("users.User")
+
+    @mock.patch("battles.services.email.send_templated_mail")
+    def test_send_email_invite(self, email_mock):
+        battle_data = {
+            "opponent": self.opponent.email,
+        }
+
+        response = self.auth_client.post(self.view_url, battle_data)
+        self.assertResponse201(response)
+
+        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)[0]
+        self.assertTrue(battle)
+
+        email_mock.assert_called_with(
+            template_name="invite",
+            from_email=settings.EMAIL_ADDRESS,
+            recipient_list=[battle.opponent.email],
+            context={
+                "creator_username": get_username(battle.creator.email),
+                "opponent_username": get_username(battle.opponent.email),
+            },
+        )
+
+    def test_challenge_none(self):
+        battle_data = {}
+
+        self.auth_client.post(reverse("battle-opponent"), battle_data)
+
+        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
+        self.assertFalse(battle)
+
+    def test_challenge_yourself(self):
+        battle_data = {
+            "creator": self.user.id,
+            "opponent": self.user.id,
+        }
+
+        self.auth_client.post(reverse("battle-opponent"), battle_data)
+
+        battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
+        self.assertFalse(battle)
+
+        self.assertRaisesMessage(ValueError, "ERROR: You can't challenge yourself.")

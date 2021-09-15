@@ -1,3 +1,6 @@
+from django.conf import settings
+from django.contrib.auth.forms import PasswordResetForm
+
 from rest_framework import serializers
 
 from battles.models import Battle, Team, TeamPokemon
@@ -6,6 +9,7 @@ from battles.services.api_integration import (
     get_or_create_pokemon,
     get_pokemon_info,
 )
+from battles.services.email import email_invite
 from battles.services.logic_team import create_guest_opponent
 from battles.services.logic_team_pokemon import (
     check_pokemons_unique,
@@ -22,22 +26,42 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("id", "email")
 
 
+class PokemonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pokemon
+        fields = ("id", "poke_id", "name", "img_url", "attack", "defense", "hp")
+
+
+class TeamSerializer(serializers.ModelSerializer):
+    trainer = UserSerializer()
+    pokemons = PokemonSerializer(many=True)
+
+    class Meta:
+        model = Team
+        fields = ("id", "battle", "trainer", "pokemons")
+
+
 class BattleSerializer(serializers.ModelSerializer):
     creator = UserSerializer()
     opponent = UserSerializer()
+    teams = TeamSerializer(many=True, read_only=True)
 
     class Meta:
         model = Battle
-        fields = ("id", "creator", "opponent", "winner", "created_at")
+        fields = ("id", "creator", "opponent", "teams", "winner", "created_at")
 
 
 class CreateBattleSerializer(serializers.ModelSerializer):
-    opponent = serializers.CharField(style={"base_template": "textarea.html"})
+    opponent = serializers.CharField()
     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Battle
         fields = ("id", "creator", "opponent")
+
+    def __init__(self, *args, **kwargs):
+        super(CreateBattleSerializer, self).__init__(*args, **kwargs)
+        self.is_guest = False
 
     def validate_opponent(self, attrs):
         opponent_email = attrs
@@ -45,6 +69,7 @@ class CreateBattleSerializer(serializers.ModelSerializer):
             opponent = User.objects.get(email=opponent_email)
         except User.DoesNotExist:
             opponent = create_guest_opponent(opponent_email)
+            self.is_guest = True
         return opponent
 
     def validate(self, attrs):
@@ -59,13 +84,21 @@ class CreateBattleSerializer(serializers.ModelSerializer):
         battle = Battle.objects.create(**validated_data)
         Team.objects.create(battle=battle, trainer=battle.creator)
         Team.objects.create(battle=battle, trainer=battle.opponent)
+
+        if not self.is_guest:
+            email_invite(battle)
+        else:
+            opponent = battle.opponent
+            invite_form = PasswordResetForm(data={"email": opponent.email})
+            invite_form.is_valid()
+            invite_form.save(
+                subject_template_name="registration/invite_signup_subject.txt",
+                email_template_name="registration/invite_signup_email.html",
+                from_email=settings.EMAIL_ADDRESS,
+                html_email_template_name=None,
+                domain_override=settings.HOST,
+            )
         return battle
-
-
-class PokemonSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Pokemon
-        fields = ("id", "poke_id", "name", "img_url", "attack", "defense", "hp")
 
 
 class SelectTeamSerializer(serializers.ModelSerializer):
