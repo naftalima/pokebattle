@@ -206,9 +206,11 @@ class SelectTeamTests(TestCaseUtils):
             "position_3": 3,
         }
 
-        self.auth_client.patch(
+        response = self.auth_client.patch(
             view_url, json.dumps(team_pokemon_data), content_type="application/json"
         )
+
+        self.assertResponse403(response)
 
         team_pokemon = TeamPokemon.objects.filter(team=self.team_creator)
         self.assertFalse(team_pokemon)
