@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
 
-class IsTheTrainerOfTheTeam(permissions.BasePermission):
+class IsTrainerOfTeam(permissions.BasePermission):
 
     message = "This user isn't the trainer of this team."
 
