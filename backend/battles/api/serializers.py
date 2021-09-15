@@ -60,7 +60,7 @@ class CreateBattleSerializer(serializers.ModelSerializer):
         fields = ("id", "creator", "opponent")
 
     def __init__(self, *args, **kwargs):
-        super(CreateBattleSerializer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.is_guest = False
 
     def validate_opponent(self, attrs):
