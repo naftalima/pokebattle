@@ -5,8 +5,9 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, TemplateView, UpdateView
 
 from battles.forms import BattleForm, TeamForm
-from battles.models import Battle, Team, TeamPokemon
+from battles.models import Battle, Team
 from battles.services.logic_battle import get_pokemons
+from battles.services.logic_team import all_teams_has_pokemons
 from battles.tasks import run_battle_and_send_result
 from pokemons.models import Pokemon
 
@@ -48,14 +49,8 @@ class SelectTeamView(LoginRequiredMixin, UpdateView):
 
         form.save()
 
-        creator_team_has_pokemons = TeamPokemon.objects.filter(
-            team__trainer=battle.creator, team__battle=battle
-        ).exists()
-        opponent_team_has_pokemons = TeamPokemon.objects.filter(
-            team__trainer=battle.opponent, team__battle=battle
-        ).exists()
-        all_teams_has_pokemons = creator_team_has_pokemons and opponent_team_has_pokemons
-        if all_teams_has_pokemons:
+        teams_are_complete = all_teams_has_pokemons(battle)
+        if teams_are_complete:
             run_battle_and_send_result.delay(battle.id)
             return HttpResponseRedirect(reverse_lazy("battle-detail", args=(battle.id,)))
         return HttpResponseRedirect(reverse_lazy("battles"))

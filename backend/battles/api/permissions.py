@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
 
-class IsTheTrainerOfTheTeam(permissions.BasePermission):
+class IsTrainerOfTeam(permissions.BasePermission):
 
     message = "This user isn't the trainer of this team."
 
@@ -11,6 +11,6 @@ class IsTheTrainerOfTheTeam(permissions.BasePermission):
         return False
 
     def has_object_permission(self, request, view, obj):
-        if str(obj.trainer) == str(request.user):
+        if str(obj.trainer.email) == str(request.user.email):
             return True
         return False

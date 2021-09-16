@@ -1,6 +1,4 @@
 from django import forms
-from django.conf import settings
-from django.contrib.auth.forms import PasswordResetForm
 from django.forms import ModelForm
 
 from battles.models import Battle, Team, TeamPokemon
@@ -10,7 +8,7 @@ from battles.services.api_integration import (
     get_pokemon_info,
 )
 from battles.services.email import email_invite
-from battles.services.logic_team import create_guest_opponent
+from battles.services.logic_team import create_guest_opponent, invite_unregistered_opponent
 from battles.services.logic_team_pokemon import (
     check_pokemons_unique,
     check_position_unique,
@@ -59,15 +57,7 @@ class BattleForm(ModelForm):
             email_invite(battle)
         else:
             opponent = self.cleaned_data["opponent"]
-            invite_form = PasswordResetForm(data={"email": opponent.email})
-            invite_form.is_valid()
-            invite_form.save(
-                subject_template_name="registration/invite_signup_subject.txt",
-                email_template_name="registration/invite_signup_email.html",
-                from_email=settings.EMAIL_ADDRESS,
-                html_email_template_name=None,
-                domain_override=settings.HOST,
-            )
+            invite_unregistered_opponent(opponent)
 
 
 class TeamForm(ModelForm):
