@@ -28,18 +28,18 @@ repos:
     types: [python]
     exclude: .+/(settings|migrations)/.+
     pass_filenames: true
-  - id: eslint
-    name: eslint-local
-    entry: npm run lint
-    language: system
-    types: [javascript]
-    exclude: >
-            (?x)^(
-                .+\.config\.js|
-                server\.js|
-                \.eslintrc\.js
-            )$
-    pass_filenames: true
+#   - id: eslint
+#     name: eslint-local
+#     entry: npm run lint
+#     language: system
+#     types: [javascript]
+#     exclude: >
+#             (?x)^(
+#                 .+\.config\.js|
+#                 server\.js|
+#                 \.eslintrc\.js
+#             )$
+#     pass_filenames: true
   - id: missing-migrations
     name: missing-migrations-local
     entry: python backend/manage.py has_missing_migrations
