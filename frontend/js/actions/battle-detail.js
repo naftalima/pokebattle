@@ -11,6 +11,7 @@ export const getBattleDetail = (id) => {
       return res.data;
     })
     .catch((err) => {
+      /* eslint no-console: ["error", { allow: ["log"] }] */
       console.log(err);
     });
 };

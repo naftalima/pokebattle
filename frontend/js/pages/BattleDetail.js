@@ -20,7 +20,7 @@ function Team({ pokemons }) {
   );
 }
 
-Team.propType = {
+Team.propTypes = {
   pokemons: PropTypes.object.isRequired,
 };
 
@@ -46,7 +46,6 @@ export default class BattleDetail extends React.Component {
 
   render() {
     const { battle } = this.state;
-    // const { creator } = battle;
 
     if (battle) {
       return (
@@ -62,8 +61,8 @@ export default class BattleDetail extends React.Component {
                 <h1>Battle #{JSON.stringify(battle.id)}</h1>
                 <p>Created at {JSON.stringify(battle.created_at)}</p>
                 <p>
-                  {/* <strong>{JSON.stringify(creator)}</strong> */}
-                  {/* <strong>{battle.creator.email}</strong> challenged <strong>{battle.opponent.email}</strong> */}
+                  <strong>{battle.creator.email}</strong> challenged{' '}
+                  <strong>{battle.opponent.email}</strong>
                 </p>
                 {battle.teams[0].pokemons.length > 0 ? (
                   <div>
