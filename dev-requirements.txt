@@ -37,8 +37,6 @@ coverage==5.5
     # via -r dev-requirements.in
 cryptography==3.4.7
     # via social-auth-core
-dataclasses==0.8
-    # via black
 defusedxml==0.7.1
     # via
     #   python3-openid
@@ -72,18 +70,6 @@ identify==2.2.11
     # via pre-commit
 idna==3.2
     # via requests
-importlib-metadata==4.6.1
-    # via
-    #   backports.entry-points-selectable
-    #   click
-    #   flake8
-    #   pre-commit
-    #   stevedore
-    #   virtualenv
-importlib-resources==5.2.0
-    # via
-    #   pre-commit
-    #   virtualenv
 isort==4.3.21
     # via
     #   -r dev-requirements.in
@@ -195,7 +181,7 @@ social-auth-app-django==4.0.0
     # via -r dev-requirements.in
 social-auth-core==4.1.0
     # via social-auth-app-django
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via django
 stevedore==3.3.0
     # via bandit
@@ -205,26 +191,12 @@ toml==0.10.2
     #   dparse
     #   pre-commit
     #   pylint
-typed-ast==1.4.3
-    # via
-    #   astroid
-    #   black
-typing-extensions==3.10.0.0
-    # via
-    #   asgiref
-    #   black
-    #   gitpython
-    #   importlib-metadata
 urllib3==1.26.6
     # via requests
 virtualenv==20.6.0
     # via pre-commit
 wrapt==1.12.1
     # via astroid
-zipp==3.5.0
-    # via
-    #   importlib-metadata
-    #   importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
