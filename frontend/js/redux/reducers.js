@@ -1,17 +1,24 @@
 import { combineReducers } from 'redux';
 
-import { BATTLE_DETAIL } from './actions';
+import { BATTLE_DETAIL, BATTLE_LIST } from './actions';
 
-const initialState = { battle: null };
+const initialState = { battle: null, battles: null };
 
 const battleReducer = (state = initialState, action = {}) => {
-  if (action.type === BATTLE_DETAIL) {
-    return {
-      ...state,
-      battle: action.payload,
-    };
+  switch (action.type) {
+    case BATTLE_DETAIL:
+      return {
+        ...state,
+        battle: action.payload,
+      };
+    case BATTLE_LIST:
+      return {
+        ...state,
+        battles: action.payload,
+      };
+    default:
+      return state;
   }
-  return state;
 };
 
 export const rootReducer = combineReducers({
