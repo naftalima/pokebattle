@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-// import { fetchBattleDetail } from '../utils/api';
 import { getBattleDetailAction } from '../redux/actions';
 import './BattleDetail.scss';
 
@@ -102,7 +101,6 @@ class BattleDetail extends React.Component {
   }
 }
 BattleDetail.propTypes = {
-  // battle: PropTypes.object,
   battleDetail: PropTypes.object,
   fetchBattle: PropTypes.func,
 };
@@ -111,9 +109,6 @@ const mapStateToProps = (state) => ({
   battleDetail: state.battle,
 });
 
-// const mapDispatchToProps = (dispatch) => {
-//   return { fetchBattle: (id) => fetchBattleDetail(id, dispatch) };
-// };
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchBattle: (id) => dispatch(getBattleDetailAction(id)),
