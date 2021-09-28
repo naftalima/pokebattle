@@ -27,8 +27,8 @@ class BattleList extends React.Component {
     } = this.props;
 
     const isFinished = (battle) => battle.winner !== null;
-    const isUnfinished = (battle) => battle.winner === null;
     const finishedBattles = battles ? battles.filter(isFinished) : {};
+    const isUnfinished = (battle) => battle.winner === null;
     const unfinishedBattles = battles ? battles.filter(isUnfinished) : {};
 
     if (battles !== null) {
