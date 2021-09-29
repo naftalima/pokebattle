@@ -12,7 +12,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link rel="shortcut icon" href="#" />
-  {% render_bundle 'main' 'css' 'DEFAULT' %}
+  {% render_bundle 'main' 'css' %}
 </head>
 
 <body>
@@ -27,7 +27,7 @@
   <script src="{% url 'js_reverse' %}" type="text/javascript"></script>
 
   <!-- Webpack rendered Javascript -->
-  {% render_bundle 'main' 'js' 'DEFAULT' %}
+  {% render_bundle 'vendors~main' 'js' 'DEFAULT' %} {% render_bundle 'main' 'js' 'DEFAULT' %}
   {% block scripts %}{% endblock %}
 </body>
 
