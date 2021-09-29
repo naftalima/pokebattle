@@ -101,7 +101,7 @@ class BattleDetail extends React.Component {
                     <span className="winner">{getUserName(battle.winner.email)}</span>
                   </h1>
                 ) : (
-                  <p>There is no winner yet</p>
+                  <h2>There is no winner yet</h2>
                 )}
               </div>
             </div>
