@@ -1,13 +1,21 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { getBattleListAction } from '../redux/actions';
+
 import './BattleList.scss';
 
 function Battles({ battles }) {
   const battleList = battles.map((battle) => {
-    return <p key={battle.id}>Battle #{battle.id}</p>;
+    return (
+      <p key={battle.id}>
+        <Link key={battle.id} to={{ pathname: `/v2/battle/${battle.id}` }}>
+          Battle #{battle.id}
+        </Link>
+      </p>
+    );
   });
   return battleList;
 }
