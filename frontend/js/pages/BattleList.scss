@@ -1,5 +1,5 @@
 $font-stack:    Helvetica, sans-serif;
-$primary-color:blue;
+$primary-color:#E86E7F;
 
 .battleList {
   font: 100% $font-stack;
@@ -31,4 +31,42 @@ body {
   background-repeat: no-repeat;
   font-family: Arial, Helvetica, sans-serif;
   background-image: url('https://i.pinimg.com/originals/df/4e/8b/df4e8ba28f912bf9cdf9fa0dfc196411.png');
+}
+
+.battle-id-btn {
+  display: inline-block;
+  padding: 10px 15px;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #E86E7F;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #EAC787;
+  opacity: 1;
+  margin: 10px;
+}
+
+table {
+  table-layout: fixed;
+  text-align: center;
+}
+
+td {
+  width: 50%;
+}
+
+tr {
+  vertical-align: top;
+  text-align: center;
+}
+
+.title {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 72px;
+  text-align: center;
 }

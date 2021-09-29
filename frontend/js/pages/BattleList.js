@@ -10,14 +10,16 @@ import './BattleList.scss';
 function Battles({ battles }) {
   const battleList = battles.map((battle) => {
     return (
-      <p key={battle.id}>
-        <Link key={battle.id} to={{ pathname: `/v2/battle/${battle.id}` }}>
-          Battle #{battle.id}
-        </Link>
-      </p>
+      <tr key={battle.id} className="battle-id-btn">
+        <Link to={{ pathname: `/v2/battle/${battle.id}` }}>Battle #{battle.id}</Link>
+      </tr>
     );
   });
-  return battleList;
+  return (
+    <table>
+      <td>{battleList}</td>
+    </table>
+  );
 }
 Battles.propTypes = {
   battles: PropTypes.array,
@@ -49,18 +51,28 @@ class BattleList extends React.Component {
           />
           <div className="container">
             <div className="battleList">
-              <h1>On going Battles</h1>
-              {unfinishedBattles ? (
-                <Battles battles={unfinishedBattles} />
-              ) : (
-                <h1>Sorry, no battles in this list.</h1>
-              )}
-              <h1>Settled Battles</h1>
-              {finishedBattles ? (
-                <Battles battles={finishedBattles} />
-              ) : (
-                <h1>Sorry, no battles in this list.</h1>
-              )}
+              <table>
+                <tr>
+                  <td className="title">On going Battles</td>
+                  <td className="title">Settled Battles</td>
+                </tr>
+                <tr>
+                  <td>
+                    {unfinishedBattles ? (
+                      <Battles battles={unfinishedBattles} />
+                    ) : (
+                      <h1>Sorry, no battles in this list.</h1>
+                    )}
+                  </td>
+                  <td>
+                    {finishedBattles ? (
+                      <Battles battles={finishedBattles} />
+                    ) : (
+                      <h1>Sorry, no battles in this list.</h1>
+                    )}
+                  </td>
+                </tr>
+              </table>
             </div>
           </div>
         </div>
