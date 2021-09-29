@@ -1,7 +1,8 @@
 $font-stack:    Helvetica, sans-serif;
 $primary-color:black;
 $secundary-color:#E86E7F;
-$terciary-color: #f44336;
+$tertiary-color: #f44336;
+$quaternary-color: #3B4CCA;
 
 .battleList {
   font: 100% $font-stack;
@@ -72,7 +73,9 @@ tr {
   font-weight: 800;
   line-height: 72px;
   text-align: center;
+  color: $tertiary-color;
 }
+
 .battle-detail-td {
   padding: 0 6px;
   width: fit-content;
@@ -92,6 +95,11 @@ tr {
 }
 
 .trainer{
-  color:$terciary-color;
+  color:$quaternary-color;
+  font-weight: bolder;
+}
+
+.winner {
+  color: $secundary-color;
   font-weight: bolder;
 }

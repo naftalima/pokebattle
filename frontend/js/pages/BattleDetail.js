@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { getBattleDetailAction } from '../redux/actions';
-// import './Style.scss';
+import { getUserName } from '../utils/format';
 
 function Team({ pokemons }) {
   const teamPokemon = [];
@@ -52,14 +52,19 @@ class BattleDetail extends React.Component {
               <div className="battleDetail">
                 <p className="title">Battle #{JSON.stringify(battle.id)}</p>
                 <h4>
-                  <span className="trainer">{battle.creator ? battle.creator.email : ''}</span>{' '}
+                  <span className="trainer">
+                    {battle.creator ? getUserName(battle.creator.email) : ''}
+                  </span>{' '}
                   challenged{' '}
-                  <span className="trainer">{battle.opponent ? battle.opponent.email : ''}</span>
+                  <span className="trainer">
+                    {battle.opponent ? getUserName(battle.opponent.email) : ''}
+                  </span>
                 </h4>
                 <table>
                   <tr>
                     <th>
-                      <span className="trainer">{battle.creator.email}</span>&apos;s Team is:
+                      <span className="trainer">{getUserName(battle.creator.email)}</span>&apos;s
+                      Team is:
                     </th>
                   </tr>
                   <tr>
@@ -75,7 +80,8 @@ class BattleDetail extends React.Component {
                 <table>
                   <tr>
                     <th>
-                      <span className="trainer">{battle.opponent.email}</span>&apos;s Team is:
+                      <span className="trainer">{getUserName(battle.opponent.email)}</span>&apos;s
+                      Team is:
                     </th>
                   </tr>
                   <tr>
@@ -90,9 +96,10 @@ class BattleDetail extends React.Component {
                 </table>
 
                 {battle.winner ? (
-                  <p className="title">
-                    And the winner is <span className="trainer">{battle.winner.email}</span>
-                  </p>
+                  <h1>
+                    And the winner is{' '}
+                    <span className="winner">{getUserName(battle.winner.email)}</span>
+                  </h1>
                 ) : (
                   <p>There is no winner yet</p>
                 )}

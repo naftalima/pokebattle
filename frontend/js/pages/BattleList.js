@@ -61,14 +61,14 @@ class BattleList extends React.Component {
                     {unfinishedBattles ? (
                       <Battles battles={unfinishedBattles} />
                     ) : (
-                      <h1>Sorry, no battles in this list.</h1>
+                      <td>Sorry, no battles in this list.</td>
                     )}
                   </td>
                   <td>
                     {finishedBattles ? (
                       <Battles battles={finishedBattles} />
                     ) : (
-                      <h1>Sorry, no battles in this list.</h1>
+                      <td>Sorry, no battles in this list.</td>
                     )}
                   </td>
                 </tr>
