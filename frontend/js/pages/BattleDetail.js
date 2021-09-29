@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { getBattleDetailAction } from '../redux/actions';
-import './BattleDetail.scss';
+// import './Style.scss';
 
 function Team({ pokemons }) {
   const teamPokemon = [];

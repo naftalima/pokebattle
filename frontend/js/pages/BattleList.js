@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { getBattleListAction } from '../redux/actions';
 
-import './BattleList.scss';
+// import './Style.scss';
 
 function Battles({ battles }) {
   const battleList = battles.map((battle) => {

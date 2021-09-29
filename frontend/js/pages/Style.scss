@@ -1,5 +1,7 @@
 $font-stack:    Helvetica, sans-serif;
-$primary-color:#E86E7F;
+$primary-color:black;
+$secundary-color:#E86E7F;
+$terciary-color: #f44336;
 
 .battleList {
   font: 100% $font-stack;
@@ -69,4 +71,26 @@ tr {
   font-weight: 800;
   line-height: 72px;
   text-align: center;
+}
+.battle-detail-td {
+  padding: 0 6px;
+  width: fit-content;
+}
+
+.battle-detail-block {
+  display: block;
+}
+
+.battle-detail-display {
+  display: flex;
+  justify-content: center;
+}
+
+.battle-detail-pokemon-name {
+  text-align: center;
+}
+
+.trainer{
+  color:$terciary-color;
+  font-weight: bolder;
 }

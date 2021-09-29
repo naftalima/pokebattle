@@ -7,6 +7,7 @@ import BattleDetail from './pages/BattleDetail';
 import BattleList from './pages/BattleList';
 import store from './redux/store';
 import SentryBoundary from './utils/SentryBoundary';
+import './pages/Style.scss';
 
 const App = () => (
   <SentryBoundary>
