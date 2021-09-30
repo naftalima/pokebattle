@@ -21,31 +21,30 @@ class BattleDetail extends React.Component {
     } = this.props;
 
     if (battle !== null) {
+      const { creator, opponent, teams, winner } = battle;
+      const creatorTeam = teams[0];
+      const opponentTeam = teams[1];
+
       return (
         <div className="container">
           <div className="battleDetail">
             <div className="battleDetail">
               <p className="title">Battle #{JSON.stringify(battle.id)}</p>
               <h4>
-                <span className="trainer">
-                  {battle.creator ? getUserName(battle.creator.email) : ''}
-                </span>{' '}
+                <span className="trainer">{creator ? getUserName(creator.email) : ''}</span>{' '}
                 challenged{' '}
-                <span className="trainer">
-                  {battle.opponent ? getUserName(battle.opponent.email) : ''}
-                </span>
+                <span className="trainer">{opponent ? getUserName(opponent.email) : ''}</span>
               </h4>
               <table>
                 <tr>
                   <th>
-                    <span className="trainer">{getUserName(battle.creator.email)}</span>&apos;s Team
-                    is:
+                    <span className="trainer">{getUserName(creator.email)}</span>&apos;s Team is:
                   </th>
                 </tr>
                 <tr>
-                  {battle.teams[0].pokemons.length > 0 ? (
+                  {creatorTeam.pokemons.length ? (
                     <div>
-                      <Team pokemons={battle.teams[0].pokemons} />
+                      <Team pokemons={creatorTeam.pokemons} />
                     </div>
                   ) : (
                     <td>Your team is empty. Choose Pokemons for your team.</td>
@@ -55,14 +54,13 @@ class BattleDetail extends React.Component {
               <table>
                 <tr>
                   <th>
-                    <span className="trainer">{getUserName(battle.opponent.email)}</span>&apos;s
-                    Team is:
+                    <span className="trainer">{getUserName(opponent.email)}</span>&apos;s Team is:
                   </th>
                 </tr>
                 <tr>
-                  {battle.teams[1].pokemons.length > 0 ? (
+                  {opponentTeam.pokemons.length ? (
                     <div>
-                      <Team pokemons={battle.teams[1].pokemons} />
+                      <Team pokemons={opponentTeam.pokemons} />
                     </div>
                   ) : (
                     <td>Wait for your opponent to choose their team.</td>
@@ -70,10 +68,9 @@ class BattleDetail extends React.Component {
                 </tr>
               </table>
 
-              {battle.winner ? (
+              {winner ? (
                 <h1>
-                  And the winner is{' '}
-                  <span className="winner">{getUserName(battle.winner.email)}</span>
+                  And the winner is <span className="winner">{getUserName(winner.email)}</span>
                 </h1>
               ) : (
                 <h2>There is no winner yet</h2>
