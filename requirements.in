@@ -4,6 +4,7 @@ django-model-utils
 django-webpack-loader
 django-js-reverse
 django-import-export
+djangorestframework
 python-decouple
 psycopg2
 brotlipy
@@ -14,7 +15,6 @@ whitenoise
 psutil
 ipython
 sentry-sdk
-djangorestframework
 requests
 django-templated-email
 social-auth-app-django

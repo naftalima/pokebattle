@@ -2,7 +2,6 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.forms import PasswordResetForm
 from django.forms import ModelForm
-from django.utils.crypto import get_random_string
 
 from battles.models import Battle, Team, TeamPokemon
 from battles.services.api_integration import (
@@ -11,6 +10,7 @@ from battles.services.api_integration import (
     get_pokemon_info,
 )
 from battles.services.email import email_invite
+from battles.services.logic_team import create_guest_opponent
 from battles.services.logic_team_pokemon import (
     check_pokemons_unique,
     check_position_unique,
@@ -44,10 +44,7 @@ class BattleForm(ModelForm):
                 raise forms.ValidationError("ERROR: You can't challenge yourself.")
         except User.DoesNotExist:
             self.is_guest = True
-            opponent = User.objects.create(email=opponent_email)
-            random_password = get_random_string(length=64)
-            opponent.set_password(random_password)
-            opponent.save()
+            opponent = create_guest_opponent(opponent_email)
         return opponent
 
     def save(self, commit=True):
