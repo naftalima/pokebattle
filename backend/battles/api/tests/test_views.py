@@ -162,6 +162,7 @@ class SelectTeamTest(TestCaseUtils):
             return fake_json
 
         mock_get_pokemon.side_effect = side_effect_func
+        mock_get_pokemon.assert_not_called()
 
         team_pokemon_data = {
             "pokemon_1": "pikachu",
@@ -231,9 +232,13 @@ class SelectTeamTest(TestCaseUtils):
             "position_3": 3,
         }
 
-        self.auth_client.patch(
+        response = self.auth_client.patch(
             view_url, json.dumps(team_pokemon_data), content_type="application/json"
         )
+
+        self.assertResponse403(response)
+
+        mock_get_pokemon.assert_not_called()
 
         team_pokemon = TeamPokemon.objects.filter(team=self.team_creator)
         self.assertFalse(team_pokemon)
