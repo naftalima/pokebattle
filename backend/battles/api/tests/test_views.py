@@ -162,6 +162,7 @@ class SelectTeamTest(TestCaseUtils):
             return fake_json
 
         mock_get_pokemon.side_effect = side_effect_func
+        mock_get_pokemon.assert_not_called()
 
         team_pokemon_data = {
             "pokemon_1": "pikachu",
@@ -236,6 +237,8 @@ class SelectTeamTest(TestCaseUtils):
         )
 
         self.assertResponse403(response)
+
+        mock_get_pokemon.assert_not_called()
 
         team_pokemon = TeamPokemon.objects.filter(team=self.team_creator)
         self.assertFalse(team_pokemon)
