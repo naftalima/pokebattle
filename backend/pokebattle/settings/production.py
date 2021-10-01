@@ -45,6 +45,7 @@ X_FRAME_OPTIONS = "DENY"
 
 # Webpack
 WEBPACK_LOADER["DEFAULT"]["CACHE"] = True
+WEBPACK_LOADER["DEFAULT"]["BUNDLE_DIR_NAME"] = "frontend/webpack_bundles/"
 
 # Celery
 CELERY_BROKER_URL = config("REDIS_URL")
