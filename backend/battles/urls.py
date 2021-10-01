@@ -1,6 +1,12 @@
 from django.urls import path
 
-from .views import BattleDetailView, BattleListView, CreateBattleView, HomeView, SelectTeamView
+from battles.views import (
+    BattleDetailView,
+    BattleListView,
+    CreateBattleView,
+    HomeView,
+    SelectTeamView,
+)
 
 
 urlpatterns = [

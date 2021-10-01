@@ -2,19 +2,62 @@ from django import forms
 from django.forms import ModelForm
 
 from battles.models import Battle, Team, TeamPokemon
-from battles.services.api_integration import get_or_create_pokemon, get_pokemon_info
-from battles.services.logic_team_pokemon import check_valid_team, is_unique
+from battles.services.api_integration import (
+    check_pokemons_exists_in_pokeapi,
+    get_or_create_pokemon,
+    get_pokemon_info,
+)
+from battles.services.email import email_invite
+from battles.services.logic_team import create_guest_opponent, invite_unregistered_opponent
+from battles.services.logic_team_pokemon import (
+    check_pokemons_unique,
+    check_position_unique,
+    check_team_sum_valid,
+)
 from users.models import User
 
 
 class BattleForm(ModelForm):
+    opponent = forms.EmailField()
+
     class Meta:
         model = Battle
         fields = ("opponent",)
 
     def __init__(self, *args, **kwargs):
         super(BattleForm, self).__init__(*args, **kwargs)
-        self.fields["opponent"].queryset = User.objects.exclude(id=self.initial["user_id"])
+        self.is_guest = False
+
+    def clean_opponent(self):
+
+        opponent_field_filled = self.cleaned_data["opponent"]
+        if not opponent_field_filled:
+            raise forms.ValidationError("ERROR: All fields are required.")
+
+        opponent_email = self.cleaned_data["opponent"]
+        try:
+            opponent = User.objects.get(email=opponent_email)
+            challenge_yourself = opponent.id == self.initial["user_id"]
+            if challenge_yourself:
+                raise forms.ValidationError("ERROR: You can't challenge yourself.")
+        except User.DoesNotExist:
+            self.is_guest = True
+            opponent = create_guest_opponent(opponent_email)
+        return opponent
+
+    def save(self, commit=True):
+        super().save()
+
+        battle = self.instance
+
+        Team.objects.create(battle=battle, trainer=battle.creator)
+        Team.objects.create(battle=battle, trainer=battle.opponent)
+
+        if not self.is_guest:
+            email_invite(battle)
+        else:
+            opponent = self.cleaned_data["opponent"]
+            invite_unregistered_opponent(opponent)
 
 
 class TeamForm(ModelForm):
@@ -29,23 +72,17 @@ class TeamForm(ModelForm):
             "position_3",
         ]
 
-    pokemon_1 = forms.IntegerField(
+    pokemon_1 = forms.CharField(
         label="Pokemon 1",
         required=True,
-        min_value=1,
-        max_value=898,
     )
-    pokemon_2 = forms.IntegerField(
+    pokemon_2 = forms.CharField(
         label="Pokemon 2",
         required=True,
-        min_value=1,
-        max_value=898,
     )
-    pokemon_3 = forms.IntegerField(
+    pokemon_3 = forms.CharField(
         label="Pokemon 3",
         required=True,
-        min_value=1,
-        max_value=898,
     )
 
     position_1 = forms.IntegerField(
@@ -70,31 +107,51 @@ class TeamForm(ModelForm):
     def clean(self):
         cleaned_data = super().clean()
 
+        required_fields = list(self.fields.keys())
+        input_fields = list(cleaned_data.keys())
+        all_fields_filled = required_fields == input_fields
+
+        if not all_fields_filled:
+            raise forms.ValidationError("ERROR: All fields are required.")
+
         positions = [
             cleaned_data["position_1"],
             cleaned_data["position_2"],
             cleaned_data["position_3"],
         ]
 
-        is_positions_valid = is_unique(positions)
+        is_positions_unique = check_position_unique(positions)
 
-        if not is_positions_valid:
+        if not is_positions_unique:
             raise forms.ValidationError(
                 "ERROR: Has repeated positions." " Please select unique positions."
             )
 
-        pokemons_id = [
+        pokemon_names = [
             cleaned_data["pokemon_1"],
             cleaned_data["pokemon_2"],
             cleaned_data["pokemon_3"],
         ]
-        pokemons_id = [str(x) for x in pokemons_id]
 
-        pokemons_data = [get_pokemon_info(pokemon_id) for pokemon_id in pokemons_id]
+        is_pokemons_unique = check_pokemons_unique(pokemon_names)
 
-        is_team_valid = check_valid_team(pokemons_data)
+        if not is_pokemons_unique:
+            raise forms.ValidationError(
+                "ERROR: Has repeated pokemon." " Please select unique pokemons."
+            )
 
-        if not is_team_valid:
+        is_pokemons_valid = check_pokemons_exists_in_pokeapi(pokemon_names)
+
+        if not is_pokemons_valid:
+            raise forms.ValidationError(
+                "ERROR: It's not a valid pokemon." " Please select an pokemons."
+            )
+
+        pokemons_data = [get_pokemon_info(pokemon_name) for pokemon_name in pokemon_names]
+
+        is_team_sum_valid = check_team_sum_valid(pokemons_data)
+
+        if not is_team_sum_valid:
             raise forms.ValidationError(
                 "ERROR: Your pokemons sum more than 600 points." " Please select other pokemons."
             )

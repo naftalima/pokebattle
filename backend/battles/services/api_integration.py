@@ -4,16 +4,16 @@ from django.conf import settings
 
 import requests
 
-from pokemons.models import Pokemon
+from pokemons.models import Pokemon  # pylint:disable=import-error
 
 
-def get_pokemon_api(poke_id):
-    url = urljoin(settings.POKE_API_URL, poke_id)
+def get_pokemon_from_api(pokemon_name):
+    url = urljoin(settings.POKE_API_URL, pokemon_name)
     response = requests.get(url)
     data = response.json()
     pokemon = {
-        "poke_id": poke_id,
-        "name": data["name"],
+        "poke_id": data["id"],
+        "name": pokemon_name,
         "img_url": data["sprites"]["front_default"],
         "defense": data["stats"][3]["base_stat"],
         "attack": data["stats"][4]["base_stat"],
@@ -33,14 +33,14 @@ def save_pokemon(pokemon_data):
     )
 
 
-def get_pokemon_info(poke_id):
-    pokemon = Pokemon.objects.filter(poke_id=poke_id).first()
+def get_pokemon_info(pokemon_name):
+    pokemon = Pokemon.objects.filter(name=pokemon_name).first()
     if not pokemon:
-        pokemon_response = get_pokemon_api(poke_id)
+        pokemon_response = get_pokemon_from_api(pokemon_name)
         return pokemon_response
     return {
-        "poke_id": poke_id,
-        "name": pokemon.name,
+        "poke_id": pokemon.poke_id,
+        "name": pokemon_name,
         "img_url": pokemon.img_url,
         "defense": pokemon.defense,
         "attack": pokemon.attack,
@@ -54,3 +54,22 @@ def get_or_create_pokemon(pokemon_data):
         pokemon = save_pokemon(pokemon_data)
         return pokemon
     return pokemon
+
+
+def get_all_pokemons_api():
+    limit = "?limit=899"
+    url = settings.POKE_API_URL + limit
+    response = requests.get(url)
+    pokeapi_named = response.json().get("results")
+    for pokemon_result in pokeapi_named:
+        pokemon_name = pokemon_result["name"]
+        pokemon = get_pokemon_from_api(pokemon_name)
+        get_or_create_pokemon(pokemon)
+
+
+def check_pokemons_exists_in_pokeapi(pokemon_names):
+    for pokemon_name in pokemon_names:
+        response = get_pokemon_from_api(pokemon_name)
+        if not bool(response):
+            return False
+    return True

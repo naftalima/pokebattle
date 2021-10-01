@@ -32,6 +32,8 @@ AUTHENTICATION_BACKENDS = (
 
 ALLOWED_HOSTS = []
 
+HOST = config("HOST", default="localhost:8000")
+
 LOGIN_REDIRECT_URL = reverse_lazy("home")
 LOGIN_URL = reverse_lazy("login")
 
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     "django_js_reverse",
     "webpack_loader",
     "import_export",
+    "rest_framework",
     "social_django",
     "common",
     "users",

@@ -5,13 +5,20 @@ def sum_points(pokemons_data):
     return points
 
 
-def check_valid_team(pokemons_data):
+def check_team_sum_valid(pokemons_data):
     is_valid = sum_points(pokemons_data) <= 600
     return is_valid
 
 
-def is_unique(positions):
+def check_position_unique(positions):
     for position in positions:
         if positions.count(position) > 1:
+            return False
+    return True
+
+
+def check_pokemons_unique(pokemon_names):
+    for pokemon_name in pokemon_names:
+        if pokemon_names.count(pokemon_name) > 1:
             return False
     return True

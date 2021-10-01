@@ -1,14 +1,14 @@
 from django import template
 
-from battles.models import Battle, Team
+from battles.models import Team
 
 
 register = template.Library()
 
 
 @register.simple_tag()
-def get_total_battles():
-    total_battles = Battle.objects.count()
+def get_total_battles(user):
+    total_battles = Team.objects.filter(trainer=user).count()
     return total_battles
 
 
