@@ -1,7 +1,6 @@
 import { getBattleDetailFromApi, getBattleListFromApi } from '../utils/api';
 
-export const BATTLE_DETAIL = 'BATTLE_DETAIL';
-export const BATTLE_LIST = 'BATTLE_LIST';
+import { BATTLE_DETAIL, BATTLE_LIST } from './actionsTypes';
 
 export function getBattleDetailAction(battleId) {
   return (dispatch) =>

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { BATTLE_DETAIL, BATTLE_LIST } from './actions';
+import { BATTLE_DETAIL, BATTLE_LIST } from './actionsTypes';
 
 const initialState = { battle: null, battles: null };
 
