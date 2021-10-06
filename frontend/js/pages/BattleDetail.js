@@ -17,19 +17,19 @@ class BattleDetail extends React.Component {
 
   render() {
     const {
-      battleDetail: { battle },
+      battleId,
+      creator,
+      opponent,
+      creatorTeamPokemons,
+      opponentTeamPokemons,
+      winner,
     } = this.props;
-
-    if (battle !== null) {
-      const { creator, opponent, teams, winner } = battle;
-      const creatorTeam = teams[0];
-      const opponentTeam = teams[1];
-
+    if (battleId !== null) {
       return (
         <div className="container">
           <div className="battleDetail">
             <div className="battleDetail">
-              <p className="title">Battle #{JSON.stringify(battle.id)}</p>
+              <p className="title">Battle #{JSON.stringify(battleId)}</p>
               <h4>
                 <span className="trainer">{creator ? getUserName(creator.email) : ''}</span>{' '}
                 challenged{' '}
@@ -42,9 +42,9 @@ class BattleDetail extends React.Component {
                   </th>
                 </tr>
                 <tr>
-                  {creatorTeam.pokemons.length ? (
+                  {creatorTeamPokemons ? (
                     <div>
-                      <Team pokemons={creatorTeam.pokemons} />
+                      <Team pokemons={creatorTeamPokemons} />
                     </div>
                   ) : (
                     <td>Your team is empty. Choose Pokemons for your team.</td>
@@ -58,16 +58,15 @@ class BattleDetail extends React.Component {
                   </th>
                 </tr>
                 <tr>
-                  {opponentTeam.pokemons.length ? (
+                  {opponentTeamPokemons ? (
                     <div>
-                      <Team pokemons={opponentTeam.pokemons} />
+                      <Team pokemons={opponentTeamPokemons} />
                     </div>
                   ) : (
                     <td>Wait for your opponent to choose their team.</td>
                   )}
                 </tr>
               </table>
-
               {winner ? (
                 <h1>
                   And the winner is <span className="winner">{getUserName(winner.email)}</span>
@@ -90,13 +89,38 @@ class BattleDetail extends React.Component {
   }
 }
 BattleDetail.propTypes = {
-  battleDetail: PropTypes.object,
   fetchBattle: PropTypes.func,
+  battleId: PropTypes.number,
+  creator: PropTypes.object,
+  opponent: PropTypes.object,
+  creatorTeamPokemons: PropTypes.array,
+  opponentTeamPokemons: PropTypes.array,
+  winner: PropTypes.object,
 };
 
-const mapStateToProps = (state) => ({
-  battleDetail: state.battleR,
-});
+const mapStateToProps = (state) => {
+  const { battleId, battle, pokemons, teams, users } = state.battleR;
+
+  const creator = battle ? users[battle[battleId].creator] : null;
+  const opponent = battle ? users[battle[battleId].opponent] : null;
+
+  const battleTeam = battle ? battle[battleId].teams : [null, null];
+  const [creatorTeamId, opponentTeamId] = battleTeam;
+
+  const creatorTeamPokemonsId = creatorTeamId ? teams[creatorTeamId].pokemons : null;
+  const opponentTeamPokemonsId = opponentTeamId ? teams[opponentTeamId].pokemons : null;
+
+  const creatorTeamPokemons = creatorTeamPokemonsId
+    ? creatorTeamPokemonsId.map((pokemonId) => pokemons[pokemonId])
+    : null;
+  const opponentTeamPokemons = opponentTeamPokemonsId
+    ? opponentTeamPokemonsId.map((pokemonId) => pokemons[pokemonId])
+    : null;
+
+  const winner = battle ? (battle[battleId].winner ? users[battle[battleId].winner] : null) : null;
+
+  return { battleId, creator, creatorTeamPokemons, opponent, opponentTeamPokemons, winner };
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
