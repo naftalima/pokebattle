@@ -9,13 +9,13 @@ const team = new schema.Entity('team', {
   pokemons: [pokemon],
 });
 
-const battle = new schema.Entity('battle', {
+const battleEntity = new schema.Entity('battle', {
   creator: user,
   opponent: user,
   teams: [team],
   winner: user,
 });
 
-const battlesEntity = [battle];
+const battlesEntity = [battleEntity];
 
-export { battlesEntity };
+export { battlesEntity, battleEntity };
