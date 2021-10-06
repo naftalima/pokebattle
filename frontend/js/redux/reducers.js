@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 
 import { BATTLE_DETAIL, BATTLE_LIST } from './actionsTypes';
 
-const initialState = { battle: null, battles: null };
+const initialState = { battle: null, battles: null, battlesId: [] };
 
 const battleReducer = (state = initialState, action = {}) => {
   switch (action.type) {
@@ -14,7 +14,8 @@ const battleReducer = (state = initialState, action = {}) => {
     case BATTLE_LIST:
       return {
         ...state,
-        battles: action.payload,
+        battles: action.payload.entities.battle,
+        battleIds: action.payload.result,
       };
     default:
       return state;
@@ -22,5 +23,5 @@ const battleReducer = (state = initialState, action = {}) => {
 };
 
 export const rootReducer = combineReducers({
-  battle: battleReducer,
+  battleR: battleReducer,
 });

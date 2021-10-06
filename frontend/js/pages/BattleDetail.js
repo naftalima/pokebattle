@@ -95,7 +95,7 @@ BattleDetail.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  battleDetail: state.battle,
+  battleDetail: state.battleR,
 });
 
 const mapDispatchToProps = (dispatch) => {
