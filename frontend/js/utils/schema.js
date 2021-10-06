@@ -16,6 +16,6 @@ const battle = new schema.Entity('battle', {
   winner: user,
 });
 
-const battles = [battle];
+const battlesEntity = [battle];
 
-export { battles };
+export { battlesEntity };
