@@ -25,3 +25,15 @@ export const getBattleListFromApi = () => {
       console.log(err);
     });
 };
+
+export const createBattleApi = (battleForm) => {
+  return axios
+    .post(`${BattleUrl}/new/`, battleForm)
+    .then((res) => {
+      console.log('createBattleApi', battleForm);
+      return res;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};

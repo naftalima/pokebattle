@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { BATTLE_DETAIL, BATTLE_LIST } from './actionsTypes';
+import * as actionsTypes from './actionsTypes';
 
 const initialState = {
   battle: null,
@@ -14,7 +14,7 @@ const initialState = {
 
 const battleReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case BATTLE_DETAIL:
+    case actionsTypes.BATTLE_DETAIL:
       return {
         ...state,
         battleId: action.payload.result,
@@ -23,11 +23,16 @@ const battleReducer = (state = initialState, action = {}) => {
         teams: action.payload.entities.team,
         users: action.payload.entities.users,
       };
-    case BATTLE_LIST:
+    case actionsTypes.BATTLE_LIST:
       return {
         ...state,
         battles: action.payload.entities.battle,
         battleIds: action.payload.result,
+      };
+    case actionsTypes.CREATE_BATTLE:
+      return {
+        ...state,
+        battle: action.payload,
       };
     default:
       return state;
