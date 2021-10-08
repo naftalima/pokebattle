@@ -327,18 +327,17 @@ class CreateBattleTest(TestCaseUtils):
     def test_challenge_none(self):
         battle_data = {}
 
-        self.auth_client.post(reverse("battle-opponent"), battle_data)
+        self.auth_client.post(self.view_url, battle_data)
 
         battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
         self.assertFalse(battle)
 
     def test_challenge_yourself(self):
         battle_data = {
-            "creator": self.user.id,
-            "opponent": self.user.id,
+            "opponent": self.user.email,
         }
 
-        self.auth_client.post(reverse("battle-opponent"), battle_data)
+        self.auth_client.post(self.view_url, battle_data)
 
         battle = Battle.objects.filter(creator=self.user, opponent=self.opponent)
         self.assertFalse(battle)

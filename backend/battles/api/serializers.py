@@ -76,9 +76,9 @@ class CreateBattleSerializer(serializers.ModelSerializer):
         return opponent
 
     def validate(self, attrs):
-        creator_email = User.objects.get(email=attrs["creator"])
-        opponent_email = User.objects.get(email=attrs["opponent"])
-        challenge_yourself = opponent_email == creator_email
+        creator = attrs["creator"]
+        opponent = attrs["opponent"]
+        challenge_yourself = opponent == creator
         if challenge_yourself:
             raise serializers.ValidationError("ERROR: You can't challenge yourself.")
         return attrs
