@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Team from '../components/Team';
+import TeamPokemon from '../components/TeamPokemon';
 import { getBattleDetailAction } from '../redux/actions';
 import { getUserName } from '../utils/format';
 
@@ -49,15 +49,7 @@ class BattleDetail extends React.Component {
                   <span className="trainer">{getUserName(creator.email)}</span>&apos;s Team is:
                 </th>
               </tr>
-              <tr>
-                {creatorTeamPokemons ? (
-                  <div>
-                    <Team pokemons={creatorTeamPokemons} />
-                  </div>
-                ) : (
-                  <td>Your team is empty. Choose Pokemons for your team.</td>
-                )}
-              </tr>
+              <TeamPokemon trainerTeamPokemons={creatorTeamPokemons} />
             </table>
             <table>
               <tr>
@@ -65,15 +57,7 @@ class BattleDetail extends React.Component {
                   <span className="trainer">{getUserName(opponent.email)}</span>&apos;s Team is:
                 </th>
               </tr>
-              <tr>
-                {opponentTeamPokemons ? (
-                  <div>
-                    <Team pokemons={opponentTeamPokemons} />
-                  </div>
-                ) : (
-                  <td>Wait for your opponent to choose their team.</td>
-                )}
-              </tr>
+              <TeamPokemon trainerTeamPokemons={opponentTeamPokemons} />
             </table>
             {winner ? (
               <h1>
