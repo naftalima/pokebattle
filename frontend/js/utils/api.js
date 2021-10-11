@@ -4,7 +4,7 @@ const baseURL = `${window.location.protocol}//${window.location.host}`;
 
 const BattleDetailtUrl = `${baseURL}/api/battle/`;
 
-export const getBattleDetail = (id) => {
+export const getBattleDetailFromApi = (id) => {
   return axios
     .get(`${BattleDetailtUrl}${id}`)
     .then((res) => {

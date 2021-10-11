@@ -1,53 +1,46 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
-import { getBattleDetail } from '../actions/battle-detail';
+import { getBattleDetailAction } from '../redux/actions';
 import './BattleDetail.scss';
 
 function Team({ pokemons }) {
-  const pokemonrows = [];
+  const teamPokemon = [];
   for (const pokemon of pokemons) {
-    pokemonrows.push(
-      <td key={pokemon}>
+    teamPokemon.push(
+      <td key={pokemon.id}>
         <img alt={pokemon} src={pokemon.img_url} /> {pokemon.name}
       </td>
     );
   }
   return (
     <table>
-      <tr>{pokemonrows}</tr>
+      <tbody>
+        <tr>{teamPokemon}</tr>
+      </tbody>
     </table>
   );
 }
-
 Team.propTypes = {
-  pokemons: PropTypes.object.isRequired,
+  pokemons: PropTypes.array.isRequired,
 };
 
-export default class BattleDetail extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      battle: null,
-    };
-  }
-
+class BattleDetail extends React.Component {
   componentDidMount() {
     const { pathname } = window.location;
     const battleId = Number(pathname.split('/').pop());
 
-    getBattleDetail(battleId).then((data) => {
-      this.setState({
-        battle: data,
-      });
-      return null;
-    });
+    const { fetchBattle } = this.props;
+    fetchBattle(battleId);
   }
 
   render() {
-    const { battle } = this.state;
+    const {
+      battleDetail: { battle },
+    } = this.props;
 
-    if (!battle) {
+    if (battle === null) {
       return (
         <div>
           <img
@@ -76,8 +69,8 @@ export default class BattleDetail extends React.Component {
               <h1>Battle #{JSON.stringify(battle.id)}</h1>
               <p>Created at {JSON.stringify(battle.created_at)}</p>
               <p>
-                <strong>{battle.creator.email}</strong> challenged{' '}
-                <strong>{battle.opponent.email}</strong>
+                <strong>{battle.creator ? battle.creator.email : ''}</strong> challenged{' '}
+                <strong>{battle.opponent ? battle.opponent.email : ''}</strong>
               </p>
               {battle.teams[0].pokemons.length > 0 ? (
                 <div>
@@ -107,3 +100,19 @@ export default class BattleDetail extends React.Component {
     );
   }
 }
+BattleDetail.propTypes = {
+  battleDetail: PropTypes.object,
+  fetchBattle: PropTypes.func,
+};
+
+const mapStateToProps = (state) => ({
+  battleDetail: state.battle,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchBattle: (id) => dispatch(getBattleDetailAction(id)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BattleDetail);
