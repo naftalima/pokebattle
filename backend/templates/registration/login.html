@@ -1,26 +1,26 @@
-{% extends "base.html" %}
+{% extends "pokebattle_base.html" %}
 
 {% block content %}
 
-  <form method="POST">{% csrf_token %}
+<form method="POST">{% csrf_token %}
 
   <!-- form variable -->
-   {{ form.as_p }}
+  {{ form.as_p }}
 
-    <input type="submit" name="sumbit">
-  </form>
+  <input type="submit" name="sumbit">
+</form>
 
 
-  <br>
+<br>
 
-  <a href="{% url 'social:begin' 'google-oauth2' %}">
-    <div class="login-with-google-btn">
-      Sign in with Google
-    </div>
-  </a>
+<a href="{% url 'social:begin' 'google-oauth2' %}">
+  <div class="login-with-google-btn">
+    Sign in with Google
+  </div>
+</a>
 
-  <a href="{% url 'signup' %}">
-    <button class="button">Battles</button>
-  </a>
+<a href="{% url 'signup' %}">
+  <button class="button">Battles</button>
+</a>
 
 {% endblock %}
