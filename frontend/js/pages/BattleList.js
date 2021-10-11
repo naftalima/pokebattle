@@ -11,9 +11,7 @@ function Battles({ battles }) {
   const battleList = battles.map((battle) => {
     return (
       <p key={battle.id}>
-        <Link key={battle.id} to={{ pathname: `/v2/battle/${battle.id}` }}>
-          Battle #{battle.id}
-        </Link>
+        <Link to={{ pathname: `/v2/battle/${battle.id}` }}>Battle #{battle.id}</Link>
       </p>
     );
   });
