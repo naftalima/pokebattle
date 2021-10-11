@@ -47,6 +47,7 @@ class BattleSerializer(serializers.ModelSerializer):
     creator = UserSerializer()
     opponent = UserSerializer()
     teams = TeamSerializer(many=True, read_only=True)
+    winner = UserSerializer()
 
     class Meta:
         model = Battle
