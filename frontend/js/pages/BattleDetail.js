@@ -40,7 +40,7 @@ class BattleDetail extends React.Component {
       battleDetail: { battle },
     } = this.props;
 
-    if (battle !== null) {
+    if (battle === null) {
       return (
         <div>
           <img
@@ -50,35 +50,7 @@ class BattleDetail extends React.Component {
           />
           <div className="container">
             <div className="battleDetail">
-              <div className="battleDetail">
-                <h1>Battle #{JSON.stringify(battle.id)}</h1>
-                <p>Created at {JSON.stringify(battle.created_at)}</p>
-                <p>
-                  <strong>{battle.creator ? battle.creator.email : ''}</strong> challenged{' '}
-                  <strong>{battle.opponent ? battle.opponent.email : ''}</strong>
-                </p>
-                {battle.teams[0].pokemons.length > 0 ? (
-                  <div>
-                    <p>{battle.creator.email} Team is:</p>
-                    <Team pokemons={battle.teams[0].pokemons} />
-                  </div>
-                ) : (
-                  <p>Your team is empty. Choose Pokemons for your team.</p>
-                )}
-                {battle.teams[1].pokemons.length > 0 ? (
-                  <div>
-                    <p>{battle.opponent.email} Team is:</p>
-                    <Team pokemons={battle.teams[1].pokemons} />
-                  </div>
-                ) : (
-                  <p>Wait for your opponent to choose their team.</p>
-                )}
-                {battle.winner ? (
-                  <p>And the winner is {battle.winner.email}</p>
-                ) : (
-                  <p>There is no winner yet</p>
-                )}
-              </div>
+              <h1>Its not a valid battle id</h1>
             </div>
           </div>
         </div>
@@ -93,7 +65,35 @@ class BattleDetail extends React.Component {
         />
         <div className="container">
           <div className="battleDetail">
-            <h1>Its not a valid battle id</h1>
+            <div className="battleDetail">
+              <h1>Battle #{JSON.stringify(battle.id)}</h1>
+              <p>Created at {JSON.stringify(battle.created_at)}</p>
+              <p>
+                <strong>{battle.creator ? battle.creator.email : ''}</strong> challenged{' '}
+                <strong>{battle.opponent ? battle.opponent.email : ''}</strong>
+              </p>
+              {battle.teams[0].pokemons.length > 0 ? (
+                <div>
+                  <p>{battle.creator.email} Team is:</p>
+                  <Team pokemons={battle.teams[0].pokemons} />
+                </div>
+              ) : (
+                <p>Your team is empty. Choose Pokemons for your team.</p>
+              )}
+              {battle.teams[1].pokemons.length > 0 ? (
+                <div>
+                  <p>{battle.opponent.email} Team is:</p>
+                  <Team pokemons={battle.teams[1].pokemons} />
+                </div>
+              ) : (
+                <p>Wait for your opponent to choose their team.</p>
+              )}
+              {battle.winner ? (
+                <p>And the winner is {battle.winner.email}</p>
+              ) : (
+                <p>There is no winner yet</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
