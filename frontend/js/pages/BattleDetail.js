@@ -24,57 +24,11 @@ class BattleDetail extends React.Component {
       opponentTeamPokemons,
       winner,
     } = this.props;
-    if (battleId !== null) {
+    if (battleId === null) {
       return (
         <div className="container">
           <div className="battleDetail">
-            <div className="battleDetail">
-              <p className="title">Battle #{JSON.stringify(battleId)}</p>
-              <h4>
-                <span className="trainer">{creator ? getUserName(creator.email) : ''}</span>{' '}
-                challenged{' '}
-                <span className="trainer">{opponent ? getUserName(opponent.email) : ''}</span>
-              </h4>
-              <table>
-                <tr>
-                  <th>
-                    <span className="trainer">{getUserName(creator.email)}</span>&apos;s Team is:
-                  </th>
-                </tr>
-                <tr>
-                  {creatorTeamPokemons ? (
-                    <div>
-                      <Team pokemons={creatorTeamPokemons} />
-                    </div>
-                  ) : (
-                    <td>Your team is empty. Choose Pokemons for your team.</td>
-                  )}
-                </tr>
-              </table>
-              <table>
-                <tr>
-                  <th>
-                    <span className="trainer">{getUserName(opponent.email)}</span>&apos;s Team is:
-                  </th>
-                </tr>
-                <tr>
-                  {opponentTeamPokemons ? (
-                    <div>
-                      <Team pokemons={opponentTeamPokemons} />
-                    </div>
-                  ) : (
-                    <td>Wait for your opponent to choose their team.</td>
-                  )}
-                </tr>
-              </table>
-              {winner ? (
-                <h1>
-                  And the winner is <span className="winner">{getUserName(winner.email)}</span>
-                </h1>
-              ) : (
-                <h2>There is no winner yet</h2>
-              )}
-            </div>
+            <h1>Its not a valid battle id</h1>
           </div>
         </div>
       );
@@ -82,7 +36,53 @@ class BattleDetail extends React.Component {
     return (
       <div className="container">
         <div className="battleDetail">
-          <h1>Its not a valid battle id</h1>
+          <div className="battleDetail">
+            <p className="title">Battle #{JSON.stringify(battleId)}</p>
+            <h4>
+              <span className="trainer">{creator ? getUserName(creator.email) : ''}</span>{' '}
+              challenged{' '}
+              <span className="trainer">{opponent ? getUserName(opponent.email) : ''}</span>
+            </h4>
+            <table>
+              <tr>
+                <th>
+                  <span className="trainer">{getUserName(creator.email)}</span>&apos;s Team is:
+                </th>
+              </tr>
+              <tr>
+                {creatorTeamPokemons ? (
+                  <div>
+                    <Team pokemons={creatorTeamPokemons} />
+                  </div>
+                ) : (
+                  <td>Your team is empty. Choose Pokemons for your team.</td>
+                )}
+              </tr>
+            </table>
+            <table>
+              <tr>
+                <th>
+                  <span className="trainer">{getUserName(opponent.email)}</span>&apos;s Team is:
+                </th>
+              </tr>
+              <tr>
+                {opponentTeamPokemons ? (
+                  <div>
+                    <Team pokemons={opponentTeamPokemons} />
+                  </div>
+                ) : (
+                  <td>Wait for your opponent to choose their team.</td>
+                )}
+              </tr>
+            </table>
+            {winner ? (
+              <h1>
+                And the winner is <span className="winner">{getUserName(winner.email)}</span>
+              </h1>
+            ) : (
+              <h2>There is no winner yet</h2>
+            )}
+          </div>
         </div>
       </div>
     );
