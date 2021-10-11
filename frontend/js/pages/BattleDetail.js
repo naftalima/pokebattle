@@ -2,29 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import Team from '../components/Team';
 import { getBattleDetailAction } from '../redux/actions';
-import './BattleDetail.scss';
-
-function Team({ pokemons }) {
-  const teamPokemon = [];
-  for (const pokemon of pokemons) {
-    teamPokemon.push(
-      <td key={pokemon.id}>
-        <img alt={pokemon} src={pokemon.img_url} /> {pokemon.name}
-      </td>
-    );
-  }
-  return (
-    <table>
-      <tbody>
-        <tr>{teamPokemon}</tr>
-      </tbody>
-    </table>
-  );
-}
-Team.propTypes = {
-  pokemons: PropTypes.array.isRequired,
-};
+import { getUserName } from '../utils/format';
 
 class BattleDetail extends React.Component {
   componentDidMount() {
@@ -40,61 +20,70 @@ class BattleDetail extends React.Component {
       battleDetail: { battle },
     } = this.props;
 
-    if (battle === null) {
+    if (battle !== null) {
+      const { creator, opponent, teams, winner } = battle;
+      const creatorTeam = teams[0];
+      const opponentTeam = teams[1];
+
       return (
-        <div>
-          <img
-            alt="pokemon"
-            className="pokebattle-logo"
-            src="https://team-rocket-blasting-off-again.github.io/pokebattle/assets/pokebattle-title.png"
-          />
-          <div className="container">
+        <div className="container">
+          <div className="battleDetail">
             <div className="battleDetail">
-              <h1>Its not a valid battle id</h1>
+              <p className="title">Battle #{JSON.stringify(battle.id)}</p>
+              <h4>
+                <span className="trainer">{creator ? getUserName(creator.email) : ''}</span>{' '}
+                challenged{' '}
+                <span className="trainer">{opponent ? getUserName(opponent.email) : ''}</span>
+              </h4>
+              <table>
+                <tr>
+                  <th>
+                    <span className="trainer">{getUserName(creator.email)}</span>&apos;s Team is:
+                  </th>
+                </tr>
+                <tr>
+                  {creatorTeam.pokemons.length ? (
+                    <div>
+                      <Team pokemons={creatorTeam.pokemons} />
+                    </div>
+                  ) : (
+                    <td>Your team is empty. Choose Pokemons for your team.</td>
+                  )}
+                </tr>
+              </table>
+              <table>
+                <tr>
+                  <th>
+                    <span className="trainer">{getUserName(opponent.email)}</span>&apos;s Team is:
+                  </th>
+                </tr>
+                <tr>
+                  {opponentTeam.pokemons.length ? (
+                    <div>
+                      <Team pokemons={opponentTeam.pokemons} />
+                    </div>
+                  ) : (
+                    <td>Wait for your opponent to choose their team.</td>
+                  )}
+                </tr>
+              </table>
+
+              {winner ? (
+                <h1>
+                  And the winner is <span className="winner">{getUserName(winner.email)}</span>
+                </h1>
+              ) : (
+                <h2>There is no winner yet</h2>
+              )}
             </div>
           </div>
         </div>
       );
     }
     return (
-      <div>
-        <img
-          alt="pokemon"
-          className="pokebattle-logo"
-          src="https://team-rocket-blasting-off-again.github.io/pokebattle/assets/pokebattle-title.png"
-        />
-        <div className="container">
-          <div className="battleDetail">
-            <div className="battleDetail">
-              <h1>Battle #{JSON.stringify(battle.id)}</h1>
-              <p>Created at {JSON.stringify(battle.created_at)}</p>
-              <p>
-                <strong>{battle.creator ? battle.creator.email : ''}</strong> challenged{' '}
-                <strong>{battle.opponent ? battle.opponent.email : ''}</strong>
-              </p>
-              {battle.teams[0].pokemons.length > 0 ? (
-                <div>
-                  <p>{battle.creator.email} Team is:</p>
-                  <Team pokemons={battle.teams[0].pokemons} />
-                </div>
-              ) : (
-                <p>Your team is empty. Choose Pokemons for your team.</p>
-              )}
-              {battle.teams[1].pokemons.length > 0 ? (
-                <div>
-                  <p>{battle.opponent.email} Team is:</p>
-                  <Team pokemons={battle.teams[1].pokemons} />
-                </div>
-              ) : (
-                <p>Wait for your opponent to choose their team.</p>
-              )}
-              {battle.winner ? (
-                <p>And the winner is {battle.winner.email}</p>
-              ) : (
-                <p>There is no winner yet</p>
-              )}
-            </div>
-          </div>
+      <div className="container">
+        <div className="battleDetail">
+          <h1>Its not a valid battle id</h1>
         </div>
       </div>
     );
