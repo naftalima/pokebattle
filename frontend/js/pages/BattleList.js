@@ -33,14 +33,14 @@ class BattleList extends React.Component {
             </tr>
             <tr>
               <td>
-                {unfinishedBattles !== [] ? (
+                {unfinishedBattles.length > 0 ? (
                   <Battles battles={unfinishedBattles} />
                 ) : (
                   <td>Sorry, no battles in this list.</td>
                 )}
               </td>
               <td>
-                {finishedBattles !== [] ? (
+                {finishedBattles.length > 0 ? (
                   <Battles battles={finishedBattles} />
                 ) : (
                   <td>Sorry, no battles in this list.</td>
