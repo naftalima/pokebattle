@@ -1,8 +1,8 @@
 const autoprefixer = require('autoprefixer');
-const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const BundleTracker = require('webpack-bundle-tracker');
 const path = require('path');
+const webpack = require('webpack');
+const BundleTracker = require('webpack-bundle-tracker');
 
 const baseConfig = require('./webpack.base.config');
 
@@ -15,7 +15,7 @@ baseConfig.entry = ['whatwg-fetch', '@babel/polyfill', './frontend/js/index.js']
 
 baseConfig.output = {
   path: path.resolve('./frontend/webpack_bundles/'),
-  publicPath: '',
+  publicPath: '/static/webpack_bundles/',
   filename: '[name]-[hash].js',
 };
 
