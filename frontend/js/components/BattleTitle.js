@@ -8,11 +8,17 @@ import { getUserName } from '../utils/format';
 function BattleTitle({ battleId, creator, opponent }) {
   return (
     <div className="battle-title">
-      <p className="title">Battle #{battleId}</p>
-      <h4>
-        <span className="trainer">{creator ? getUserName(creator.email) : ''}</span> challenged{' '}
-        <span className="trainer">{opponent ? getUserName(opponent.email) : ''}</span>
-      </h4>
+      {battleId === 0 ? (
+        <p>there is no battle</p>
+      ) : (
+        <div>
+          <p className="title">Battle #{battleId}</p>
+          <h4>
+            <span className="trainer">{creator ? getUserName(creator.email) : ''}</span> challenged{' '}
+            <span className="trainer">{opponent ? getUserName(opponent.email) : ''}</span>
+          </h4>
+        </div>
+      )}
     </div>
   );
 }
