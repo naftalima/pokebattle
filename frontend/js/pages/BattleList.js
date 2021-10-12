@@ -59,8 +59,6 @@ const mapStateToProps = (state) => {
   const finishedBattles = battleList ? battleList.filter(isFinished) : [];
   const unfinishedBattles = battleList ? battleList.filter(isUnfinished) : [];
 
-  console.log('finishedBattles', typeof finishedBattles, finishedBattles);
-
   return {
     finishedBattles,
     unfinishedBattles,
