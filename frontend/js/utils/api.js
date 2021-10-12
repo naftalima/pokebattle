@@ -4,7 +4,7 @@ import axios from 'axios';
 const baseURL = `${window.location.protocol}//${window.location.host}`;
 const battleUrl = `${baseURL}/api/battle/`;
 const createBattleUrl = `${battleUrl}new/`;
-const selectTeamUrl = `${baseURL}team/`;
+const selectTeamUrl = `${baseURL}/api/team/`;
 
 function getCookie(name) {
   let cookieValue = null;
@@ -57,8 +57,8 @@ export const createBattleApi = (battleForm) => {
     });
 };
 
-export const selectTeamApi = (teamForm, id) => {
-  console.log(teamForm, id);
+export const selectTeamApi = (teamForm) => {
+  const id = 39;
   console.log(`${selectTeamUrl}${id}/edit/`);
   return axios
     .put(`${selectTeamUrl}${id}/edit/`, teamForm, { headers: { 'X-CSRFToken': csrftoken } })

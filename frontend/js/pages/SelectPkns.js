@@ -1,3 +1,4 @@
+/* eslint-disable babel/camelcase */
 import { Formik, Field, Form } from 'formik';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -11,12 +12,12 @@ function SelectPkns(props) {
       <div className="battleList">
         <Formik
           initialValues={{
-            pokemon1: '',
-            pokemon2: '',
-            pokemon3: '',
-            position1: 1,
-            position2: 2,
-            position3: 3,
+            pokemon_1: '',
+            pokemon_2: '',
+            pokemon_3: '',
+            position_1: 1,
+            position_2: 2,
+            position_3: 3,
           }}
           onSubmit={async (values) => {
             console.log('values', values);
@@ -24,9 +25,9 @@ function SelectPkns(props) {
           }}
         >
           <Form>
-            <Field id="pokemon1" name="pokemon1" placeholder="pikachu" type="text" />
-            <Field id="pokemon2" name="pokemon2" placeholder="eevee" type="text" />
-            <Field id="pokemon3" name="pokemon3" placeholder="nidorina" type="text" />
+            <Field id="pokemon_1" name="pokemon_1" placeholder="pikachu" type="text" />
+            <Field id="pokemon_2" name="pokemon_2" placeholder="eevee" type="text" />
+            <Field id="pokemon_3" name="pokemon_3" placeholder="nidorina" type="text" />
             <button type="submit">Submit</button>
           </Form>
         </Formik>
@@ -43,7 +44,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    selectTeamProp: (battleForm) => dispatch(selectTeamAction({ battleForm, id: 39 })),
+    selectTeamProp: (battleForm) => {
+      console.log('selectTeamProp', battleForm);
+      dispatch(selectTeamAction(battleForm));
+    },
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SelectPkns);

@@ -28,10 +28,9 @@ export function createBattleAction(battleForm) {
     });
 }
 
-export function selectTeamAction(payload) {
-  const { teamForm, id } = payload;
+export function selectTeamAction(teamForm) {
   return (dispatch) =>
-    api.selectTeamApi(teamForm, id).then((team) => {
+    api.selectTeamApi(teamForm).then((team) => {
       return dispatch({ type: actionsTypes.SELECT_TEAM, payload: team });
     });
 }
