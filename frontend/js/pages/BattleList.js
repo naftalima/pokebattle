@@ -32,20 +32,8 @@ class BattleList extends React.Component {
               <td className="title">Settled Battles</td>
             </tr>
             <tr>
-              <td>
-                {unfinishedBattles.length > 0 ? (
-                  <Battles battles={unfinishedBattles} />
-                ) : (
-                  <td>Sorry, no battles in this list.</td>
-                )}
-              </td>
-              <td>
-                {finishedBattles.length > 0 ? (
-                  <Battles battles={finishedBattles} />
-                ) : (
-                  <td>Sorry, no battles in this list.</td>
-                )}
-              </td>
+              <Battles battles={unfinishedBattles} />
+              <Battles battles={finishedBattles} />
             </tr>
           </table>
         </div>
@@ -63,13 +51,15 @@ BattleList.propTypes = {
 const mapStateToProps = (state) => {
   const { battleIds, battles } = state.battleR;
 
-  const battleList = battles ? battleIds.map((id) => battles[id]) : [];
+  const battleList = battleIds ? battleIds.map((id) => battles[id]) : [];
 
   const isFinished = (battle) => battle.winner !== null;
   const isUnfinished = (battle) => battle.winner === null;
 
   const finishedBattles = battleList ? battleList.filter(isFinished) : [];
   const unfinishedBattles = battleList ? battleList.filter(isUnfinished) : [];
+
+  console.log('finishedBattles', typeof finishedBattles, finishedBattles);
 
   return {
     finishedBattles,
