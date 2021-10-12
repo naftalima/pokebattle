@@ -5,16 +5,20 @@ import { connect } from 'react-redux';
 function Pokemons({ trainerTeamPokemons }) {
   return (
     <tr>
-      {trainerTeamPokemons.map((pokemon) => (
-        <td key={pokemon.id} className="battle-detail-td">
-          <div className="battle-detail-block">
-            <div className="battle-datail-display">
-              <img alt={pokemon} height="90px" src={pokemon.img_url} />
+      {Object.keys(trainerTeamPokemons).length === 0 ? (
+        <p>The team is empty. Waiting for the trainer to choose the Pokemons for the team.</p>
+      ) : (
+        trainerTeamPokemons.map((pokemon) => (
+          <td key={pokemon.id} className="battle-detail-td">
+            <div className="battle-detail-block">
+              <div className="battle-datail-display">
+                <img alt={pokemon} height="90px" src={pokemon.img_url} />
+              </div>
+              <div className="battle-detail-pokemon-name">{pokemon.name}</div>
             </div>
-            <div className="battle-detail-pokemon-name">{pokemon.name}</div>
-          </div>
-        </td>
-      ))}
+          </td>
+        ))
+      )}
     </tr>
   );
 }

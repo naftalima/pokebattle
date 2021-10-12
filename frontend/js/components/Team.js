@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -7,8 +6,7 @@ import { getUserName } from '../utils/format';
 
 import Pokemons from './Pokemons';
 
-function Team(props) {
-  const { trainer, trainerTeamId } = props;
+function Team({ trainer, trainerTeamId }) {
   return (
     <table>
       <tr>
@@ -18,12 +16,6 @@ function Team(props) {
       </tr>
       <tr>
         <Pokemons trainerTeamId={trainerTeamId} />
-        {/* {trainerTeamId.pokemons !== [] ? (
-          <div>
-          </div>
-        ) : (
-          <td>The team is empty. Waiting for the trainer to choose the Pokemons for the team.</td>
-        )} */}
       </tr>
     </table>
   );
