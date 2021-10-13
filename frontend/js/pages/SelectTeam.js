@@ -3,6 +3,7 @@ import { Formik, Field, Form } from 'formik';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { selectTeamAction } from '../redux/actions';
 
@@ -20,7 +21,7 @@ function SelectTeam(props) {
             position_3: 3,
           }}
           onSubmit={async (values) => {
-            console.log('values', values);
+            props.history.push('/v2/battle');
             props.selectTeamProp(values);
           }}
         >
@@ -37,6 +38,7 @@ function SelectTeam(props) {
 }
 SelectTeam.propTypes = {
   selectTeamProp: PropTypes.func,
+  history: PropTypes.object,
 };
 const mapStateToProps = (state) => ({
   battle: state.battleR.battle,
@@ -50,4 +52,4 @@ const mapDispatchToProps = (dispatch) => {
     },
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(SelectTeam);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SelectTeam));
