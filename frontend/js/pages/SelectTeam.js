@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { selectTeamAction } from '../redux/actions';
 
-function SelectPkns(props) {
+function SelectTeam(props) {
   return (
     <div className="container">
       <div className="battleList">
@@ -35,7 +35,7 @@ function SelectPkns(props) {
     </div>
   );
 }
-SelectPkns.propTypes = {
+SelectTeam.propTypes = {
   selectTeamProp: PropTypes.func,
 };
 const mapStateToProps = (state) => ({
@@ -50,4 +50,4 @@ const mapDispatchToProps = (dispatch) => {
     },
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(SelectPkns);
+export default connect(mapStateToProps, mapDispatchToProps)(SelectTeam);

@@ -7,7 +7,7 @@ import Base from './components/Base';
 import BattleDetail from './pages/BattleDetail';
 import BattleList from './pages/BattleList';
 import CreateBattle from './pages/CreateBattle';
-import SelectTeam from './pages/SelectPkns';
+import SelectTeam from './pages/SelectTeam';
 import store from './redux/store';
 import SentryBoundary from './utils/SentryBoundary';
 import './pages/Style.scss';
