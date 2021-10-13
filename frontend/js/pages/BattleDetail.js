@@ -1,6 +1,8 @@
+/* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import BattleTitle from '../components/BattleTitle';
 import Team from '../components/Team';
@@ -9,11 +11,17 @@ import { getBattleDetailAction } from '../redux/actions';
 
 class BattleDetail extends React.Component {
   componentDidMount() {
-    const { pathname } = window.location;
-    const battleId = Number(pathname.split('/').pop());
+    const {
+      match: { params },
+      fetchBattle,
+      battle,
+    } = this.props;
 
-    const { fetchBattle } = this.props;
-    fetchBattle(battleId);
+    const battleId = params.id;
+
+    if (!battle.id) {
+      fetchBattle(battleId);
+    }
   }
 
   render() {
@@ -68,4 +76,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(BattleDetail);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BattleDetail));
