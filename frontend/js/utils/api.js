@@ -49,19 +49,19 @@ export const createBattleApi = (battleForm) => {
   return axios
     .post(`${createBattleUrl}`, battleForm, { headers: { 'X-CSRFToken': csrftoken } })
     .then((res) => {
-      console.log('createBattleApi', battleForm);
-      return res;
+      return res.data;
     })
     .catch((err) => {
       console.log(err);
     });
 };
 
-export const selectTeamApi = (teamForm) => {
-  const id = 39;
-  console.log(`${selectTeamUrl}${id}/edit/`);
+export const selectTeamApi = (payload) => {
+  console.log('selectTeamApi', payload);
+  const { teamId, teamForm } = payload;
+  console.log(`${selectTeamUrl}${teamId}/edit/`);
   return axios
-    .put(`${selectTeamUrl}${id}/edit/`, teamForm, { headers: { 'X-CSRFToken': csrftoken } })
+    .put(`${selectTeamUrl}${teamId}/edit/`, teamForm, { headers: { 'X-CSRFToken': csrftoken } })
     .then((res) => {
       return res;
     })

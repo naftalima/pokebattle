@@ -57,10 +57,11 @@ class BattleSerializer(serializers.ModelSerializer):
 class CreateBattleSerializer(serializers.ModelSerializer):
     opponent = serializers.CharField()
     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    teams = TeamSerializer(many=True, read_only=True)
 
     class Meta:
         model = Battle
-        fields = ("id", "creator", "opponent")
+        fields = ("id", "creator", "opponent", "teams")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

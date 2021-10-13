@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable babel/camelcase */
 import { Formik, Field, Form } from 'formik';
 import PropTypes from 'prop-types';
@@ -8,6 +9,10 @@ import { withRouter } from 'react-router';
 import { selectTeamAction } from '../redux/actions';
 
 function SelectTeam(props) {
+  const {
+    match: { params },
+  } = props;
+  const teamId = params.id;
   return (
     <div className="container">
       <div className="battleList">
@@ -22,7 +27,7 @@ function SelectTeam(props) {
           }}
           onSubmit={async (values) => {
             props.history.push('/v2/battle');
-            props.selectTeamProp(values);
+            props.selectTeamProp(teamId, values);
           }}
         >
           <Form>
@@ -46,9 +51,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    selectTeamProp: (battleForm) => {
-      console.log('selectTeamProp', battleForm);
-      dispatch(selectTeamAction(battleForm));
+    selectTeamProp: (teamId, teamForm) => {
+      dispatch(selectTeamAction({ teamId, teamForm }));
     },
   };
 };

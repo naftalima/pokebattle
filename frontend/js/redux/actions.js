@@ -21,16 +21,9 @@ export function getBattleListAction() {
     });
 }
 
-export function createBattleAction(battleForm) {
+export function selectTeamAction(payload) {
   return (dispatch) =>
-    api.createBattleApi(battleForm).then((battle) => {
-      return dispatch({ type: actionsTypes.CREATE_BATTLE, payload: battle });
-    });
-}
-
-export function selectTeamAction(teamForm) {
-  return (dispatch) =>
-    api.selectTeamApi(teamForm).then((team) => {
+    api.selectTeamApi(payload).then((team) => {
       return dispatch({ type: actionsTypes.SELECT_TEAM, payload: team });
     });
 }

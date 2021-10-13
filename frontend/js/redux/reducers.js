@@ -29,11 +29,6 @@ const battleReducer = (state = initialState, action = {}) => {
         battles: action.payload.entities.battle,
         battleIds: action.payload.result,
       };
-    case actionsTypes.CREATE_BATTLE:
-      return {
-        ...state,
-        battle: action.payload,
-      };
     default:
       return state;
   }

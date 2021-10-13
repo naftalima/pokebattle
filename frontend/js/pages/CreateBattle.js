@@ -1,10 +1,9 @@
 import { Formik, Field, Form } from 'formik';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { createBattleAction } from '../redux/actions';
+import { createBattleApi } from '../utils/api';
 
 function CreateBattle(props) {
   return (
@@ -15,9 +14,12 @@ function CreateBattle(props) {
             opponent: '',
           }}
           onSubmit={async (values) => {
-            props.createBattleAction(values);
-            const teamId = 39;
-            props.history.push(`/v2/team/${teamId}`);
+            createBattleApi(values).then((battle) => {
+              const { teams } = battle;
+              const creatorTeamId = teams[0].id;
+              props.history.push(`/v2/team/${creatorTeamId}`);
+              return true;
+            });
           }}
         >
           <Form>
@@ -30,16 +32,7 @@ function CreateBattle(props) {
   );
 }
 CreateBattle.propTypes = {
-  createBattleAction: PropTypes.func,
   history: PropTypes.object,
 };
-const mapStateToProps = (state) => ({
-  battle: state.battleR.battle,
-});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    createBattleAction: (battleForm) => dispatch(createBattleAction(battleForm)),
-  };
-};
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CreateBattle));
+export default withRouter(CreateBattle);
