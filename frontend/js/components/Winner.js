@@ -23,12 +23,9 @@ Winner.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { battles, users } = state.battleR;
-  const { battleId } = ownProps;
+  const { users } = state.battleR;
+  const { winnerId } = ownProps;
 
-  const battle = battles[battleId];
-
-  const winnerId = battle ? battle.winner : null;
   const winner = winnerId ? users[winnerId] : null;
   return { winner };
 };

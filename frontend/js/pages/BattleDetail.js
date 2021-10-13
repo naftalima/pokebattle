@@ -46,7 +46,7 @@ class BattleDetail extends React.Component {
             <BattleTitle battleId={battle.id} />
             <Team trainerTeamId={creatorTeamId} />
             <Team trainerTeamId={opponentTeamId} />
-            <Winner battleId={battle.id} />
+            <Winner winnerId={battle.winner} />
           </div>
         </div>
       </div>
