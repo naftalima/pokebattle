@@ -59,11 +59,12 @@ BattleDetail.propTypes = {
   match: PropTypes.object,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   const { battles } = state.battleR;
-
-  const { pathname } = window.location;
-  const battleId = Number(pathname.split('/').pop());
+  const {
+    match: { params },
+  } = ownProps;
+  const battleId = params.id;
 
   const battle = battles[battleId] ? battles[battleId] : {};
 
