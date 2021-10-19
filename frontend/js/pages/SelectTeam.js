@@ -15,7 +15,6 @@ function SelectTeam(props) {
   } = props;
 
   const teamId = params.id;
-  console.log(teamId);
   useEffect(() => {
     const { fetchPokemons, pokemonNames } = props;
     if (pokemonNames.length === 0) {
