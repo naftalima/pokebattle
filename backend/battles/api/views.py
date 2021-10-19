@@ -3,8 +3,14 @@ from django.db.models import Q
 from rest_framework import generics, permissions
 
 from battles.api.permissions import IsTrainerOfTeam
-from battles.api.serializers import BattleSerializer, CreateBattleSerializer, SelectTeamSerializer
+from battles.api.serializers import (
+    BattleSerializer,
+    CreateBattleSerializer,
+    PokemonSerializer,
+    SelectTeamSerializer,
+)
 from battles.models import Battle, Team
+from pokemons.models import Pokemon
 
 
 class BattleListView(generics.ListAPIView):
@@ -16,6 +22,12 @@ class BattleListView(generics.ListAPIView):
             Q(creator=self.request.user) | Q(opponent=self.request.user)
         ).order_by("-id")
         return queryset
+
+
+class PokemonListView(generics.ListAPIView):
+    serializer_class = PokemonSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Pokemon.objects.all()
 
 
 class BattleDetailView(generics.RetrieveAPIView):

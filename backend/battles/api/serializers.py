@@ -29,6 +29,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PokemonSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(read_only=True)
+
     class Meta:
         model = Pokemon
         fields = ("id", "poke_id", "name", "img_url", "attack", "defense", "hp")

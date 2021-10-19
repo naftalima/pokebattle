@@ -21,6 +21,13 @@ export function getBattleListAction() {
     });
 }
 
+export function getPokemonListAction() {
+  return (dispatch) =>
+    api.getPokemonListFromApi().then((pokemons) => {
+      return dispatch({ type: actionsTypes.POKEMON_LIST, payload: pokemons });
+    });
+}
+
 export function selectTeamAction(payload) {
   return (dispatch) =>
     api.selectTeamApi(payload).then((team) => {
