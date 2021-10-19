@@ -15,6 +15,7 @@ function SelectTeam(props) {
   } = props;
 
   const teamId = params.id;
+  console.log(teamId);
   useEffect(() => {
     const { fetchPokemons, pokemonNames } = props;
     if (pokemonNames.length === 0) {
@@ -38,7 +39,7 @@ function SelectTeam(props) {
             position_3: 3,
           }}
           onSubmit={async (values) => {
-            selectTeamApi(teamId, values);
+            selectTeamApi({ teamId, values });
             props.history.push('/v2/battle');
           }}
         >

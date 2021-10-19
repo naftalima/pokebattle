@@ -56,11 +56,10 @@ export const createBattleApi = (battleForm) => {
 };
 
 export const selectTeamApi = (payload) => {
-  console.log('selectTeamApi', payload);
-  const { teamId, teamForm } = payload;
+  const { teamId, values } = payload;
   console.log(`${selectTeamUrl}${teamId}/edit/`);
   return axios
-    .put(`${selectTeamUrl}${teamId}/edit/`, teamForm, { headers: { 'X-CSRFToken': csrftoken } })
+    .put(`${selectTeamUrl}${teamId}/edit/`, values, { headers: { 'X-CSRFToken': csrftoken } })
     .then((res) => {
       return res;
     })
