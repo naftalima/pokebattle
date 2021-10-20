@@ -1,7 +1,7 @@
 import { normalize } from 'normalizr';
 
 import * as api from '../utils/api';
-import { battlesEntity, battleEntity } from '../utils/schema';
+import { battlesEntity, battleEntity, teamEntity } from '../utils/schema';
 
 import * as actionsTypes from './actionsTypes';
 
@@ -10,6 +10,14 @@ export function getBattleDetailAction(battleId) {
     api.getBattleDetailFromApi(battleId).then((battle) => {
       const normalizedBattle = normalize(battle, battleEntity);
       return dispatch({ type: actionsTypes.BATTLE_DETAIL, payload: normalizedBattle });
+    });
+}
+
+export function getTeamDetailAction(teamId) {
+  return (dispatch) =>
+    api.getTeamDetailFromApi(teamId).then((team) => {
+      const normalizedTeam = normalize(team, teamEntity);
+      return dispatch({ type: actionsTypes.TEAM_DETAIL, payload: normalizedTeam });
     });
 }
 

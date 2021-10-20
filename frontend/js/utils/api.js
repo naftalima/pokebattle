@@ -22,6 +22,17 @@ export const getBattleDetailFromApi = (id) => {
     });
 };
 
+export const getTeamDetailFromApi = (id) => {
+  return axios
+    .get(`${selectTeamUrl}${id}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 export const getBattleListFromApi = () => {
   return axios
     .get(`${battleUrl}`)
@@ -57,7 +68,6 @@ export const createBattleApi = (battleForm) => {
 
 export const selectTeamApi = (payload) => {
   const { teamId, values } = payload;
-  console.log(`${selectTeamUrl}${teamId}/edit/`);
   return axios
     .put(`${selectTeamUrl}${teamId}/edit/`, values, { headers: { 'X-CSRFToken': csrftoken } })
     .then((res) => {

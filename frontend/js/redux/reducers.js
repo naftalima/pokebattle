@@ -23,6 +23,14 @@ const battleReducer = (state = initialState, action = {}) => {
         teams: action.payload.entities.team,
         users: action.payload.entities.users,
       };
+    case actionsTypes.TEAM_DETAIL:
+      return {
+        ...state,
+        teams: {
+          ...state.teams,
+          ...action.payload.entities.team,
+        },
+      };
     case actionsTypes.BATTLE_LIST:
       return {
         ...state,

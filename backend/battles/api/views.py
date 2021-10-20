@@ -8,6 +8,7 @@ from battles.api.serializers import (
     CreateBattleSerializer,
     PokemonSerializer,
     SelectTeamSerializer,
+    TeamSerializer,
 )
 from battles.models import Battle, Team
 from pokemons.models import Pokemon
@@ -38,6 +39,15 @@ class BattleDetailView(generics.RetrieveAPIView):
         queryset = Battle.objects.filter(
             Q(creator=self.request.user) | Q(opponent=self.request.user)
         ).order_by("-id")
+        return queryset
+
+
+class TeamDetailView(generics.RetrieveAPIView):
+    serializer_class = TeamSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Team.objects.filter(trainer=self.request.user).order_by("-id")
         return queryset
 
 

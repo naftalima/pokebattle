@@ -5,18 +5,43 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { getPokemonListAction } from '../redux/actions';
+import { getPokemonListAction, getTeamDetailAction } from '../redux/actions';
 import { selectTeamApi } from '../utils/api';
+
+function PokemonList({ pokemonNames }) {
+  return (
+    <datalist id="pokemons">
+      {pokemonNames.map((pokemon) => {
+        return (
+          <option key={pokemon} value={pokemon}>
+            {`${pokemon}`}
+          </option>
+        );
+      })}
+    </datalist>
+  );
+}
+PokemonList.propTypes = {
+  pokemonNames: PropTypes.array,
+};
 
 function SelectTeam(props) {
   const {
     match: { params },
+    fetchTeam,
+    team,
     pokemonNames,
+    fetchPokemons,
   } = props;
 
   const teamId = params.id;
   useEffect(() => {
-    const { fetchPokemons, pokemonNames } = props;
+    if (team && team.id === teamId) {
+      fetchTeam(teamId);
+    }
+  });
+
+  useEffect(() => {
     if (pokemonNames.length === 0) {
       fetchPokemons();
     }
@@ -44,35 +69,11 @@ function SelectTeam(props) {
         >
           <Form>
             <Field id="pokemon_1" list="pokemons" name="pokemon_1" type="text" />
-            <datalist id="pokemons">
-              {pokemonNames.map((pokemon) => {
-                return (
-                  <option key={pokemon} value={pokemon}>
-                    {`${pokemon}`}
-                  </option>
-                );
-              })}
-            </datalist>
+            <PokemonList pokemonNames={pokemonNames} />
             <Field id="pokemon_2" list="pokemons" name="pokemon_2" type="text" />
-            <datalist id="pokemons">
-              {pokemonNames.map((pokemon) => {
-                return (
-                  <option key={pokemon} value={pokemon}>
-                    {`${pokemon}`}
-                  </option>
-                );
-              })}
-            </datalist>
+            <PokemonList pokemonNames={pokemonNames} />
             <Field id="pokemon_3" list="pokemons" name="pokemon_3" type="text" />
-            <datalist id="pokemons">
-              {pokemonNames.map((pokemon) => {
-                return (
-                  <option key={pokemon} value={pokemon}>
-                    {`${pokemon}`}
-                  </option>
-                );
-              })}
-            </datalist>
+            <PokemonList pokemonNames={pokemonNames} />
             <button type="submit">Submit</button>
           </Form>
         </Formik>
@@ -84,11 +85,20 @@ SelectTeam.propTypes = {
   history: PropTypes.object,
   pokemonNames: PropTypes.array,
   fetchPokemons: PropTypes.func,
+  fetchTeam: PropTypes.func,
+  team: PropTypes.object,
   match: PropTypes.object,
 };
 
-const mapStateToProps = (state) => {
-  const { pokemons } = state.battleR;
+const mapStateToProps = (state, ownProps) => {
+  const { pokemons, teams } = state.battleR;
+  const {
+    match: { params },
+  } = ownProps;
+  const teamId = params.id;
+
+  const team = teams ? teams[teamId] : {};
+
   const pokemonNames = [];
   if (pokemons) {
     // eslint-disable-next-line no-unused-vars
@@ -96,7 +106,7 @@ const mapStateToProps = (state) => {
       pokemonNames.push(value.name);
     }
   }
-  return { pokemonNames };
+  return { pokemonNames, team };
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -104,6 +114,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchPokemons: () => {
       dispatch(getPokemonListAction());
     },
+    fetchTeam: (id) => dispatch(getTeamDetailAction(id)),
   };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SelectTeam));
