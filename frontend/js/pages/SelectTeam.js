@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import PokemonCard from '../components/PokemonCard';
 import { getPokemonListAction, getTeamDetailAction } from '../redux/actions';
 import { selectTeamApi } from '../utils/api';
 
@@ -30,25 +31,26 @@ function SelectTeam(props) {
     match: { params },
     fetchTeam,
     team,
-    noPokemons,
+    emptyPokemonList,
     pokemons,
     fetchPokemons,
+    emptyPokemonTeam,
   } = props;
 
   const teamId = params.id;
   useEffect(() => {
-    if (team && team.id === teamId) {
+    if (team && team.id !== Number(teamId)) {
       fetchTeam(teamId);
     }
   });
 
   useEffect(() => {
-    if (noPokemons) {
+    if (emptyPokemonList) {
       fetchPokemons();
     }
   });
 
-  if (noPokemons) {
+  if (emptyPokemonList) {
     return (
       <div className="container">
         <div className="battleList">
@@ -57,33 +59,45 @@ function SelectTeam(props) {
       </div>
     );
   }
+  if (emptyPokemonTeam) {
+    return (
+      <div className="container">
+        <div className="battleList">
+          <Formik
+            initialValues={{
+              pokemon_1: '',
+              pokemon_2: '',
+              pokemon_3: '',
+              position_1: 1,
+              position_2: 2,
+              position_3: 3,
+            }}
+            onSubmit={async (values) => {
+              selectTeamApi({ teamId, values });
+              props.history.push('/v2/battle');
+            }}
+          >
+            <Form>
+              <Field id="pokemon_1" list="pokemons" name="pokemon_1" type="text" />
+              <PokemonList pokemons={pokemons} />
+              <Field id="pokemon_2" list="pokemons" name="pokemon_2" type="text" />
+              <PokemonList pokemons={pokemons} />
+              <Field id="pokemon_3" list="pokemons" name="pokemon_3" type="text" />
+              <PokemonList pokemons={pokemons} />
+              <button type="submit">Submit</button>
+            </Form>
+          </Formik>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="container">
       <div className="battleList">
-        <Formik
-          initialValues={{
-            pokemon_1: '',
-            pokemon_2: '',
-            pokemon_3: '',
-            position_1: 1,
-            position_2: 2,
-            position_3: 3,
-          }}
-          onSubmit={async (values) => {
-            selectTeamApi({ teamId, values });
-            props.history.push('/v2/battle');
-          }}
-        >
-          <Form>
-            <Field id="pokemon_1" list="pokemons" name="pokemon_1" type="text" />
-            <PokemonList pokemons={pokemons} />
-            <Field id="pokemon_2" list="pokemons" name="pokemon_2" type="text" />
-            <PokemonList pokemons={pokemons} />
-            <Field id="pokemon_3" list="pokemons" name="pokemon_3" type="text" />
-            <PokemonList pokemons={pokemons} />
-            <button type="submit">Submit</button>
-          </Form>
-        </Formik>
+        <h1>Team Pokemon</h1>
+        <PokemonCard pokemonId={team.pokemons[0]} />
+        <PokemonCard pokemonId={team.pokemons[1]} />
+        <PokemonCard pokemonId={team.pokemons[2]} />
       </div>
     </div>
   );
@@ -91,7 +105,8 @@ function SelectTeam(props) {
 SelectTeam.propTypes = {
   history: PropTypes.object,
   pokemons: PropTypes.object,
-  noPokemons: PropTypes.bool,
+  emptyPokemonList: PropTypes.bool,
+  emptyPokemonTeam: PropTypes.bool,
   fetchPokemons: PropTypes.func,
   fetchTeam: PropTypes.func,
   team: PropTypes.object,
@@ -106,10 +121,11 @@ const mapStateToProps = (state, ownProps) => {
   const teamId = params.id;
 
   const team = teams ? teams[teamId] : {};
+  const pokemonTeam = team ? team.pokemons : [];
+  const emptyPokemonTeam = pokemonTeam ? pokemonTeam.length === 0 : true;
+  const emptyPokemonList = Object.keys(pokemons).length === 0 && pokemons.constructor === Object;
 
-  const noPokemons = Object.keys(pokemons).length === 0 && pokemons.constructor === Object;
-
-  return { team, pokemons, noPokemons };
+  return { team, pokemons, emptyPokemonList, emptyPokemonTeam };
 };
 
 const mapDispatchToProps = (dispatch) => {

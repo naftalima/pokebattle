@@ -18,7 +18,7 @@ class BattleDetail extends React.Component {
 
     const battleId = params.id;
 
-    if (battle && battle.id !== battleId) {
+    if (battle && battle.id !== Number(battleId)) {
       fetchBattle(battleId);
     }
   }
