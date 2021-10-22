@@ -5,26 +5,11 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import PokemonCard from '../components/PokemonCard';
+import Loading from '../components/Loading';
+import PokemonList from '../components/PokemonList';
+import SortPokemons from '../components/SortPokemons';
 import { getPokemonListAction, getTeamDetailAction } from '../redux/actions';
 import { selectTeamApi } from '../utils/api';
-
-function PokemonList({ pokemons }) {
-  return (
-    <datalist id="pokemons">
-      {pokemons.map((pokemon) => {
-        return (
-          <option key={pokemon.id} value={pokemon.name}>
-            {`${pokemon.name}`}
-          </option>
-        );
-      })}
-    </datalist>
-  );
-}
-PokemonList.propTypes = {
-  pokemons: PropTypes.object,
-};
 
 function SelectTeam(props) {
   const {
@@ -51,13 +36,7 @@ function SelectTeam(props) {
   });
 
   if (emptyPokemonList) {
-    return (
-      <div className="container">
-        <div className="battleList">
-          <h1>LOADING</h1>
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
   if (emptyPokemonTeam) {
     return (
@@ -91,16 +70,7 @@ function SelectTeam(props) {
       </div>
     );
   }
-  return (
-    <div className="container">
-      <div className="battleList">
-        <h1>Team Pokemon</h1>
-        <PokemonCard pokemonId={team.pokemons[0]} />
-        <PokemonCard pokemonId={team.pokemons[1]} />
-        <PokemonCard pokemonId={team.pokemons[2]} />
-      </div>
-    </div>
-  );
+  return <SortPokemons team={team} />;
 }
 SelectTeam.propTypes = {
   history: PropTypes.object,
