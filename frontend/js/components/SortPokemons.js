@@ -1,9 +1,9 @@
 /* eslint-disable babel/camelcase */
-import arrayMove from 'array-move';
+// import arrayMove from 'array-move';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { SortableContainer } from 'react-sortable-hoc';
+import { SortableContainer, arrayMove } from 'react-sortable-hoc';
 
 import PokemonCard from './PokemonCard';
 import ToDoList from './ToDoList';
