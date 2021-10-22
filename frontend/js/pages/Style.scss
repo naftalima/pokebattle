@@ -103,3 +103,36 @@ tr {
   color: $secundary-color;
   font-weight: bolder;
 }
+
+.card {
+  width: 150px;
+  height: 225px;
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+  margin: 5px
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 $tertiary-color;
+}
+
+.pokemon-name {
+	background:$quaternary-color;
+	color: white;
+	text-align: center;
+}
+.pokemon-status{
+  background:$secundary-color;
+  color:#EAC787;
+	text-align: center;
+  margin: 1px;
+}
+
+.pokemon-img {
+  display: flex;
+  justify-content: center;
+}
+
