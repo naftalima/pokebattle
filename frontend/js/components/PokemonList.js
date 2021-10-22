@@ -1,19 +1,19 @@
-import PropTypes from 'prop-types';
+/* eslint-disable react/prop-types */
 import React from 'react';
+import { SortableElement } from 'react-sortable-hoc';
 
-export default function PokemonList({ pokemons }) {
+import PokemonCard from './PokemonCard';
+
+const SortableItem = SortableElement(PokemonCard);
+
+const PokemonList = ({ items }) => {
   return (
-    <datalist id="pokemons">
-      {pokemons.map((pokemon) => {
-        return (
-          <option key={pokemon.id} value={pokemon.name}>
-            {`${pokemon.name}`}
-          </option>
-        );
+    <div className="SortableListContainer">
+      {items.map((x, i) => {
+        return <SortableItem key={x.id} index={i} todo={x} />;
       })}
-    </datalist>
+    </div>
   );
-}
-PokemonList.propTypes = {
-  pokemons: PropTypes.object,
 };
+
+export default PokemonList;

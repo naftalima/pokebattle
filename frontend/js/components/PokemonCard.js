@@ -1,29 +1,28 @@
-import PropTypes from 'prop-types';
+/* eslint-disable react/prop-types */
 import React from 'react';
-import { connect } from 'react-redux';
 
-function PokemonCard({ pokemon }) {
+const ToDoItem = ({ todo }) => {
   return (
-    <td key={pokemon.id} className="battle-detail-td">
-      <div className="battle-detail-block">
-        <div className="battle-datail-display">
-          <img alt={pokemon} height="90px" src={pokemon.img_url} />
-        </div>
-        <div className="battle-detail-pokemon-name">{pokemon.name}</div>
+    <div className="card">
+      <div className="pokemon-name">
+        <p>{todo.name}</p>
       </div>
-    </td>
+      <div className="pokemon-img">
+        <img alt="pokemon" src={todo.img_url} />
+      </div>
+      <div className="card-body">
+        <div className="pokemon-status">
+          <strong>ATK/{todo.attack}</strong>
+        </div>
+        <div className="pokemon-status">
+          <strong>DEF/{todo.defense}</strong>
+        </div>
+        <div className="pokemon-status">
+          <strong>HP/{todo.hp}</strong>
+        </div>
+      </div>
+    </div>
   );
-}
-PokemonCard.propTypes = {
-  pokemon: PropTypes.object,
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const { pokemons } = state.battleR;
-  const { pokemonId } = ownProps;
-
-  const pokemon = pokemons ? pokemons[pokemonId] : {};
-  return { pokemon };
-};
-
-export default connect(mapStateToProps)(PokemonCard);
+export default ToDoItem;

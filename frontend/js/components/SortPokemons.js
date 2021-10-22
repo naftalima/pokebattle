@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { SortableContainer, arrayMove } from 'react-sortable-hoc';
 
-import ToDoList from './ToDoList';
+import PokemonList from './PokemonList';
 
-const SortableList = SortableContainer(ToDoList);
+const SortableList = SortableContainer(PokemonList);
 
 function SortPokemons({ teamPokemons }) {
   const [pokemons, setTodos] = useState(teamPokemons);
@@ -14,13 +14,21 @@ function SortPokemons({ teamPokemons }) {
   const onSortEnd = ({ oldIndex, newIndex }) => {
     const newPokemons = arrayMove(pokemons, oldIndex, newIndex);
     setTodos(newPokemons);
+    console.log(newPokemons);
   };
 
   return (
     <div className="container">
       <div className="battleList">
-        <h1>select the order your pokemons will battle:</h1>
-        <SortableList axis="y" items={pokemons} onSortEnd={onSortEnd} />
+        <h3>select the order your pokemons will battle:</h3>
+        <SortableList axis="x" items={pokemons} onSortEnd={onSortEnd} />
+        <h1>.</h1>
+        <h1>.</h1>
+        <h1>.</h1>
+        <h1>.</h1>
+        <button className="order-btn" type="submit">
+          Submit
+        </button>
       </div>
     </div>
   );

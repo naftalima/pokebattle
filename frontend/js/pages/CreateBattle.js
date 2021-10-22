@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import { Formik, Field, Form } from 'formik';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -23,8 +24,11 @@ function CreateBattle(props) {
           }}
         >
           <Form>
+            <label htmlFor="opponent">Opponent:</label>
             <Field id="opponent" name="opponent" placeholder="jane@acme.com" type="email" />
-            <button type="submit">Submit</button>
+            <button className="battle-id-btn" type="submit">
+              Submit
+            </button>
           </Form>
         </Formik>
       </div>

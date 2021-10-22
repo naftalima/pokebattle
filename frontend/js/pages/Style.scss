@@ -11,6 +11,7 @@ $quaternary-color: #3B4CCA;
 
 .container {
   width: 70%;
+  min-height: 500px;
   background-color: rgba(82, 78, 77, 0.65);
   border-radius: 10px;
   display: flex;
@@ -136,3 +137,28 @@ tr {
   justify-content: center;
 }
 
+.SortableListContainer{
+  display: flex;
+	height: 3rem;
+	width: 100%;
+}
+
+
+.order-btn{
+  display: inline-block;
+  padding: 10px 15px;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #E86E7F;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #EAC787;
+  opacity: 1;
+  margin: 10px;
+  bottom: 10px;
+
+}

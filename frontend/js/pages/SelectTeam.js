@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable babel/camelcase */
 import { Formik, Field, Form } from 'formik';
 import PropTypes from 'prop-types';
@@ -6,7 +7,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import Loading from '../components/Loading';
-import PokemonList from '../components/PokemonList';
+import PokemonNameList from '../components/PokemonNameList';
 import SortPokemons from '../components/SortPokemons';
 import { getPokemonListAction, getTeamDetailAction } from '../redux/actions';
 import { selectTeamApi } from '../utils/api';
@@ -42,6 +43,7 @@ function SelectTeam(props) {
     return (
       <div className="container">
         <div className="battleList">
+          <h1 className="title">Choose your Team!</h1>
           <Formik
             initialValues={{
               pokemon_1: '',
@@ -57,13 +59,26 @@ function SelectTeam(props) {
             }}
           >
             <Form>
-              <Field id="pokemon_1" list="pokemons" name="pokemon_1" type="text" />
-              <PokemonList pokemons={pokemons} />
-              <Field id="pokemon_2" list="pokemons" name="pokemon_2" type="text" />
-              <PokemonList pokemons={pokemons} />
-              <Field id="pokemon_3" list="pokemons" name="pokemon_3" type="text" />
-              <PokemonList pokemons={pokemons} />
-              <button type="submit">Submit</button>
+              <div className="form">
+                <div>
+                  <label htmlFor="pokemon">Pokemon:</label>
+                  <Field id="pokemon_1" list="pokemons" name="pokemon_1" type="text" />
+                </div>
+                <PokemonNameList pokemons={pokemons} />
+                <div>
+                  <label htmlFor="pokemon">Pokemon:</label>
+                  <Field id="pokemon_2" list="pokemons" name="pokemon_2" type="text" />
+                </div>
+                <PokemonNameList pokemons={pokemons} />
+                <div>
+                  <label htmlFor="pokemon">Pokemon:</label>
+                  <Field id="pokemon_3" list="pokemons" name="pokemon_3" type="text" />
+                </div>
+                <PokemonNameList pokemons={pokemons} />
+                <button className="battle-id-btn" type="submit">
+                  Submit
+                </button>
+              </div>
             </Form>
           </Formik>
         </div>
