@@ -1,3 +1,4 @@
+/* eslint-disable babel/camelcase */
 /* eslint no-console: ["error", { allow: ["log"] }] */
 import axios from 'axios';
 
@@ -68,8 +69,14 @@ export const createBattleApi = (battleForm) => {
 
 export const selectTeamApi = (payload) => {
   const { teamId, values } = payload;
+  const team = {
+    ...values,
+    position_1: 1,
+    position_2: 2,
+    position_3: 3,
+  };
   return axios
-    .put(`${selectTeamUrl}${teamId}/edit/`, values, { headers: { 'X-CSRFToken': csrftoken } })
+    .put(`${selectTeamUrl}${teamId}/edit/`, team, { headers: { 'X-CSRFToken': csrftoken } })
     .then((res) => {
       return res;
     })
