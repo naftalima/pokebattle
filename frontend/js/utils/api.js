@@ -27,7 +27,11 @@ export const getTeamDetailFromApi = (id) => {
   return axios
     .get(`${selectTeamUrl}${id}`)
     .then((res) => {
-      return res.data;
+      const team = res.data;
+      team.pokemons[0] = team.pokemons[0].pokemon;
+      team.pokemons[1] = team.pokemons[1].pokemon;
+      team.pokemons[2] = team.pokemons[2].pokemon;
+      return team;
     })
     .catch((err) => {
       console.log(err);

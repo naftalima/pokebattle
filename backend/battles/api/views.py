@@ -47,7 +47,7 @@ class TeamDetailView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        queryset = Team.objects.filter(trainer=self.request.user).order_by("-id")
+        queryset = Team.objects.filter(trainer=self.request.user)
         return queryset
 
 

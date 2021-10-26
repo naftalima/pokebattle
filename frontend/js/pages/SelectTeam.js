@@ -70,10 +70,11 @@ const mapStateToProps = (state, ownProps) => {
   const {
     match: { params },
   } = ownProps;
-  const teamId = params.id;
 
+  const teamId = params.id;
   const team = teams ? teams[teamId] : {};
   const pokemonTeam = team ? team.pokemons : [];
+
   const emptyPokemonTeam = pokemonTeam ? pokemonTeam.length === 0 : true;
   const emptyPokemonList = Object.keys(pokemons).length === 0 && pokemons.constructor === Object;
 
