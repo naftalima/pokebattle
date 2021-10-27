@@ -17,12 +17,16 @@ export const getBattleDetailFromApi = (id) => {
     .get(`${battleUrl}${id}`)
     .then((res) => {
       const [creatorTeam, opponentTeam] = res.data.teams;
-      creatorTeam.pokemons[0] = creatorTeam.pokemons[0].pokemon;
-      creatorTeam.pokemons[1] = creatorTeam.pokemons[1].pokemon;
-      creatorTeam.pokemons[2] = creatorTeam.pokemons[2].pokemon;
-      opponentTeam.pokemons[0] = opponentTeam.pokemons[0].pokemon;
-      opponentTeam.pokemons[1] = opponentTeam.pokemons[1].pokemon;
-      opponentTeam.pokemons[2] = opponentTeam.pokemons[2].pokemon;
+      if (creatorTeam.pokemons.length !== 0) {
+        creatorTeam.pokemons[0] = creatorTeam.pokemons[0].pokemon;
+        creatorTeam.pokemons[1] = creatorTeam.pokemons[1].pokemon;
+        creatorTeam.pokemons[2] = creatorTeam.pokemons[2].pokemon;
+      }
+      if (opponentTeam.pokemons.length !== 0) {
+        opponentTeam.pokemons[0] = opponentTeam.pokemons[0].pokemon;
+        opponentTeam.pokemons[1] = opponentTeam.pokemons[1].pokemon;
+        opponentTeam.pokemons[2] = opponentTeam.pokemons[2].pokemon;
+      }
       return res.data;
     })
     .catch((err) => {

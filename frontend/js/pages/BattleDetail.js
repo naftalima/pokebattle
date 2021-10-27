@@ -4,13 +4,15 @@ import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import BattleTitle from '../components/BattleTitle';
+import Loading from '../components/Loading';
 import Team from '../components/Team';
 import Winner from '../components/Winner';
 import { getBattleDetailAction } from '../redux/actions';
 
 function BattleDetail(props) {
-  const { fetchBattle, battle } = props;
+  const { fetchBattle, battle, emptyBattle } = props;
   const { id } = useParams();
+  console.log(id);
 
   useEffect(() => {
     if (battle && battle.id !== Number(id)) {
@@ -18,14 +20,8 @@ function BattleDetail(props) {
     }
   });
 
-  if (!battle.id) {
-    return (
-      <div className="container">
-        <div className="battleDetail">
-          <h1>Its not a valid battle id</h1>
-        </div>
-      </div>
-    );
+  if (emptyBattle) {
+    return <Loading />;
   }
 
   const battleTeam = battle ? battle.teams : [null, null];
@@ -47,6 +43,7 @@ function BattleDetail(props) {
 BattleDetail.propTypes = {
   fetchBattle: PropTypes.func,
   battle: PropTypes.object,
+  emptyBattle: PropTypes.bool,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -54,11 +51,12 @@ const mapStateToProps = (state, ownProps) => {
   const {
     match: { params },
   } = ownProps;
-  const battleId = params.id;
+  const battleId = params ? params.id : {};
 
-  const battle = battles[battleId] ? battles[battleId] : {};
-
-  return { battle };
+  const emptyBattles = Object.keys(battles).length === 0 && battles.constructor === Object;
+  const battle = !emptyBattles ? battles[battleId] : {};
+  const emptyBattle = Object.keys(battle).length === 0 && battle.constructor === Object;
+  return { battle, emptyBattle };
 };
 
 const mapDispatchToProps = (dispatch) => {
