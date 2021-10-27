@@ -3,7 +3,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 import FormPokemons from '../components/FormPokemons';
 import Loading from '../components/Loading';
@@ -11,17 +11,9 @@ import SortPokemons from '../components/SortPokemons';
 import { getPokemonListAction, getTeamDetailAction } from '../redux/actions';
 
 function SelectTeam(props) {
-  const {
-    match: { params },
-    emptyPokemonTeam,
-    emptyPokemonList,
-    pokemons,
-    fetchPokemons,
-    fetchTeam,
-    team,
-  } = props;
-
-  const teamId = params.id;
+  const { emptyPokemonTeam, emptyPokemonList, pokemons, fetchPokemons, fetchTeam, team } = props;
+  const { id } = useParams();
+  const teamId = id;
   useEffect(() => {
     if (team && team.id !== Number(teamId)) {
       fetchTeam(teamId);
@@ -62,7 +54,6 @@ SelectTeam.propTypes = {
   fetchPokemons: PropTypes.func,
   fetchTeam: PropTypes.func,
   team: PropTypes.object,
-  match: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -89,4 +80,4 @@ const mapDispatchToProps = (dispatch) => {
     fetchTeam: (id) => dispatch(getTeamDetailAction(id)),
   };
 };
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SelectTeam));
+export default connect(mapStateToProps, mapDispatchToProps)(SelectTeam);

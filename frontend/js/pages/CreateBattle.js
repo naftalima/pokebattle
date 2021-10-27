@@ -1,10 +1,9 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import { withRouter } from 'react-router';
 
 import FormOpponent from '../components/FormOpponent';
 
-function CreateBattle() {
+export default function CreateBattle() {
   return (
     <div className="container">
       <div className="battleList">
@@ -14,5 +13,3 @@ function CreateBattle() {
     </div>
   );
 }
-
-export default withRouter(CreateBattle);

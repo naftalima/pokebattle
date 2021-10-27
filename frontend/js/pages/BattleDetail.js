@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 import BattleTitle from '../components/BattleTitle';
 import Team from '../components/Team';
@@ -9,16 +9,12 @@ import Winner from '../components/Winner';
 import { getBattleDetailAction } from '../redux/actions';
 
 function BattleDetail(props) {
-  const {
-    match: { params },
-    fetchBattle,
-    battle,
-  } = props;
-  const battleId = params.id;
+  const { fetchBattle, battle } = props;
+  const { id } = useParams();
 
   useEffect(() => {
-    if (battle && battle.id !== Number(battleId)) {
-      fetchBattle(battleId);
+    if (battle && battle.id !== Number(id)) {
+      fetchBattle(id);
     }
   });
 
@@ -51,7 +47,6 @@ function BattleDetail(props) {
 BattleDetail.propTypes = {
   fetchBattle: PropTypes.func,
   battle: PropTypes.object,
-  match: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -72,4 +67,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BattleDetail));
+export default connect(mapStateToProps, mapDispatchToProps)(BattleDetail);

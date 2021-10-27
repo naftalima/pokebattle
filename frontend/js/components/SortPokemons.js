@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { SortableContainer, arrayMove } from 'react-sortable-hoc';
 
 import { selectTeamApi } from '../utils/api';
@@ -12,8 +12,9 @@ import PokemonList from './PokemonList';
 const SortableList = SortableContainer(PokemonList);
 
 function SortPokemons(props) {
-  const { teamPokemons, teamId, history } = props;
+  const { teamPokemons, teamId } = props;
   const [pokemons, setTodos] = useState(teamPokemons);
+  const history = useHistory();
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     const newPokemons = arrayMove(pokemons, oldIndex, newIndex);
@@ -47,7 +48,6 @@ function SortPokemons(props) {
 SortPokemons.propTypes = {
   teamPokemons: PropTypes.array,
   teamId: PropTypes.string,
-  history: PropTypes.object,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -73,4 +73,4 @@ const mapStateToProps = (state, ownProps) => {
   return { teamPokemons, teamId };
 };
 
-export default withRouter(connect(mapStateToProps)(SortPokemons));
+export default connect(mapStateToProps)(SortPokemons);

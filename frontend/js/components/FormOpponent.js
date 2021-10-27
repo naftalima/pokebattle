@@ -1,14 +1,14 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable babel/camelcase */
 import { Formik, Field, Form } from 'formik';
-import PropTypes from 'prop-types';
 import React from 'react';
-import { withRouter } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 import { createBattleApi } from '../utils/api';
 
-function FormOpponent(props) {
-  const { history } = props;
+export default function FormOpponent() {
+  const history = useHistory();
+
   return (
     <Formik
       initialValues={{
@@ -35,8 +35,3 @@ function FormOpponent(props) {
     </Formik>
   );
 }
-FormOpponent.propTypes = {
-  history: PropTypes.object,
-};
-
-export default withRouter(FormOpponent);
