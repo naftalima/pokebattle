@@ -1,45 +1,42 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import Battles from '../components/Battles';
 import { getBattleListAction } from '../redux/actions';
 
-class BattleList extends React.Component {
-  componentDidMount() {
-    const { fetchBattles } = this.props;
+function BattleList(props) {
+  const { finishedBattles, unfinishedBattles, battleIds, fetchBattles } = props;
+
+  useEffect(() => {
     fetchBattles();
-  }
+  });
 
-  render() {
-    const { finishedBattles, unfinishedBattles, battleIds } = this.props;
-
-    if (battleIds === null) {
-      return (
-        <div className="container">
-          <div className="battleList">
-            <h1>Sorry, no battles yet.</h1>
-          </div>
-        </div>
-      );
-    }
+  if (battleIds === null) {
     return (
       <div className="container">
         <div className="battleList">
-          <table>
-            <tr>
-              <td className="title">On going Battles</td>
-              <td className="title">Settled Battles</td>
-            </tr>
-            <tr>
-              <Battles battles={unfinishedBattles} />
-              <Battles battles={finishedBattles} />
-            </tr>
-          </table>
+          <h1>Sorry, no battles yet.</h1>
         </div>
       </div>
     );
   }
+  return (
+    <div className="container">
+      <div className="battleList">
+        <table>
+          <tr>
+            <td className="title">On going Battles</td>
+            <td className="title">Settled Battles</td>
+          </tr>
+          <tr>
+            <Battles battles={unfinishedBattles} />
+            <Battles battles={finishedBattles} />
+          </tr>
+        </table>
+      </div>
+    </div>
+  );
 }
 BattleList.propTypes = {
   finishedBattles: PropTypes.array,
