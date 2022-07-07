@@ -8,21 +8,31 @@ import Pokemons from './Pokemons';
 
 function Team({ trainer, trainerTeamId }) {
   return (
-    <table>
-      <tr>
-        <th>
-          <span className="trainer">{getUserName(trainer.email)}</span>&apos;s Team is:
-        </th>
-      </tr>
-      <tr>
-        <Pokemons trainerTeamId={trainerTeamId} />
-      </tr>
-    </table>
+    <div className="team">
+      {trainerTeamId === null ? (
+        <table>
+          <tr>
+            <th>there is no team</th>
+          </tr>
+        </table>
+      ) : (
+        <table>
+          <tr>
+            <th>
+              <span className="trainer">{getUserName(trainer.email)}</span>&apos;s Team is:
+            </th>
+          </tr>
+          <tr>
+            <Pokemons trainerTeamId={trainerTeamId} />
+          </tr>
+        </table>
+      )}
+    </div>
   );
 }
 Team.propTypes = {
   trainer: PropTypes.object,
-  trainerTeamId: PropTypes.object,
+  trainerTeamId: PropTypes.number,
 };
 
 const mapStateToProps = (state, ownProps) => {
