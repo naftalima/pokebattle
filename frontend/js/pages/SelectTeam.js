@@ -1,59 +1,92 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable babel/camelcase */
-import { Formik, Field, Form } from 'formik';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { selectTeamAction } from '../redux/actions';
+import FormPokemons from '../components/FormPokemons';
+import Loading from '../components/Loading';
+import SortPokemons from '../components/SortPokemons';
+import { getPokemonListAction, getTeamDetailAction } from '../redux/actions';
 
 function SelectTeam(props) {
   const {
     match: { params },
+    emptyPokemonTeam,
+    emptyPokemonList,
+    pokemons,
+    fetchPokemons,
+    fetchTeam,
+    team,
   } = props;
+
   const teamId = params.id;
+  useEffect(() => {
+    if (team && team.id !== Number(teamId)) {
+      fetchTeam(teamId);
+    }
+  });
+
+  useEffect(() => {
+    if (emptyPokemonList) {
+      fetchPokemons();
+    }
+  });
+
+  if (emptyPokemonList) {
+    return <Loading />;
+  }
   return (
     <div className="container">
       <div className="battleList">
-        <Formik
-          initialValues={{
-            pokemon_1: '',
-            pokemon_2: '',
-            pokemon_3: '',
-            position_1: 1,
-            position_2: 2,
-            position_3: 3,
-          }}
-          onSubmit={async (values) => {
-            props.history.push('/v2/battle');
-            props.selectTeamProp(teamId, values);
-          }}
-        >
-          <Form>
-            <Field id="pokemon_1" name="pokemon_1" placeholder="pikachu" type="text" />
-            <Field id="pokemon_2" name="pokemon_2" placeholder="eevee" type="text" />
-            <Field id="pokemon_3" name="pokemon_3" placeholder="nidorina" type="text" />
-            <button type="submit">Submit</button>
-          </Form>
-        </Formik>
+        {emptyPokemonTeam ? (
+          <div>
+            <h1 className="title">Choose your Team!</h1>
+            <FormPokemons pokemons={pokemons} teamId={teamId} />
+          </div>
+        ) : (
+          <div>
+            <h1 className="title">Reorder your Team!</h1>
+            <SortPokemons team={team} teamId={teamId} />
+          </div>
+        )}
       </div>
     </div>
   );
 }
 SelectTeam.propTypes = {
-  selectTeamProp: PropTypes.func,
-  history: PropTypes.object,
+  pokemons: PropTypes.object,
+  emptyPokemonList: PropTypes.bool,
+  emptyPokemonTeam: PropTypes.bool,
+  fetchPokemons: PropTypes.func,
+  fetchTeam: PropTypes.func,
+  team: PropTypes.object,
+  match: PropTypes.object,
 };
-const mapStateToProps = (state) => ({
-  battle: state.battleR.battle,
-});
+
+const mapStateToProps = (state, ownProps) => {
+  const { pokemons, teams } = state.battleR;
+  const {
+    match: { params },
+  } = ownProps;
+
+  const teamId = params.id;
+  const team = teams ? teams[teamId] : {};
+  const pokemonTeam = team ? team.pokemons : [];
+
+  const emptyPokemonTeam = pokemonTeam ? pokemonTeam.length === 0 : true;
+  const emptyPokemonList = Object.keys(pokemons).length === 0 && pokemons.constructor === Object;
+
+  return { team, pokemons, emptyPokemonList, emptyPokemonTeam };
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    selectTeamProp: (teamId, teamForm) => {
-      dispatch(selectTeamAction({ teamId, teamForm }));
+    fetchPokemons: () => {
+      dispatch(getPokemonListAction());
     },
+    fetchTeam: (id) => dispatch(getTeamDetailAction(id)),
   };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SelectTeam));

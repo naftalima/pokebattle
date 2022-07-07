@@ -29,14 +29,29 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PokemonSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(read_only=True)
+
     class Meta:
         model = Pokemon
         fields = ("id", "poke_id", "name", "img_url", "attack", "defense", "hp")
 
 
+class TeamPokemonSerializer(serializers.ModelSerializer):
+    pokemon = PokemonSerializer()
+
+    class Meta:
+        model = TeamPokemon
+
+        fields = (
+            "team",
+            "pokemon",
+            "order",
+        )
+
+
 class TeamSerializer(serializers.ModelSerializer):
     trainer = UserSerializer()
-    pokemons = PokemonSerializer(many=True)
+    pokemons = TeamPokemonSerializer(source="teams", many=True)
 
     class Meta:
         model = Team

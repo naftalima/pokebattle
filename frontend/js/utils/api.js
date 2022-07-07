@@ -1,31 +1,37 @@
+/* eslint-disable babel/camelcase */
 /* eslint no-console: ["error", { allow: ["log"] }] */
 import axios from 'axios';
 
+import getCookie from './cookie';
+
+const csrftoken = getCookie('csrftoken');
+
 const baseURL = `${window.location.protocol}//${window.location.host}`;
 const battleUrl = `${baseURL}/api/battle/`;
+const pokemonUrl = `${baseURL}/api/pokemon/`;
 const createBattleUrl = `${battleUrl}new/`;
 const selectTeamUrl = `${baseURL}/api/team/`;
-
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (const element of cookies) {
-      const cookie = element.trim();
-      if (cookie.slice(0, Math.max(0, name.length + 1)) === `${name}=`) {
-        cookieValue = decodeURIComponent(cookie.slice(Math.max(0, name.length + 1)));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
 
 export const getBattleDetailFromApi = (id) => {
   return axios
     .get(`${battleUrl}${id}`)
     .then((res) => {
       return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const getTeamDetailFromApi = (id) => {
+  return axios
+    .get(`${selectTeamUrl}${id}`)
+    .then((res) => {
+      const team = res.data;
+      team.pokemons[0] = team.pokemons[0].pokemon;
+      team.pokemons[1] = team.pokemons[1].pokemon;
+      team.pokemons[2] = team.pokemons[2].pokemon;
+      return team;
     })
     .catch((err) => {
       console.log(err);
@@ -43,7 +49,16 @@ export const getBattleListFromApi = () => {
     });
 };
 
-const csrftoken = getCookie('csrftoken');
+export const getPokemonListFromApi = () => {
+  return axios
+    .get(`${pokemonUrl}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 export const createBattleApi = (battleForm) => {
   return axios
@@ -57,11 +72,15 @@ export const createBattleApi = (battleForm) => {
 };
 
 export const selectTeamApi = (payload) => {
-  console.log('selectTeamApi', payload);
-  const { teamId, teamForm } = payload;
-  console.log(`${selectTeamUrl}${teamId}/edit/`);
+  const { teamId, values } = payload;
+  const team = {
+    ...values,
+    position_1: 1,
+    position_2: 2,
+    position_3: 3,
+  };
   return axios
-    .put(`${selectTeamUrl}${teamId}/edit/`, teamForm, { headers: { 'X-CSRFToken': csrftoken } })
+    .put(`${selectTeamUrl}${teamId}/edit/`, team, { headers: { 'X-CSRFToken': csrftoken } })
     .then((res) => {
       return res;
     })

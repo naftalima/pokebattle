@@ -23,11 +23,23 @@ const battleReducer = (state = initialState, action = {}) => {
         teams: action.payload.entities.team,
         users: action.payload.entities.users,
       };
+    case actionsTypes.TEAM_DETAIL:
+      return {
+        ...state,
+        teams: {
+          ...state.teams,
+          ...action.payload.entities.team,
+        },
+      };
     case actionsTypes.BATTLE_LIST:
       return {
         ...state,
         battles: action.payload.entities.battle,
         battleIds: action.payload.result,
+      };
+    case actionsTypes.POKEMON_LIST:
+      return {
+        pokemons: action.payload,
       };
     default:
       return state;
