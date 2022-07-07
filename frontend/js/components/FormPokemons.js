@@ -4,14 +4,15 @@ import { Formik, Field, Form } from 'formik';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 import { selectTeamApi } from '../utils/api';
 
 import PokemonNameList from './PokemonNameList';
 
 function FormPokemons(props) {
-  const { teamId, history, pokemons } = props;
+  const { teamId, pokemons } = props;
+  const history = useHistory();
 
   return (
     <Formik
@@ -52,7 +53,6 @@ function FormPokemons(props) {
 FormPokemons.propTypes = {
   pokemons: PropTypes.object,
   teamId: PropTypes.string,
-  history: PropTypes.object,
 };
 
 const mapStateToProps = (_state, ownProps) => {
@@ -61,4 +61,4 @@ const mapStateToProps = (_state, ownProps) => {
   return { teamId, pokemons };
 };
 
-export default withRouter(connect(mapStateToProps)(FormPokemons));
+export default connect(mapStateToProps)(FormPokemons);

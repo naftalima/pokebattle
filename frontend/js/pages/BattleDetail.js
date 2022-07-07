@@ -1,62 +1,49 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { useParams } from 'react-router-dom';
 
 import BattleTitle from '../components/BattleTitle';
+import Loading from '../components/Loading';
 import Team from '../components/Team';
 import Winner from '../components/Winner';
 import { getBattleDetailAction } from '../redux/actions';
 
-class BattleDetail extends React.Component {
-  componentDidMount() {
-    const {
-      match: { params },
-      fetchBattle,
-      battle,
-    } = this.props;
+function BattleDetail(props) {
+  const { fetchBattle, battle, emptyBattle } = props;
+  const { id } = useParams();
+  console.log(id);
 
-    const battleId = params.id;
-
-    if (battle && battle.id !== Number(battleId)) {
-      fetchBattle(battleId);
+  useEffect(() => {
+    if (battle && battle.id !== Number(id)) {
+      fetchBattle(id);
     }
+  });
+
+  if (emptyBattle) {
+    return <Loading />;
   }
 
-  render() {
-    const { battle } = this.props;
+  const battleTeam = battle ? battle.teams : [null, null];
+  const [creatorTeamId, opponentTeamId] = battleTeam;
 
-    if (!battle.id) {
-      return (
-        <div className="container">
-          <div className="battleDetail">
-            <h1>Its not a valid battle id</h1>
-          </div>
-        </div>
-      );
-    }
-
-    const battleTeam = battle ? battle.teams : [null, null];
-    const [creatorTeamId, opponentTeamId] = battleTeam;
-
-    return (
-      <div className="container">
+  return (
+    <div className="container">
+      <div className="battleDetail">
         <div className="battleDetail">
-          <div className="battleDetail">
-            <BattleTitle battleId={battle.id} />
-            <Team trainerTeamId={creatorTeamId} />
-            <Team trainerTeamId={opponentTeamId} />
-            <Winner winnerId={battle.winner} />
-          </div>
+          <BattleTitle battleId={battle.id} />
+          <Team trainerTeamId={creatorTeamId} />
+          <Team trainerTeamId={opponentTeamId} />
+          <Winner winnerId={battle.winner} />
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 BattleDetail.propTypes = {
   fetchBattle: PropTypes.func,
   battle: PropTypes.object,
-  match: PropTypes.object,
+  emptyBattle: PropTypes.bool,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -64,11 +51,12 @@ const mapStateToProps = (state, ownProps) => {
   const {
     match: { params },
   } = ownProps;
-  const battleId = params.id;
+  const battleId = params ? params.id : {};
 
-  const battle = battles[battleId] ? battles[battleId] : {};
-
-  return { battle };
+  const emptyBattles = Object.keys(battles).length === 0 && battles.constructor === Object;
+  const battle = !emptyBattles ? battles[battleId] : {};
+  const emptyBattle = Object.keys(battle).length === 0 && battle.constructor === Object;
+  return { battle, emptyBattle };
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -77,4 +65,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BattleDetail));
+export default connect(mapStateToProps, mapDispatchToProps)(BattleDetail);
