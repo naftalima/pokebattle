@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "pokebattle_base.html" %}
 
 {% block content %}
 
@@ -6,16 +6,16 @@
 <p>- Pokemons from Trainer1 will battle against Pokemons from Trainer2</p>
 <p>- A battle is a comparison 1 x 1 of the Pokemons in the order defined by the trainers</p>
 <p>- It is a 'best of three' where the attack (A1) of PKN1 is compared to the defense (D2) of PKN2, then A2 vs. D1.</p>
-<p>   In case of draw the PKN with the highest HP wins.</p>
+<p> In case of draw the PKN with the highest HP wins.</p>
 
 
-  <a href="{% url 'battles' %}">
-    <button class="button">Battles</button>
-  </a>
+<a href="{% url 'battles' %}">
+  <button class="button">Battles</button>
+</a>
 
-  <br>
+<br>
 
-  <a href="{% url 'battle-opponent' %}">
-    <button class="button">New Battle</button>
-  </a>
+<a href="{% url 'battle-opponent' %}">
+  <button class="button">New Battle</button>
+</a>
 {% endblock %}

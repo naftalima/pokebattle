@@ -29,14 +29,29 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PokemonSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(read_only=True)
+
     class Meta:
         model = Pokemon
         fields = ("id", "poke_id", "name", "img_url", "attack", "defense", "hp")
 
 
+class TeamPokemonSerializer(serializers.ModelSerializer):
+    pokemon = PokemonSerializer()
+
+    class Meta:
+        model = TeamPokemon
+
+        fields = (
+            "team",
+            "pokemon",
+            "order",
+        )
+
+
 class TeamSerializer(serializers.ModelSerializer):
     trainer = UserSerializer()
-    pokemons = PokemonSerializer(many=True)
+    pokemons = TeamPokemonSerializer(source="teams", many=True)
 
     class Meta:
         model = Team
@@ -47,6 +62,7 @@ class BattleSerializer(serializers.ModelSerializer):
     creator = UserSerializer()
     opponent = UserSerializer()
     teams = TeamSerializer(many=True, read_only=True)
+    winner = UserSerializer()
 
     class Meta:
         model = Battle
@@ -56,10 +72,11 @@ class BattleSerializer(serializers.ModelSerializer):
 class CreateBattleSerializer(serializers.ModelSerializer):
     opponent = serializers.CharField()
     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    teams = TeamSerializer(many=True, read_only=True)
 
     class Meta:
         model = Battle
-        fields = ("id", "creator", "opponent")
+        fields = ("id", "creator", "opponent", "teams")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -75,9 +92,9 @@ class CreateBattleSerializer(serializers.ModelSerializer):
         return opponent
 
     def validate(self, attrs):
-        creator_email = User.objects.get(email=attrs["creator"])
-        opponent_email = User.objects.get(email=attrs["opponent"])
-        challenge_yourself = opponent_email == creator_email
+        creator = attrs["creator"]
+        opponent = attrs["opponent"]
+        challenge_yourself = opponent == creator
         if challenge_yourself:
             raise serializers.ValidationError("ERROR: You can't challenge yourself.")
         return attrs

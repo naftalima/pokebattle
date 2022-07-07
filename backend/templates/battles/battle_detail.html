@@ -1,84 +1,84 @@
-{% extends "base.html" %}
+{% extends "pokebattle_base.html" %}
 {% load battles_tags %}
 
 {% block content %}
 
-  <h1 class="title">Battle #{{battle.id}}</h1>
-  <p>Created at {{battle.created_at}}</p>
+<h1 class="title">Battle #{{battle.id}}</h1>
+<p>Created at {{battle.created_at}}</p>
 
-  <p> <strong>{{battle.creator}}</strong> challenged <strong>{{battle.opponent}}</strong> </p>
+<p> <strong>{{battle.creator}}</strong> challenged <strong>{{battle.opponent}}</strong> </p>
 
 
-  {% if battle.winner %}
+{% if battle.winner %}
 
-  <h3 class="title">{{battle.creator}}'s team was:</h3>
-  <table>
-    <tr>
-      {% for pokemon in creator_pokemons %}
-      <td class="battle-detail-td">
-        <div class="battle-detail-block">
-          <div class="battle-datail-display">
-            <img src="{{pokemon.img_url}}" height="90px">
-          </div>
-          <div class="battle-detail-pokemon-name">
-            {{pokemon.name}}
-          </div>
+<h3 class="title">{{battle.creator}}'s team was:</h3>
+<table>
+  <tr>
+    {% for pokemon in creator_pokemons %}
+    <td class="battle-detail-td">
+      <div class="battle-detail-block">
+        <div class="battle-datail-display">
+          <img src="{{pokemon.img_url}}" height="90px">
         </div>
-      </td>
-      {% endfor %}
-    </tr>
-  </table>
-
-
-  <h3 class="title">{{battle.opponent}}'s team was:</h3>
-  <table>
-    <tr>
-      {% for pokemon in opponent_pokemons %}
-      <td class="battle-detail-td">
-        <div class="battle-detail-block">
-          <div class="battle-datail-display">
-            <img src="{{pokemon.img_url}}" height="90px">
-          </div>
-          <div class="battle-detail-pokemon-name">
-            {{pokemon.name}}
-          </div>
+        <div class="battle-detail-pokemon-name">
+          {{pokemon.name}}
         </div>
-      </td>
-      {% endfor %}
-    </tr>
-  </table>
+      </div>
+    </td>
+    {% endfor %}
+  </tr>
+</table>
 
-  <h1 class="title">And the winner is <b>{{battle.winner}}</b>!!!</h1>
 
-  {% else %}
+<h3 class="title">{{battle.opponent}}'s team was:</h3>
+<table>
+  <tr>
+    {% for pokemon in opponent_pokemons %}
+    <td class="battle-detail-td">
+      <div class="battle-detail-block">
+        <div class="battle-datail-display">
+          <img src="{{pokemon.img_url}}" height="90px">
+        </div>
+        <div class="battle-detail-pokemon-name">
+          {{pokemon.name}}
+        </div>
+      </div>
+    </td>
+    {% endfor %}
+  </tr>
+</table>
 
-    {% if not opponent_pokemons %}
-      <h2>Wait for your opponent to choose their team.</h2>
-    {% endif %}
+<h1 class="title">And the winner is <b>{{battle.winner}}</b>!!!</h1>
 
-  <h3 class="title">Your team is:</h3>
-  <table>
-    <tr>
-      {% for pokemon in creator_pokemons %}
-        <td class="battle-detail-td">
-          <div class="battle-detail-block">
-            <div class="battle-datail-display">
-              <img src="{{pokemon.img_url}}" height="90px">
-            </div>
-            <div class="battle-detail-pokemon-name">
-              {{pokemon.name}}
-            </div>
-          </div>
-        </td>
-      {% empty %}
-        <p>Your team is empty. Choose Pokemons for your team.</p>
-      {% endfor %}
-    </tr>
-  </table>
+{% else %}
 
-  <a href="{% url 'battle-team-pokemons' battle|get_team:user %}">
-    <button class="button">Edit Team</button>
-  </a>
+{% if not opponent_pokemons %}
+<h2>Wait for your opponent to choose their team.</h2>
+{% endif %}
 
-  {% endif %}
+<h3 class="title">Your team is:</h3>
+<table>
+  <tr>
+    {% for pokemon in creator_pokemons %}
+    <td class="battle-detail-td">
+      <div class="battle-detail-block">
+        <div class="battle-datail-display">
+          <img src="{{pokemon.img_url}}" height="90px">
+        </div>
+        <div class="battle-detail-pokemon-name">
+          {{pokemon.name}}
+        </div>
+      </div>
+    </td>
+    {% empty %}
+    <p>Your team is empty. Choose Pokemons for your team.</p>
+    {% endfor %}
+  </tr>
+</table>
+
+<a href="{% url 'battle-team-pokemons' battle|get_team:user %}">
+  <button class="button">Edit Team</button>
+</a>
+
+{% endif %}
 {% endblock %}

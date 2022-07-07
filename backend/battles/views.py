@@ -16,6 +16,10 @@ class HomeView(TemplateView):
     template_name = "battles/home.html"
 
 
+class BaseView(TemplateView):
+    template_name = "base.html"
+
+
 class CreateBattleView(LoginRequiredMixin, CreateView):
     model = Battle
     template_name = "battles/battle-opponent.html"

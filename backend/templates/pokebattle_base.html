@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poke Battle</title>
+  <style>
+    body {
+      padding: 0px;
+      background: #3B4CCA;
+      /* fallback for old browsers */
+      background-repeat: no-repeat;
+      font-family: Arial, Helvetica, sans-serif;
+      background-image: url('https://i.pinimg.com/originals/df/4e/8b/df4e8ba28f912bf9cdf9fa0dfc196411.png');
+    }
+
+    /* Create two equal columns that floats next to each other */
+    .column {
+      float: left;
+      margin: 15px;
+
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      margin: 15px;
+    }
+
+    .center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+
+    .container {
+      height: 700px;
+      width: 70%;
+      background-color: rgba(82, 78, 77, 0.65);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: auto;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 15px;
+      font-size: 24px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      outline: none;
+      color: #fff;
+      background-color: #E86E7F;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 9px #EAC787;
+      opacity: 1;
+      margin-top: 100px;
+    }
+
+    .button:hover {
+      background-color: #EAC787
+    }
+
+    .button:active {
+      background-color: #3e8e41;
+      box-shadow: 0 5px #666;
+      transform: translateY(4px);
+    }
+
+    .battle-id-btn {
+      display: inline-block;
+      padding: 10px 15px;
+      font-size: 24px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      outline: none;
+      color: #fff;
+      background-color: #E86E7F;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 9px #EAC787;
+      opacity: 1;
+    }
+
+    .title {
+      color: #E86E7F;
+    }
+
+    .battle-detail-td {
+      padding: 0 6px;
+      width: fit-content;
+    }
+
+    .battle-detail-block {
+      display: block;
+    }
+
+    .battle-detail-display {
+      display: flex;
+      justify-content: center;
+    }
+
+    .battle-detail-pokemon-name {
+      text-align: center;
+    }
+
+    .login-with-google-btn {
+      padding: 12px 16px 12px 42px;
+      border: none;
+      border-radius: 3px;
+
+      color: #757575;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+
+      background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTcuNiA5LjJsLS4xLTEuOEg5djMuNGg0LjhDMTMuNiAxMiAxMyAxMyAxMiAxMy42djIuMmgzYTguOCA4LjggMCAwIDAgMi42LTYuNnoiIGZpbGw9IiM0Mjg1RjQiIGZpbGwtcnVsZT0ibm9uemVybyIvPjxwYXRoIGQ9Ik05IDE4YzIuNCAwIDQuNS0uOCA2LTIuMmwtMy0yLjJhNS40IDUuNCAwIDAgMS04LTIuOUgxVjEzYTkgOSAwIDAgMCA4IDV6IiBmaWxsPSIjMzRBODUzIiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNNCAxMC43YTUuNCA1LjQgMCAwIDEgMC0zLjRWNUgxYTkgOSAwIDAgMCAwIDhsMy0yLjN6IiBmaWxsPSIjRkJCQzA1IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48cGF0aCBkPSJNOSAzLjZjMS4zIDAgMi41LjQgMy40IDEuM0wxNSAyLjNBOSA5IDAgMCAwIDEgNWwzIDIuNGE1LjQgNS40IDAgMCAxIDUtMy43eiIgZmlsbD0iI0VBNDMzNSIgZmlsbC1ydWxlPSJub256ZXJvIi8+PHBhdGggZD0iTTAgMGgxOHYxOEgweiIvPjwvZz48L3N2Zz4=);
+      background-color: white;
+      background-repeat: no-repeat;
+      background-position: 12px 11px;
+    }
+
+    .welcome {
+      text-align: center;
+      color: #3B4CCA;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .error {
+      padding: 5px;
+      background-color: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <img class="center" src="https://team-rocket-blasting-off-again.github.io/pokebattle/assets/pokebattle-title.png"
+    alt="pokemon">
+
+  {% if request.user.is_anonymous %}
+  <a href="{% url 'login' %}">
+    <p class="welcome">Begin Session</p>
+  </a>
+  {% else %}
+  <p class="welcome">Hello, {{request.user}}!</p>
+  {% endif %}
+
+  <div class="container">
+    <div class="ontop">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
+</body>
+
+</html>
