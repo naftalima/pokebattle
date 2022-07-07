@@ -1,20 +1,33 @@
 import { combineReducers } from 'redux';
 
-import { BATTLE_DETAIL, BATTLE_LIST } from './actions';
+import { BATTLE_DETAIL, BATTLE_LIST } from './actionsTypes';
 
-const initialState = { battle: null, battles: null };
+const initialState = {
+  battles: {},
+  battlesId: [],
+  pokemons: {},
+  teams: {},
+  users: {},
+};
 
 const battleReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case BATTLE_DETAIL:
       return {
         ...state,
-        battle: action.payload,
+        battles: {
+          ...state.battles,
+          ...action.payload.entities.battle,
+        },
+        pokemons: action.payload.entities.pokemon,
+        teams: action.payload.entities.team,
+        users: action.payload.entities.users,
       };
     case BATTLE_LIST:
       return {
         ...state,
-        battles: action.payload,
+        battles: action.payload.entities.battle,
+        battleIds: action.payload.result,
       };
     default:
       return state;
@@ -22,5 +35,5 @@ const battleReducer = (state = initialState, action = {}) => {
 };
 
 export const rootReducer = combineReducers({
-  battle: battleReducer,
+  battleR: battleReducer,
 });

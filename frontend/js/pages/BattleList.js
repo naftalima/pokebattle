@@ -12,41 +12,13 @@ class BattleList extends React.Component {
   }
 
   render() {
-    const {
-      battleList: { battles },
-    } = this.props;
+    const { finishedBattles, unfinishedBattles, battleIds } = this.props;
 
-    const isFinished = (battle) => battle.winner !== null;
-    const finishedBattles = battles ? battles.filter(isFinished) : {};
-    const isUnfinished = (battle) => battle.winner === null;
-    const unfinishedBattles = battles ? battles.filter(isUnfinished) : {};
-
-    if (battles !== null) {
+    if (battleIds === null) {
       return (
         <div className="container">
           <div className="battleList">
-            <table>
-              <tr>
-                <td className="title">On going Battles</td>
-                <td className="title">Settled Battles</td>
-              </tr>
-              <tr>
-                <td>
-                  {unfinishedBattles ? (
-                    <Battles battles={unfinishedBattles} />
-                  ) : (
-                    <td>Sorry, no battles in this list.</td>
-                  )}
-                </td>
-                <td>
-                  {finishedBattles ? (
-                    <Battles battles={finishedBattles} />
-                  ) : (
-                    <td>Sorry, no battles in this list.</td>
-                  )}
-                </td>
-              </tr>
-            </table>
+            <h1>Sorry, no battles yet.</h1>
           </div>
         </div>
       );
@@ -54,20 +26,45 @@ class BattleList extends React.Component {
     return (
       <div className="container">
         <div className="battleList">
-          <h1>Sorry, no battles in this list.</h1>
+          <table>
+            <tr>
+              <td className="title">On going Battles</td>
+              <td className="title">Settled Battles</td>
+            </tr>
+            <tr>
+              <Battles battles={unfinishedBattles} />
+              <Battles battles={finishedBattles} />
+            </tr>
+          </table>
         </div>
       </div>
     );
   }
 }
 BattleList.propTypes = {
-  battleList: PropTypes.object,
+  finishedBattles: PropTypes.array,
+  unfinishedBattles: PropTypes.array,
   fetchBattles: PropTypes.func,
+  battleIds: PropTypes.array,
 };
 
-const mapStateToProps = (state) => ({
-  battleList: state.battle,
-});
+const mapStateToProps = (state) => {
+  const { battleIds, battles } = state.battleR;
+
+  const battleList = battleIds ? battleIds.map((id) => battles[id]) : [];
+
+  const isFinished = (battle) => battle.winner !== null;
+  const isUnfinished = (battle) => battle.winner === null;
+
+  const finishedBattles = battleList ? battleList.filter(isFinished) : [];
+  const unfinishedBattles = battleList ? battleList.filter(isUnfinished) : [];
+
+  return {
+    finishedBattles,
+    unfinishedBattles,
+    battleIds,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
