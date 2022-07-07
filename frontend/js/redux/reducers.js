@@ -29,6 +29,10 @@ const battleReducer = (state = initialState, action = {}) => {
         battles: action.payload.entities.battle,
         battleIds: action.payload.result,
       };
+    case actionsTypes.POKEMON_LIST:
+      return {
+        pokemons: action.payload,
+      };
     default:
       return state;
   }

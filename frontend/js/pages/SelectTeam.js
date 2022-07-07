@@ -1,18 +1,30 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable babel/camelcase */
 import { Formik, Field, Form } from 'formik';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { selectTeamAction } from '../redux/actions';
+import { getPokemonListAction } from '../redux/actions';
+import { selectTeamApi } from '../utils/api';
 
 function SelectTeam(props) {
   const {
     match: { params },
+    pokemonNames,
   } = props;
+
   const teamId = params.id;
+  useEffect(() => {
+    const { fetchPokemons, pokemonNames } = props;
+    if (pokemonNames.length === 0) {
+      fetchPokemons();
+    }
+  });
+
+  if (pokemonNames.length === 0) {
+    return <p>loading</p>;
+  }
   return (
     <div className="container">
       <div className="battleList">
@@ -26,14 +38,41 @@ function SelectTeam(props) {
             position_3: 3,
           }}
           onSubmit={async (values) => {
+            selectTeamApi(teamId, values);
             props.history.push('/v2/battle');
-            props.selectTeamProp(teamId, values);
           }}
         >
           <Form>
-            <Field id="pokemon_1" name="pokemon_1" placeholder="pikachu" type="text" />
-            <Field id="pokemon_2" name="pokemon_2" placeholder="eevee" type="text" />
-            <Field id="pokemon_3" name="pokemon_3" placeholder="nidorina" type="text" />
+            <Field id="pokemon_1" list="pokemons" name="pokemon_1" type="text" />
+            <datalist id="pokemons">
+              {pokemonNames.map((pokemon) => {
+                return (
+                  <option key={pokemon} value={pokemon}>
+                    {`${pokemon}`}
+                  </option>
+                );
+              })}
+            </datalist>
+            <Field id="pokemon_2" list="pokemons" name="pokemon_2" type="text" />
+            <datalist id="pokemons">
+              {pokemonNames.map((pokemon) => {
+                return (
+                  <option key={pokemon} value={pokemon}>
+                    {`${pokemon}`}
+                  </option>
+                );
+              })}
+            </datalist>
+            <Field id="pokemon_3" list="pokemons" name="pokemon_3" type="text" />
+            <datalist id="pokemons">
+              {pokemonNames.map((pokemon) => {
+                return (
+                  <option key={pokemon} value={pokemon}>
+                    {`${pokemon}`}
+                  </option>
+                );
+              })}
+            </datalist>
             <button type="submit">Submit</button>
           </Form>
         </Formik>
@@ -42,17 +81,28 @@ function SelectTeam(props) {
   );
 }
 SelectTeam.propTypes = {
-  selectTeamProp: PropTypes.func,
   history: PropTypes.object,
+  pokemonNames: PropTypes.array,
+  fetchPokemons: PropTypes.func,
+  match: PropTypes.object,
 };
-const mapStateToProps = (state) => ({
-  battle: state.battleR.battle,
-});
+
+const mapStateToProps = (state) => {
+  const { pokemons } = state.battleR;
+  const pokemonNames = [];
+  if (pokemons) {
+    // eslint-disable-next-line no-unused-vars
+    for (const [key, value] of Object.entries(pokemons)) {
+      pokemonNames.push(value.name);
+    }
+  }
+  return { pokemonNames };
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    selectTeamProp: (teamId, teamForm) => {
-      dispatch(selectTeamAction({ teamId, teamForm }));
+    fetchPokemons: () => {
+      dispatch(getPokemonListAction());
     },
   };
 };
