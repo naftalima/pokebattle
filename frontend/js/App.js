@@ -7,6 +7,7 @@ import Base from './components/Base';
 import BattleDetail from './pages/BattleDetail';
 import BattleList from './pages/BattleList';
 import CreateBattle from './pages/CreateBattle';
+import SelectTeam from './pages/SelectTeam';
 import store from './redux/store';
 import SentryBoundary from './utils/SentryBoundary';
 import './pages/Style.scss';
@@ -20,6 +21,7 @@ const App = () => (
           <Route component={CreateBattle} exact path="/v2/battle/new" />
           <Route component={BattleList} exact path="/v2/battle/" />
           <Route component={BattleDetail} path="/v2/battle/:id" />
+          <Route component={SelectTeam} path="/v2/team/:id" />
         </Switch>
       </Router>
     </Provider>

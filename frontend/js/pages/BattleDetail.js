@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import BattleTitle from '../components/BattleTitle';
 import Team from '../components/Team';
@@ -9,11 +10,17 @@ import { getBattleDetailAction } from '../redux/actions';
 
 class BattleDetail extends React.Component {
   componentDidMount() {
-    const { pathname } = window.location;
-    const battleId = Number(pathname.split('/').pop());
+    const {
+      match: { params },
+      fetchBattle,
+      battle,
+    } = this.props;
 
-    const { fetchBattle } = this.props;
-    fetchBattle(battleId);
+    const battleId = params.id;
+
+    if (!battle.id) {
+      fetchBattle(battleId);
+    }
   }
 
   render() {
@@ -39,7 +46,7 @@ class BattleDetail extends React.Component {
             <BattleTitle battleId={battle.id} />
             <Team trainerTeamId={creatorTeamId} />
             <Team trainerTeamId={opponentTeamId} />
-            <Winner battleId={battle.id} />
+            <Winner winnerId={battle.winner} />
           </div>
         </div>
       </div>
@@ -49,13 +56,15 @@ class BattleDetail extends React.Component {
 BattleDetail.propTypes = {
   fetchBattle: PropTypes.func,
   battle: PropTypes.object,
+  match: PropTypes.object,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   const { battles } = state.battleR;
-
-  const { pathname } = window.location;
-  const battleId = Number(pathname.split('/').pop());
+  const {
+    match: { params },
+  } = ownProps;
+  const battleId = params.id;
 
   const battle = battles[battleId] ? battles[battleId] : {};
 
@@ -68,4 +77,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(BattleDetail);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BattleDetail));

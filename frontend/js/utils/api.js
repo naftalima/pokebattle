@@ -2,7 +2,9 @@
 import axios from 'axios';
 
 const baseURL = `${window.location.protocol}//${window.location.host}`;
-const BattleUrl = `${baseURL}/api/battle/`;
+const battleUrl = `${baseURL}/api/battle/`;
+const createBattleUrl = `${battleUrl}new/`;
+const selectTeamUrl = `${baseURL}/api/team/`;
 
 function getCookie(name) {
   let cookieValue = null;
@@ -21,7 +23,7 @@ function getCookie(name) {
 
 export const getBattleDetailFromApi = (id) => {
   return axios
-    .get(`${BattleUrl}${id}`)
+    .get(`${battleUrl}${id}`)
     .then((res) => {
       return res.data;
     })
@@ -32,7 +34,7 @@ export const getBattleDetailFromApi = (id) => {
 
 export const getBattleListFromApi = () => {
   return axios
-    .get(`${BattleUrl}`)
+    .get(`${battleUrl}`)
     .then((res) => {
       return res.data;
     })
@@ -45,9 +47,22 @@ const csrftoken = getCookie('csrftoken');
 
 export const createBattleApi = (battleForm) => {
   return axios
-    .post(`${BattleUrl}new/`, battleForm, { headers: { 'X-CSRFToken': csrftoken } })
+    .post(`${createBattleUrl}`, battleForm, { headers: { 'X-CSRFToken': csrftoken } })
     .then((res) => {
-      console.log('createBattleApi', battleForm);
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const selectTeamApi = (payload) => {
+  console.log('selectTeamApi', payload);
+  const { teamId, teamForm } = payload;
+  console.log(`${selectTeamUrl}${teamId}/edit/`);
+  return axios
+    .put(`${selectTeamUrl}${teamId}/edit/`, teamForm, { headers: { 'X-CSRFToken': csrftoken } })
+    .then((res) => {
       return res;
     })
     .catch((err) => {

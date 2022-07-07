@@ -8,7 +8,7 @@ import { getUserName } from '../utils/format';
 function Winner({ winner }) {
   return (
     <div className="winner">
-      {Object.keys(winner).length === 0 ? (
+      {!winner ? (
         <h2>There is no winner yet</h2>
       ) : (
         <h2>
@@ -23,13 +23,10 @@ Winner.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { battles, users } = state.battleR;
-  const { battleId } = ownProps;
+  const { users } = state.battleR;
+  const { winnerId } = ownProps;
 
-  const battle = battles[battleId];
-
-  const winnerId = battle ? battle.winner : null;
-  const winner = winnerId ? users[winnerId] : {};
+  const winner = winnerId ? users[winnerId] : null;
   return { winner };
 };
 
